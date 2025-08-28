@@ -17,9 +17,8 @@ interface ChartSectionProps {
 
 const ChartSection: React.FC<ChartSectionProps> = ({ data }) => {
   const [hoveredIndex, setHoveredIndex] = useState<number | null>(null)
-  // const [activeDotPos, setActiveDotPos] = useState<{ x: number, y: number } | null>(null);
-
   const activeDotRef = useRef<{ x: number, y: number } | null>(null);
+
   const handleMouseEnter = (_: any, index: number | TooltipIndex | undefined) => {
     if (typeof index === "number") {
       setHoveredIndex(index)
@@ -174,6 +173,8 @@ const ChartSection: React.FC<ChartSectionProps> = ({ data }) => {
 
           {/* Cumulative net cash flow line */}
           <Line
+            animateNewValues={true}
+            isAnimationActive={false}
             type="monotone"
             dataKey="cumulativeNetCash"
             fill="var(--accent)"
