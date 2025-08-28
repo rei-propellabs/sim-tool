@@ -1,0 +1,43 @@
+import { MiningScenarioData } from "api/models/MiningScenarioData";
+
+export const scenarioData_mock: Record<string, MiningScenarioData> = {
+  "SCENARIO 1": {
+    baselineMiningCost: 200,
+    processingCost: 25,
+    wasteCost: 10,
+    commodityPrice: 2900,
+    millRecovery: 95,
+    numberOfDrills: 2,
+    cutterHeadSize: 2,
+    availability: 75,
+    maxHoleLength: 300,
+    minHoleInclination: 60,
+    discountRate: 5,
+  },
+  "SCENARIO 2": {
+    baselineMiningCost: 180,
+    processingCost: 30,
+    wasteCost: 12,
+    commodityPrice: 3100,
+    millRecovery: 92,
+    numberOfDrills: 3,
+    cutterHeadSize: 2.5,
+    availability: 80,
+    maxHoleLength: 350,
+    minHoleInclination: 65,
+    discountRate: 4.5,
+  },
+  "SCENARIO 3": {
+    baselineMiningCost: 220,
+    processingCost: 20,
+    wasteCost: 8,
+    commodityPrice: 2800,
+    millRecovery: 97,
+    numberOfDrills: 1,
+    cutterHeadSize: 1.8,
+    availability: 70,
+    maxHoleLength: 280,
+    minHoleInclination: 55,
+    discountRate: 5.5,
+  },
+}

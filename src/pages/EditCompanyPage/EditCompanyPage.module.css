@@ -1,0 +1,166 @@
+
+.pageContainer {
+  width: 100vw;
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+.title {
+  font-size: 1.5rem;
+  color: var(--default-text);
+  font-weight: bold;
+}
+
+.formContainer {
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+  min-width: 500px;
+  width: 20%;
+  gap: 15px;
+  align-self: center;
+  margin: 20px;
+}
+
+.row {
+  display: flex;
+  flex-direction: row;
+  gap: 8px;
+  width: 100%;
+}
+
+.fieldDetails {
+  color: var(--default-text);
+  font-size: 0.8rem;
+  font-weight: 400;
+  width: 100%;
+}
+.inputField {
+  width: 100%;
+  margin-top: 4px;
+  margin-bottom: 4px;
+  padding:8px;
+}
+
+.headerContainer {
+  background-color: var(--dark-background-300);
+  display: flex;
+  align-items: center;
+  flex-direction: row;
+  justify-content: space-between;
+  padding: 10px;
+  height: 130px;
+  box-sizing: border-box;
+}
+
+.headerLeft {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+.backBtn {
+  height: fit-content;
+  padding: 10px;
+  display: flex;
+  font-weight: 600;
+  font-size: 0.8rem;
+  background: none;
+  color: var(--darker-text);
+  gap: 4px;
+  align-items: flex-end;
+}
+
+.projectName {
+  font-size: 2rem;
+  color: var(--default-text);
+  font-weight: bold;
+  padding: 10px;
+}
+
+.submitBtn {
+  width: fit-content;
+  font-weight: 600;
+}
+
+.dateInput {
+  margin-top: 4px;
+  height: 36px;
+}
+
+.addBtnContainer {
+  display: flex;
+  width: 100%;
+  justify-content: flex-end;
+}
+
+.addBtn {
+  width: fit-content;
+  font-weight: 600;
+  margin-top: 10px;
+  border-radius: 8px;
+  padding: 8px 14px;
+  background: none;
+  border: 1px solid var(--accent);
+  color: var(--accent);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  align-self: flex-end;
+}
+
+.userAccessInputContainer {
+  background: var(--input-background);
+  border: var(--box-border);
+  border-radius: 6px;
+  color: var(--default-text);
+  height: 34px;
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: row;
+  margin: 8px 0px;
+
+}
+
+.userAccessInput {
+  border: none;
+  background: transparent;
+  padding: 8px;
+  flex: 1;
+
+}
+
+.userAccessInput:focus {
+  outline: none;
+  border: none;
+}
+.userAccessMenu {
+  border: none;
+  background: none;
+  cursor: pointer;
+  outline: none;
+  padding: 6px;
+  height: 100%;
+  display: flex;
+}
+
+.option {
+  cursor: pointer;
+  font-size: 0.9rem;
+  font-weight: 400;
+  display: flex;
+  gap: 4px;
+  align-items: center;
+  border-radius: 0;
+  width: 170px;
+  color: var(--default-text);
+}
+.deleteOption {
+  color: var(--error100);
+}
+.errorText {
+  color: var(--darker-text);
+  gap: 4px;
+  display: flex;
+}

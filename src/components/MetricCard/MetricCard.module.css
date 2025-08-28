@@ -1,0 +1,190 @@
+.metricCard,
+.metricCardOneRow,
+.metricCardThreeRows,
+.metricCardComposite {
+  background-color: var(--metric-card-background);
+  border: var(--metric-card-border);
+  border-radius: 8px;
+  padding: 1vh;
+  display: flex;
+  justify-content: space-between;
+  min-width: 0;
+}
+
+.metricCard {
+  flex-direction: column;
+}
+
+.metricCard.fullWidth {
+  grid-column: 1 / -1;
+}
+
+.metricValue {
+  font-size: clamp(12px, 2.2cqh, 2rem);
+  font-weight: 700;
+  color: var(--default-text);
+  margin-bottom: 8px;
+  line-height: 1.1;
+}
+
+.metricLabel {
+  font-size: clamp(12px, 1.2cqh, 1.8rem);
+  color: var(--darker-text);
+  font-weight: 400;
+  line-height: 1.3;
+  display: flex;
+  align-items: center;
+  gap: 2px;
+}
+
+.metricCardOneRow {
+  display: flex;
+  flex-direction: row-reverse;
+  grid-column: 1 / -1;
+  align-items: flex-end;
+}
+
+.metricCardOneRow .metricLabel {
+  font-size: 1.5cqh;
+  font-weight: 400;
+  color: var(--default-text);
+  margin: 0;
+}
+
+.metricCardOneRow .metricValue {
+  font-size: 2.2cqh;
+  font-weight: 700;
+  margin: 0;
+  color: var(--default-text);
+}
+
+.metricCardComposite {
+  grid-column: 1 / -1;
+  flex-direction: column;
+  padding: 0
+}
+
+.row {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+}
+
+.metricCardComposite .metricCard {
+  border: none;
+  flex-grow: 1;
+}
+
+.leftData {
+  border-top-right-radius: 0;
+  border-bottom-right-radius: 0;
+  border-bottom-left-radius: 0;
+  border-right: var(--metric-card-border) !important;
+  border-bottom: var(--metric-card-border) !important;
+}
+
+.rightData {
+  border-bottom: var(--metric-card-border) !important;
+  border-bottom-left-radius: 0;
+  border-bottom-right-radius: 0;
+}
+
+.bottomData {
+  background-color: var(--dark-background-300);
+  border-top-left-radius: 0;
+  border-top-right-radius: 0;
+}
+
+.metricCardThreeRows {
+  display: flex;
+  flex-direction: column;
+  grid-column: 1 / -1;
+}
+
+.metricCardThreeRows .metricCard {
+  border: none;
+  flex: 1;
+  padding: 0;
+  margin-top: 4px;
+  background-color: transparent;
+
+}
+
+.infoContainer {
+  position: relative;
+  display: inline-block;
+  cursor: pointer;
+
+  -ms-user-select: none;
+  -webkit-user-select: none;
+  user-select: none;
+}
+
+.tooltipAbove {
+  position: fixed;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 9999;
+  background: #222;
+  color: #fff;
+  padding: 8px 12px;
+  border-radius: 6px;
+  font-size: 0.8rem;
+  white-space: pre-line;
+  pointer-events: none;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.18);
+  max-width: 200px;
+  z-index: 9999;
+  -ms-user-select: none;
+  -webkit-user-select: none;
+  user-select: none;
+}
+
+.dim {
+  color: var(--darker-text) !important;
+}
+
+@keyframes flashBackground {
+  0% {
+    background-color: var(--metric-card-background);
+  }
+
+  20% {
+    background-color: var(--accent-card);
+  }
+
+  80% {
+    background-color: var(--accent-card);
+  }
+
+  100% {
+    background-color: var(--metric-card-background);
+  }
+}
+
+.flash {
+  animation: flashBackground 1.5s ease-in-out;
+}
+
+@keyframes flashBackgroundDark {
+  0% {
+    background-color: var(--metric-card-background);
+  }
+
+  20% {
+    background-color: var(--accent-card-dark);
+  }
+
+  80% {
+    background-color: var(--accent-card-dark);
+  }
+
+  100% {
+    background-color: var(--metric-card-background);
+  }
+}
+
+.flashDark {
+  animation: flashBackgroundDark 1.5s ease-in-out;
+
+}

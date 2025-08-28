@@ -1,0 +1,84 @@
+.container {
+  width: 100%;
+  height: 200px;
+  border: 2px dashed var(--show-image-bar-background);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  position: relative;
+  background: black;
+  border-radius: 4px;
+}
+
+.accentBorder {
+  border: 1px solid var(--accent);
+}
+
+.hidden {
+  display: none;
+}
+
+.spinner {
+  position: relative;
+  width: 50px;
+  height: 50px;
+}
+
+.spinner div {
+  position: absolute;
+  width: 10px;
+  height: 10px;
+  background-color: var(--accent);
+  border-radius: 50%;
+  animation: scale 1s linear infinite;
+}
+
+.spinner div:nth-child(1) { top: 0; left: 50%; transform: translate(-50%, -50%); animation-delay: 0s; }
+.spinner div:nth-child(2) { top: 14%; left: 85%; transform: translate(-50%, -50%); animation-delay: 0.125s; }
+.spinner div:nth-child(3) { top: 50%; left: 100%; transform: translate(-50%, -50%); animation-delay: 0.25s; }
+.spinner div:nth-child(4) { top: 85%; left: 85%; transform: translate(-50%, -50%); animation-delay: 0.375s; }
+.spinner div:nth-child(5) { top: 100%; left: 50%; transform: translate(-50%, -50%); animation-delay: 0.5s; }
+.spinner div:nth-child(6) { top: 85%; left: 14%; transform: translate(-50%, -50%); animation-delay: 0.625s; }
+.spinner div:nth-child(7) { top: 50%; left: 0; transform: translate(-50%, -50%); animation-delay: 0.75s; }
+.spinner div:nth-child(8) { top: 14%; left: 14%; transform: translate(-50%, -50%); animation-delay: 0.875s; }
+
+@keyframes scale {
+  0%, 100% { transform: scale(1); }
+  50% { transform: scale(1.5); }
+}
+
+.inputContainer {
+  width: 100%;
+  height: 100%;
+  opacity: 0;
+  position: absolute;
+  top: 0;
+  left: 0;
+  cursor: pointer;
+}
+
+.overlayText {
+  position: absolute;
+  text-align: center;
+  pointer-events: none;
+  color: var(--default-text);
+  font-size: 0.8rem;
+  display: flex;
+  align-items: center;
+  flex-direction: align-items;
+  justify-content: center;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.accentText {
+  color: var(--accent);
+}
+
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}

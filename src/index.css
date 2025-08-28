@@ -1,0 +1,117 @@
+@import './styles/colors.css';
+
+body {
+  margin: 0;
+  font-family: 'Manrope', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
+    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
+    sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  background-color: var(--background); /* Replace with your desired color */
+  overscroll-behavior: none;
+}
+* {
+  font-family: inherit;
+}
+
+code {
+  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
+    monospace;
+}
+
+img {
+  -khtml-user-select: none;
+  -o-user-select: none;
+  -moz-user-select: none;
+  -webkit-user-select: none;
+  user-select: none;
+}
+input {
+  background: var(--input-background);
+  border: var(--box-border);
+  border-radius: 6px;
+  color: var(--default-text);
+  padding: 8px;
+  box-sizing: border-box;
+  display: flex;
+  font-size: 0.8rem;
+  flex-direction: row;
+
+}
+
+button {
+  background: var(--accent);
+  border: 0;
+  color: var(--primary-button-text);
+  padding: 8px 14px;
+  border-radius: 8px;
+  cursor: pointer;
+  font-weight: 600;
+}
+
+button:disabled {
+  cursor: default;
+  opacity: 50%;
+}
+
+
+h1,h2,h3,h4,h5,h6 {
+  margin-block-start: 0px;
+  margin-block-end: 0px;
+  margin-inline-start: 0px;
+  margin-inline-end: 0px;
+  color: var(--default-text)
+}
+.row {
+  display: flex;
+  flex-direction: row;  
+}
+
+.buttonNoBg {
+  padding: 10px;
+  border: none;
+  outline: none;
+  cursor: pointer;
+  background: none;
+}
+
+.borderButton {
+  border: 1px solid var(--accent);
+  cursor: pointer;
+  background: none;
+  border-radius: 8px;
+  color: var(--accent);
+}
+.touched {
+  opacity: 0.5;
+}
+
+button:focus {
+  outline: none;
+}
+
+:root {
+  --station-panel-height-dynamic: calc(100vh - var(--header) - var(--paging-height) - 25px);
+  
+  --panel-content-height: calc(var(--station-panel-height-dynamic) - var(--station-title-height) - var(--station-metrics-height) - 25px);
+  --panel-content-width: calc(840 / 1313 * var(--panel-content-height));
+  --radargram-width-dynamic: calc(640 / 1313 * var(--panel-content-height) );
+  --ata-width: calc(200 / 840 * var(--panel-content-width));
+
+  --station-panel-narrow: calc(var(--radargram-width-dynamic) + var(--ata-width-narrow));
+
+  --radargram-width-focus: calc((var(--station-panel-height-dynamic) - var(--station-metrics-height) - var(--station-title-height) - 4px));
+  --station-panel-width: var(--panel-content-width);
+  --border-width: 3px;
+  --content-width: calc(100vw - var(--label-list-width));
+  --core-sample-height: calc(var(--station-panel-width) / 354 * 17);
+
+  --station-panel-height: 768px;
+  --header: 40px;
+  --paging-height: 70px;
+  --station-title-height: 5vh;
+  --station-metrics-height: 13vh;
+  --ata-width-narrow: 12px;
+  --label-list-width: 230px;
+
+}

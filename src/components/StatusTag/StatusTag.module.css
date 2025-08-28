@@ -1,0 +1,15 @@
+.statusText {
+  align-self: flex-end; 
+  font-weight: bold; 
+  font-weight: 600;
+  color: var(--dark-text);
+  font-size: 0.7rem;
+  background: var(--default-text);
+  padding: 1px 6px;
+  border-radius: 10px;
+  gap: 4px;
+  display: flex;
+  align-items: center;
+  align-self: flex-start;
+  place-self: center;
+}

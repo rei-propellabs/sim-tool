@@ -1,0 +1,40 @@
+
+
+.pageContainer {
+  width: 100vw;
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+.pageContent {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.inputContainer {
+  display: flex;
+  flex-direction: column;
+  width: 240px;
+  gap: 16px;
+}
+
+.title {
+  padding-bottom: 6px;
+  color: var(--default-text);
+  font-size: 0.8rem;
+}
+.input {
+  width: 90%;
+}
+
+.loginButton {
+  width: fit-content;
+}
+.error {
+  margin-top: 8px;
+  margin-bottom: 4px;
+  color: var(--warning);
+  font-size: 0.8rem;
+}

@@ -1,0 +1,130 @@
+.coreSampleSlicer {
+  text-align: center;
+}
+
+.coreSampleSlicerHeader {
+  background-color: #282c34;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start;
+  font-size: calc(10px + 2vmin);
+  color: white;
+  padding: 20px;
+  box-sizing: border-box;
+  overflow-y: auto;
+}
+
+.imageContainer {
+  position: relative;
+  display: inline-block;
+}
+
+.selectedImage {
+  max-width: 1280px;
+  max-height: 600px;
+  width: auto;
+  height: auto;
+  object-fit: contain;
+  padding-top: 20px;
+  cursor: crosshair;
+}
+.selectedImage:focus {
+  outline: none;
+}
+.coordinateMarker {
+  position: absolute;
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  border: 1px solid black;
+  background-color: white;
+  transform: translate(-50%, -50%);
+  pointer-events: none;
+}
+
+.annotationForm {
+  margin-top: 20px;
+  text-align: left;
+}
+
+.radioGroup {
+  margin-bottom: 10px;
+}
+
+.radioGroup label {
+  margin-right: 10px;
+}
+
+.labelInput {
+  margin-left: 10px;
+  display: inline-flex;
+  align-items: center;
+}
+
+.labelInput input {
+  width: 60px;
+}
+
+.labelInput span {
+  margin-left: 5px;
+}
+
+.coordinatesDisplay {
+  margin-top: 10px;
+  display: flex;
+  align-items: center;
+}
+
+.coordinatesDisplay button {
+  margin-left: 10px;
+}
+
+.annotationForm button {
+  margin-top: 10px;
+}
+
+.coordinateMarker.default {
+  background-color: white;
+}
+
+.coordinateMarker.rod {
+  background-color: red;
+}
+
+.coordinateMarker.marker {
+  background-color: rgb(67, 148, 253);
+}
+
+.annotationContainer {
+  display: flex;
+  justify-content: space-between;
+  width: 80%;
+  margin-top: 20px;
+}
+
+.annotationForm {
+  flex: 1;
+  margin-right: 20px;
+}
+
+.jsonDisplay {
+  flex: 1;
+  max-width: 20%;
+}
+
+.jsonTextarea {
+  width: 100%;
+  height: 200px;
+  resize: vertical;
+  font-family: monospace;
+  font-size: 12px;
+  white-space: pre;
+  overflow-wrap: normal;
+  overflow-x: scroll;
+}
+
+.smallCoordinates {
+  font-size: 0.6em;
+}

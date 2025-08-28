@@ -1,0 +1,46 @@
+.pageContainer {
+  flex-grow: 1;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 2vh;
+}
+
+.option {
+  cursor: pointer;
+  font-size: 0.8rem;
+  font-weight: 400;
+  display: flex;
+  gap: 4px;
+  align-items: center;
+  border-radius: 0;
+  width: 150px;
+  color: var(--default-text);
+}
+
+.chevronContainer {
+  border-left: 1px solid var(--accent);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 34px;
+  height: 34px;
+}
+
+.uploadedToText {
+  padding: 8px 12px;
+}
+
+.uploadedToButton {
+  border: 1px solid var(--accent);
+  color: var(--accent);
+  background: transparent;
+  padding: 0px;
+  display: flex;
+  align-items: center;
+}
+.noUploadText {
+  color:var(--darker-text);
+  font-size: 0.9rem;
+  align-self: center;
+}

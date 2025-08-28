@@ -1,0 +1,94 @@
+.container {
+  height: 100vh;
+  justify-items: center;
+  box-sizing: border-box;
+  padding: 3vh 6vw;
+  display: flex;
+  flex-direction: column;
+}
+
+.heading {
+  display: flex;
+  justify-content: space-between;
+  padding: 16px 24px;
+  color: var(--default-text);
+  align-items: flex-end;
+}
+
+.left {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  height: 100%;
+  flex: 1;
+
+}
+
+.scenarioLabel {
+  font-size: 0.7rem;
+  color: var(--darker-text);
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+.title {
+  font-size: 2rem;
+  font-weight: 400;
+  margin: 4px 0 0;
+}
+
+.legend {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  font-size: 0.75rem;
+  text-align: right;
+}
+
+.legendItem {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.legendText {
+  white-space: nowrap;
+}
+
+.colorBox {
+  width: 10px;
+  height: 10px;
+  border-radius: 2px;
+}
+
+.chartContainer {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  align-self: center;
+  width: 80vw;
+  margin-top: 24px;
+  margin-bottom: 24px;
+}
+.dataPanelContainer {
+  display: flex;
+  align-self: center;
+  justify-content: center;
+  width: 60vw;
+  justify-self: center;
+}
+
+.lineLegendIconBackground {
+  width: 10px;
+  height: 10px;
+  background-color: #6F714A22;
+  border-radius: 2px;
+}
+.lineLegendIcon{
+  width: 10px;
+  height: 1px;
+  background-color: var(--accent);
+  rotate: -20deg;
+  translate: 0px 4px;
+}

@@ -1,0 +1,227 @@
+.full-width {
+    width: 100%
+}
+
+.full-height {
+    height: 100%
+}
+
+.flex1 {
+    flex: 1
+}
+.gap-row-sm {
+    width: 8px;
+}
+
+.gap-row-mid {
+    width: 16px;
+}
+
+.gap-column-mid {
+    height: 16px;
+}
+
+.gap-column-sm {
+    height: 8px;
+}
+
+.flex {
+    display: flex;
+}
+
+.flex-auto {
+    display: flex;
+    flex: auto
+}
+
+.align-vertical {
+    display: flex;
+    align-items: center;
+
+}
+
+.align-horizontal {
+    display: flex;
+    justify-content: center;
+
+}
+
+
+.flex-row {
+    flex-direction: row;
+}
+
+.flex-column {
+    flex-direction: column;
+}
+
+.primary-button {
+    background-color: var(--accent);
+    border: 0;
+    color: var(--primary-button-text);
+    padding: 6px 12px;
+    border-radius: 5px;
+    width: fit-content;
+}
+.border-button {
+    background-color: transparent;
+    border: 1px solid var(--accent);
+    color: var(--accent);
+    padding: 6px 12px;
+    border-radius: 5px;
+    width: fit-content;
+}
+.position-relative {
+    position: relative;
+}
+.hide {
+    visibility: "hidden";
+}
+.center-vertical {
+    align-items: center;
+    display: flex;
+}
+
+.cursor-pointer {
+    cursor: pointer;
+}
+
+.custom-slider {
+    & .MuiSlider-thumb {
+        background-color: #E5F3EBDE;
+        
+        &:hover,  &.Mui-focusVisible {
+            box-shadow: 0 0 2px 0px rgba(0, 0, 0, 1);
+        };
+
+        &:focus, &.Mui-active {
+            box-shadow: none;
+        }
+        
+    };
+    & .MuiSlider-track {
+        height: 8px;
+        background-color: var(--accent);
+        border: none;
+    };
+    & .MuiSlider-rail {
+        opacity: 1;
+        background: #525B54;
+        height: 8px;
+    };
+    &.MuiSlider-trackInverted {
+        & .MuiSlider-track {
+            opacity: 1;
+            background-color: #525B54;
+
+        }
+        & .MuiSlider-rail {
+            opacity: 1;
+            background-color: var(--accent);
+        }
+    };
+}
+
+.flip-horizontal {
+    transform: scaleX(-1);
+}
+
+.MuiList-root {
+    background: var(--popup-menu-bg);
+    border: none;
+    min-width: 150px;
+    max-height: 240px;
+}
+
+.MuiPaper-root {
+    background: var(--popup-menu-bg);
+}
+
+
+.noselect {
+    -webkit-touch-callout: none; /* iOS Safari */
+      -webkit-user-select: none; /* Safari */
+       -khtml-user-select: none; /* Konqueror HTML */
+         -moz-user-select: none; /* Old versions of Firefox */
+          -ms-user-select: none; /* Internet Explorer/Edge */
+              user-select: none; /* Non-prefixed version, currently
+                                    supported by Chrome, Edge, Opera and Firefox */
+  }
+
+.no-scrollbars{
+    scrollbar-width: thin;
+    scrollbar-color: transparent transparent;
+    user-select: none;
+  
+    &::-webkit-scrollbar {
+      width: 1px;
+      height: 1px;
+      pointer-events: none;
+    }
+  
+    &::-webkit-scrollbar-track {
+      background: transparent;
+      pointer-events: none;
+      width: 1px;
+      height: 1px;
+    }
+  
+    &::-webkit-scrollbar-thumb {
+      background-color: transparent;
+      pointer-events: none;
+      width: 1px;
+      height: 1px;
+    }
+}
+
+
+.dim {
+  color: var(--darker-text);
+}
+
+.scroll-container {
+    overflow: auto; /* Allows scrolling */
+    scrollbar-width: none; /* For Firefox: hides scrollbar */
+    -ms-overflow-style: none; /* For Internet Explorer and Edge */
+  }
+
+.scroll-container::-webkit-scrollbar {
+    display: none;
+}
+
+.horizontal-scroll {
+    overflow-y: auto;
+    overflow-x: hidden;
+    overflow: unset;
+}
+
+::-webkit-scrollbar {
+    width: 0.5em;
+    height: 0.5em
+}
+::-webkit-scrollbar-button {
+    background: var(--header-background)
+}
+::-webkit-scrollbar-track-piece {
+    background: var(--content-background)
+}
+::-webkit-scrollbar-thumb {
+    background: vaar(--secondary-button);
+    border-radius: 10px;
+}
+
+::-webkit-scrollbar-track {
+    background: var(--content-background);
+}
+::-webkit-scrollbar-thumb:hover {
+    background: #555;
+}
+
+.recharts-wrapper,
+.recharts-wrapper svg {
+    outline: none; /* removes default browser focus border */
+}
+.recharts-layer,
+.recharts-active-dot circle {
+    stroke: none;
+}

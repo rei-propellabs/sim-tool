@@ -1,0 +1,92 @@
+.formContainer {
+  max-width: 500px;
+  margin: 2rem auto;
+  padding: 2rem;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.title {
+  color: var(--default-text);
+  margin-bottom: 1.5rem;
+}
+
+.form {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.formGroup {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.label {
+  font-size: 0.7rem;
+  color: var(--default-text);
+}
+
+.input_outer, .select {
+  border: var(--box-border);
+  background: var(--input-background);
+  border-radius: 4px;
+  font-size: 1rem;
+  color: var(--darker-text);
+  flex-direction: row;
+  align-items: center;
+  display: flex;
+}
+.input_inner {
+  border: none;
+  background: none;
+  font-size: 1rem;
+  color: var(--darker-text);
+  flex: 1;
+}
+
+
+.lock {
+  margin-right: 0.5rem;
+  display: flex;
+}
+
+.select {
+  padding: 5px;
+  flex: 1;
+  border: none;
+  background: none;
+}
+
+.select:disabled {
+  appearance: none; 
+  -webkit-appearance: none;
+  -moz-appearance: none;
+}
+
+.select:disabled::-ms-expand {
+  display: none;
+}
+
+.imagePreview {
+  max-width: 200px;
+  margin-top: 0.5rem;
+}
+
+.submitButton {
+  width: fit-content;
+  border: 1px solid var(--accent);
+  color: var(--accent);
+  border-radius: 8px;
+  padding: 10px 14px;
+  cursor: pointer;
+  font-size: 0.9rem;
+  background: none;
+}
+
+.disable {
+  cursor: default;
+  border: 1px solid var(--focused-border);
+  color: var(--focused-border);
+}

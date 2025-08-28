@@ -1,0 +1,42 @@
+
+.pageContainer {
+  width: 100vw;
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+.title {
+  font-size: 1.5rem;
+  color: var(--default-text);
+  font-weight: bold;
+}
+
+.formContainer {
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+  min-width: 500px;
+  width: 20%;
+  gap: 15px;
+  align-self: center;
+  margin: 20px;
+}
+
+.fieldDetails {
+  color: var(--default-text);
+  font-size: 0.8rem;
+  font-weight: 400;
+  width: 100%;
+}
+.inputField {
+  width: 100%;
+  margin-top: 4px;
+  margin-bottom: 4px;
+  padding:8px;
+}
+
+.submitBtn {
+  width: fit-content;
+  font-weight: 600;
+}

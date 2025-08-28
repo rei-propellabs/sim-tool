@@ -1,0 +1,12 @@
+
+.expiredContainer {
+  display: flex;
+  align-self: center;
+  flex-direction: column;
+  justify-content: center;
+  height: 100vh;
+  padding: 20px;
+  max-width: 300px;  
+  justify-self: center;
+  color: var(--default-text);
+}

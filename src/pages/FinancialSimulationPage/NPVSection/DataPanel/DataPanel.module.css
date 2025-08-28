@@ -1,0 +1,70 @@
+.dataPanel {
+  display: flex;
+  border-radius: 8px;
+  overflow: hidden;
+  width: 100%;
+  border: var(--metric-card-border);
+}
+
+.metricCard {
+  flex: 1;
+  background-color: var(--metric-card-background);
+  padding: 12px 14px;
+  position: relative;
+  gap: 8px;
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+}
+
+.metricCard:not(:last-child) {
+  border-right: var(--metric-card-border);
+
+}
+
+.valueContainer {
+  display: flex;
+  flex-direction: row;
+  gap: 4px;
+  align-items: center;
+
+}
+
+.colorIndicator {
+  height: 20px;
+  width: 3px;
+  border-radius: 1px;
+}
+
+.value {
+  font-size: 1.3rem;
+  font-weight: 600;
+  color: var(--default-text);
+  white-space: nowrap;
+}
+
+.label {
+  font-size: 0.8rem;
+  color: var(--darker-text);
+  font-weight: 400;
+  line-height: 1.4;
+  white-space: nowrap;
+}
+
+.darkBackground {
+  background-color: var(--dark-background-300);
+}
+
+
+.revenue {
+  background-color: var(--revenue);
+}
+.miningCost {
+  background-color: var(--mining-cost);
+}
+.processingCost {
+  background-color: var(--processing-cost);
+}
+.netCash {
+  background-color: var(--net-cash);
+}

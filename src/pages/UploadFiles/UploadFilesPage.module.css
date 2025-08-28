@@ -1,0 +1,333 @@
+.pageContainer {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  min-width: 920px;
+}
+.container {
+  display: flex;
+  flex-direction: column;
+  width: 60%;
+  gap: 15px;
+  padding-bottom: 16px;
+}
+
+.title {
+  font-weight: bold;
+  color: var(--default-text);
+  font-size: 1.5rem;
+  padding-top: 40px;
+}
+
+.requiredContainer {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  padding: 16px;
+  border-radius: 8px;
+  background-color: #1A1E1B;
+  background-image: linear-gradient(0deg, rgba(229, 243, 235, 0.08), rgba(229, 243, 235, 0.08));
+  color: var(--default-text);
+}
+.optionalContainer {
+  color: var(--default-text);
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.fieldTitle {
+  font-weight: 600;
+  color: var(--default-text);
+  font-size: 0.9rem;
+  flex-direction: row;
+  display: flex;
+}
+
+.fieldDescription, 
+.fieldDetails {
+  color: var(--default-text);
+  font-size: 0.8rem;
+}
+
+.fieldDescription {
+  font-weight: 600;
+}
+
+.fieldDetails {
+  font-weight: 400;
+}
+
+.requirement {
+  background: var(--requirement-background);
+  color: var(--darker-text);
+  font-size: 0.9rem;
+  border-radius: 6px;
+  padding: 0px 5px;
+  margin: 0px 2px;
+  font-weight: 400;
+}
+
+.titleRow {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 2px;
+
+}
+.requirements {
+  flex: 1;
+  margin-left: 4px;
+}
+.fileStatusText {
+  align-self: flex-end; 
+  font-weight: bold; 
+  font-weight: 600;
+  color: var(--dark-text);
+  font-size: 0.7rem;
+  background: var(--default-text);
+  padding: 1px 6px;
+  border-radius: 10px;
+  gap: 4px;
+  display: flex;
+  align-items: center;
+  align-self: flex-start;
+}
+
+.inputField {
+  width: 100%;
+  margin-top: 4px;
+  margin-bottom: 12px;
+  padding: 8px;
+  background: var(--input-background);
+  border: var(--box-border);
+  border-radius: 6px;
+  color: var(--default-text);
+  box-sizing: border-box;
+  font-size: 0.8rem;
+}
+
+.inputField[readOnly] {
+  cursor: default;
+  outline: none;
+  border: var(--box-border);
+}
+
+.inputField[readOnly]:focus {
+  outline: none;
+  border: var(--box-border);
+  box-shadow: none;
+}
+
+.textarea {
+  width: 100%;
+  min-height: 80px;
+  max-height: 200px;
+  margin-top: 4px;
+  margin-bottom: 12px;
+  background: var(--input-background);
+  border: var(--box-border);
+  border-radius: 6px;
+  color: var(--default-text);
+  padding: 6px;
+  box-sizing: border-box;
+  font-size: 0.8rem;
+  resize: vertical
+
+}
+
+.textarea[readOnly] {
+  cursor: default;
+  outline: none;
+  border: var(--box-border);
+}
+
+.textarea[readOnly]:focus {
+  outline: none;
+  border: var(--box-border);
+  box-shadow: none;
+}
+
+.prompt {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background: rgba(0, 0, 0, 0.5);
+  backdrop-filter: blur(4px);
+  z-index: 9999;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.promptContainer {
+  background: var(--popup-menu-bg);
+  border-radius: 12px;
+  box-shadow: 0 2px 16px rgba(0, 0, 0, 0.15);
+  padding: 16px 20px;
+  min-width: 320px;
+  color: var(--default-text);
+}
+
+.promptTitleRow {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 16px;
+  gap: 10px;
+}
+.promptTitle {
+  font-size: 1.5rem;
+  font-weight: 800;
+  color: var(--default-text);
+  flex: 1;
+}
+.checkIconContainer {
+  background: #7DD8A8;
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  box-sizing: border-box;
+  padding: 7px;
+  display: flex;
+  align-items: center;
+
+}
+.promptMessage {
+  font-size: 1rem;
+  margin-bottom: 16px;
+  color: var(--darker-text);
+}
+.promptButtons {
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+}
+
+.promptButtonText {
+  font-size: 1rem;
+
+}
+
+.option {
+   cursor: pointer;
+  font-size: 0.8rem;
+  font-weight: 400;
+  display: flex;
+  gap: 4px;
+  align-items: center;
+  border-radius: 0;
+  width: 150px;
+  color: var(--default-text);
+}
+
+.submitButton {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0;
+  margin-bottom: 2vh;
+}
+
+.uploadToText {
+  padding: 9px 12px;
+  border-right: 1px solid var(--primary-button-text);
+}
+.downloadAllButton {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0;
+  margin-bottom: 2vh;
+  padding: 9px 12px;
+  gap: 4px;
+}
+.downloadAllText {
+  color: var(--primary-button-text);
+
+}
+
+.chevronRight {
+  height: 100%;
+  display: flex;
+  align-items: center;
+  margin-left: 8px; 
+  margin-right: 8px;
+  padding: 4px;
+}
+
+.tabContainer {
+  display: flex;
+  margin-bottom: 12px;
+}
+
+.tab {
+  display: flex;
+  align-items: center;
+  padding: 6px 12px;
+  background: var(--background);
+  cursor: pointer;
+  color: var(--darker-text);
+  border: var(--box-border);
+  font-weight: bold;
+}
+
+.activeTab {
+  background-color: var(--accent);
+  color: black;
+  cursor: default;
+}
+
+.leftTab {
+  border-top-right-radius: 0;
+  border-bottom-right-radius: 0;
+}
+
+.rightTab {
+  border-top-left-radius: 0;
+  border-bottom-left-radius: 0;
+}
+
+.compressRequiredContainer {
+  color: var(--warning400);
+  border-radius: 8px;
+  display: flex;
+  gap: 8px;
+  width: fit-content;
+  font-size: 0.8rem;
+  font-weight: 600;
+}
+
+.radioWrapper {
+ display: flex;
+}
+
+.radioWrapper input[type="radio"] {
+  opacity: 0;
+  position: absolute;
+  width: 0;
+  height: 0;
+}
+
+.custom-radio {
+  height: 20px;
+  width: 20px;
+  border-radius: 50%;
+  border: 2px solid #666;
+  margin-right: 10px;
+  display: inline-block;
+  position: relative;
+}
+
+.radioWrapper input[type="radio"]:checked + .custom-radio::after {
+  content: "";
+  position: absolute;
+  top: 4px;
+  left: 4px;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background-color: #007bff; /* Blue dot */
+}

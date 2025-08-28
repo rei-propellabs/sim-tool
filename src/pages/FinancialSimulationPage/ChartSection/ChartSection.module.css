@@ -1,0 +1,72 @@
+.chartContainer {
+  flex: 1;
+  outline: none;
+}
+
+/* Adding custom tooltip styles */
+.tooltip {
+  background-color: var(--station-panel-background);
+  border-radius: 8px;
+  padding: 12px;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+  min-width: 150px;
+}
+
+.tooltipItem {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 2px;
+  gap: 8px;
+}
+
+.tooltipItem:last-child {
+  margin-bottom: 0;
+}
+
+.indicator {
+  width: 2px;
+  height: 12px;
+  border-radius: 1px;
+  flex-shrink: 0;
+}
+
+ .label {
+  color: var(--darker-text);
+  font-size: 12px;
+  flex: 1;
+}
+
+ .value {
+  color: var(--default-text);
+  font-size: 12px;
+  font-weight: 600;
+  text-align: right;
+}
+
+.tooltipSection {
+  display: flex;
+  flex-direction: row;
+  margin-top: 4px;
+  padding-top: 8px;
+}
+
+.tooltipColumn{
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+}
+
+.indicatorLong {
+  width: 2px;
+  border-radius: 2px;
+  margin-right: 8px;
+}
+
+.sectionTitle {
+  color: #6b7280;
+  font-size: 10px;
+  font-weight: 600;
+  margin-bottom: 4px;
+  text-transform: uppercase;
+}

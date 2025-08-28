@@ -1,0 +1,137 @@
+.container {
+  border-radius: 8px;
+  width: 360px;
+  margin-bottom: 4px;
+}
+
+.fileInputContainer {
+  border-radius: 8px;
+  height: 40px;
+  align-items: center;
+  padding: 0 10px;
+  background-color: var(--input-file-background);
+  display: flex;
+  flex-direction: row;
+  border: 2px dashed var(--border-color);
+  text-align: center;
+  transition: background-color 0.3s ease;
+  cursor: pointer;
+  gap: 10px;
+}
+
+.fileInputContainer.dragging {
+  background: var(--input-background);  
+}
+.fileInputContainer.uploaded {
+  border-bottom-left-radius: 0px;
+  border-bottom-right-radius: 0px;
+}
+
+.uploadDataField {
+  display: flex;
+  flex-direction: row;
+  background: #3b403d;
+  width: 100%;
+  border-bottom-left-radius: 8px;
+  border-bottom-right-radius: 8px;
+  padding: 4px 10px;
+  gap: 24px;
+  box-sizing: border-box;
+  
+}
+.uploadDataField .title {
+  font-size: 0.7rem;
+  font-weight: 500;
+  color: var(--darker-text);
+}
+
+
+.uploadDataField .data {
+  font-size: 0.75rem;
+  font-weight: 600;
+}
+
+.uploading {
+  display: flex;
+  flex-direction: column;
+  background: var(--warning200);
+  width: 100%;
+  border-bottom-left-radius: 8px;
+  border-bottom-right-radius: 8px;
+  padding: 4px 10px;
+  box-sizing: border-box;
+}
+
+.uploading .title {
+  font-size: 0.7rem;
+  font-weight: 500;
+  color: var(--textSecondary);
+}
+
+.uploading .description {
+font-size: 0.9rem;
+font-weight: 600;
+color: var(--dark-text);
+}
+
+.fileInputLabel {
+  display: flex;
+  font-size: 0.8rem;
+  color: var(--darker-text);
+  font-weight: 600;
+  align-items: center;
+  gap: 8px;
+  cursor: pointer;
+  width: 100%;
+}
+
+.fileName {
+  font-weight: bold;
+  color: var(--default-text);
+  font-size: 0.8rem;
+  line-height: 1.3;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  min-width: 0;
+  width: 100%;
+  text-align: left;
+}
+
+.fileSize {
+  font-weight: 400;
+  color: var(--secondary-text);
+  font-size: 0.8rem;
+  line-height: 1.3;
+  text-align: start;
+}
+
+.fileInput {
+  display: none;
+}
+
+.fileDetails {
+  justify-items: start;
+  flex: 1;
+  min-width: 0;
+}
+
+.dropHere {
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: var(--darker-text);
+}
+.option {
+  cursor: pointer;
+  font-size: 0.9rem;
+  font-weight: 400;
+  display: flex;
+  gap: 4px;
+  align-items: center;
+  border-radius: 0;
+  width: 170px;
+  color: var(--default-text);
+}
+.deleteOption {
+  color: var(--error100);
+}

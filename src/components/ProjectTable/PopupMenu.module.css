@@ -1,0 +1,14 @@
+.container {
+  background: var(--popup-menu-bg);
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+  z-index: 1000;
+  color: var(--default-text);
+  display: none;
+  max-height: 160px;
+  overflow: auto;
+}
+
+.container > *:not(:last-child) {
+  border-bottom: 1px solid var(--option-divider);
+}

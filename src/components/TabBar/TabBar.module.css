@@ -1,0 +1,39 @@
+.tabToggle {
+  display: flex;
+  background-color: var(--metric-card-background);
+  border-radius: 50px;
+  padding:  0.2cqh;
+  width: 100%;
+}
+
+.tabButton {
+  flex: 1;
+  padding: 0.4cqh 0px;
+  border: none;
+  border-radius: 46px;
+  background-color: transparent;
+  color: var(--darker-text);
+  font-size: 0.8cqw;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  text-transform: uppercase;
+  font-weight: 500;
+  margin: 0.1cqw;
+}
+
+.tabButton:hover {
+  color: #d1d5db;
+}
+
+.tabButton.active {
+  background-color: var(--tab-active);
+  color: var(--secondary-900);
+}
+
+/* Responsive design */
+/* @media (max-width: 640px) {
+  .tabButton {
+    padding: 10px 16px;
+    font-size: 12px;
+  }
+} */

@@ -1,0 +1,38 @@
+
+.paginationBarContainer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+}
+
+.paginationInfo {
+  margin-left: 2vw;
+  color: var(--darker-text);
+  font-size: 0.7em;
+}
+
+.paginationBar {
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  gap: 8px;
+  margin-right: 2vw;
+}
+
+.paginationEllipsis {
+  padding: 0 8px;
+  color: var(--default-text);
+  font-size: 1.1em;
+}
+.paginationButton {
+  background-color: transparent;
+  border: var( --box-border);
+  border-radius: 4px;
+  color: var(--default-text);
+}
+.paginationButton.active {
+  background: var(--accent);
+  border: none;
+  color: var(--primary-button-text);
+}

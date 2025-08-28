@@ -1,0 +1,13 @@
+.breadcrumbsText {
+  padding: 2px 4px;
+  background: var(--content-background);
+  color: var(--darker-text);
+  border-radius: 4px;
+  height: 20px;
+  align-items: center;
+  display: flex;
+  font-size: 0.7rem;
+}
+.currentLevel {
+  color: var(--default-text);
+}

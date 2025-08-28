@@ -1,0 +1,72 @@
+:root {
+    --background: #1A1E1B;
+    --content-background: #3A403C;
+    --header-background: #2A2F2C;  
+    --station-panel-background: #000; 
+    --secondary-900: #555c57;
+    --accent: #68DDD2; 
+    --light-accent: #BCF0EB;
+    --default-text: #E5F3EBDE;
+    --darker-text: #E5F3EB99;
+    --secondary-button: #BCCFBE29;
+    --dark-background-300: #2A2F2C;
+    --topbar-background: #3A403C;
+    --topbar-shadow: #0000001F;
+    --requirement-background: #E5F3EB1A;
+    --textSecondary: #14261BAB;
+    --warning200: #F7C368;
+    --warning400: #F5B038;
+    --warning800: #8D5C07;
+    
+    --focused-border: #E5F3EB61;
+    --disabled-background: #E5F3EB61;
+    --dark-text: #14261BDE;
+    --primary-button-text: #14261BDE;
+    --box-border: 1px solid #CCDCD029;
+    --input-file-background: #555c57;
+    --popup-menu-bg: #3b403d;
+    --option-divider: #4b514d;
+
+    --input-background:  #BCCFBE14;
+    --highlight-background: #ECF4EE;
+    --white-transparent: #FFFFFF80;
+
+    --switch-thumb-off: #14261BDE;
+    --switch-thumb-on: #14261BDE;
+
+    --switch-off-background: #E5F3EB99;
+
+    --show-image-bar-background: #CCDCD029;
+
+    --indicator: #FF6E45;
+    --delete-warning: #FF6E45;
+    --warning: #FF6E45;
+    --error100: #FF825E;
+
+    /* Status colors */
+    --actionRequired: #FF6E45;
+    --waiting: #C7DBC9;
+    --systemReady: #68DDD2;
+    --completed: #37BA74;
+
+    
+    --pagination-border-visible: #515954;
+    --pagination-border-selected: #CFDCD4;
+    --pagination-border-invisible: #212321; 
+
+    --metric-card-background: #3b403d;
+    --metric-card-border: 1px solid #444F45;
+    --tab-active: #CCDCD0;
+
+    --accent-card: #1B7970;
+    --accent-card-dark: #16645d;
+
+     /* Cash flow colors */
+    --revenue: #1F6A43;
+    --mining-cost: #A63A1B;
+    --processing-cost: #D68C0A;
+    --net-cash: #68DDD2;
+
+    --chart-grid: #222623;
+  }
+ 

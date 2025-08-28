@@ -1,0 +1,28 @@
+.spinner {
+  position: relative;
+  width: 28px;
+  height: 28px;
+}
+
+.spinner div {
+  position: absolute;
+  width: 4px;
+  height: 4px;
+  background-color: var(--accent);
+  border-radius: 50%;
+  animation: scale 1s linear infinite;
+}
+
+.spinner div:nth-child(1) { top: 0; left: 50%; transform: translate(-50%, -50%); animation-delay: 0s; }
+.spinner div:nth-child(2) { top: 14%; left: 85%; transform: translate(-50%, -50%); animation-delay: 0.125s; }
+.spinner div:nth-child(3) { top: 50%; left: 100%; transform: translate(-50%, -50%); animation-delay: 0.25s; }
+.spinner div:nth-child(4) { top: 85%; left: 85%; transform: translate(-50%, -50%); animation-delay: 0.375s; }
+.spinner div:nth-child(5) { top: 100%; left: 50%; transform: translate(-50%, -50%); animation-delay: 0.5s; }
+.spinner div:nth-child(6) { top: 85%; left: 14%; transform: translate(-50%, -50%); animation-delay: 0.625s; }
+.spinner div:nth-child(7) { top: 50%; left: 0; transform: translate(-50%, -50%); animation-delay: 0.75s; }
+.spinner div:nth-child(8) { top: 14%; left: 14%; transform: translate(-50%, -50%); animation-delay: 0.875s; }
+
+@keyframes scale {
+  0%, 100% { transform: scale(1); }
+  50% { transform: scale(1.7); }
+}

@@ -1,0 +1,15 @@
+
+
+export const Chevron = ({ color, rotate = 0, width, height}: { color: string,
+  rotate?: number,
+  width?: number | string,
+  height?: number | string }) => {
+  return (
+    <svg
+      style={{transform: `rotate(${rotate}deg)`}}
+      width={width ?? 8} height={height ?? 13} viewBox="0 0 8 13" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <path d="M0.589844 11.34L5.16984 6.75L0.589844 2.16L1.99984 0.75L7.99984 6.75L1.99984 12.75L0.589844 11.34Z" fill={color}/>
+    </svg>
+
+  )
+}

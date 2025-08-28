@@ -1,0 +1,18 @@
+
+
+
+.dropdownButton {
+  background: #4F5751 !important;
+  border-radius: 4px !important;
+  padding: 3px !important;
+  color: var(--default-text) !important;
+  font-size: 0.6rem !important;
+  width: fit-content !important;
+  text-transform: none !important;
+}
+
+.arrowContainer {
+  padding-right: 4px;
+  font-size: 0px !important;
+}
+
