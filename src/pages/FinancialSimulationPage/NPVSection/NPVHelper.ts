@@ -102,6 +102,7 @@ export function cashFlowToChartData(cashFlowData: CashFlowData): ChartData[] {
         ...first,
         "Mining Cost": group.reduce((sum, row) => sum + (row["Mining Cost"] ?? 0), 0),
         "Total Processing Cost": group.reduce((sum, row) => sum + (row["Total Processing Cost"] ?? 0), 0),
+        "Gross Revenue": group.reduce((sum, row) => sum + (row["Gross Revenue"] ?? 0), 0),
         "Net Revenue": group.reduce((sum, row) => sum + (row["Net Revenue"] ?? 0), 0),
         "Period Beginning": first["Period Beginning"],
       })
@@ -123,7 +124,7 @@ export function cashFlowToChartData(cashFlowData: CashFlowData): ChartData[] {
         })()
       : new Date(row["Period Beginning"])
 
-    const revenue = row["Gross Revenue"] ?? row["Net Revenue"] ?? 0
+    const revenue = row["Gross Revenue"] ?? 0
     const miningCost = -Math.abs(row["Mining Cost"] ?? 0)
     const processingCost = -Math.abs(row["Total Processing Cost"] ?? 0)
     cumulative += row["Net Revenue"] ?? 0

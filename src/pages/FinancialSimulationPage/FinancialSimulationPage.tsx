@@ -12,11 +12,11 @@ const demoScenarios = [
     title: "SCENARIO 1"
   },
   {
-    fileName: "/demo/scenario1/Drill 200 Cu Cashflows.xlsx",
+    fileName: "/demo/scenario2/Cashflow ReAlloys.xlsx",
     title: "SCENARIO 2"
   },
   {
-    fileName: "/demo/scenario1/Drill 200 Cu Cashflows.xlsx",
+    fileName: "/demo/scenario3/West Red Lake Cashflows.xlsx",
     title: "SCENARIO 3"
   },
 ]
@@ -55,20 +55,7 @@ export function FinancialSimulationPage() {
             })
             const result: any = {}
             headers.forEach(h => {
-              // if (h === "Period Beginning") {
-              //   const excelDate = trimmedRow[h]
-              //   result[h] = typeof excelDate === "number"
-              //     ? XLSX.SSF.parse_date_code(excelDate)
-              //       ? new Date(Date.UTC(
-              //         XLSX.SSF.parse_date_code(excelDate).y,
-              //         XLSX.SSF.parse_date_code(excelDate).m - 1,
-              //         XLSX.SSF.parse_date_code(excelDate).d
-              //       ))
-              //       : null
-              //     : (excelDate ? new Date(excelDate) : null)
-              // } else {
                 result[h] = Number(trimmedRow[h]) || 0
-              // }
             })
             return result
           }) as CashFlowRow[]
@@ -93,7 +80,9 @@ export function FinancialSimulationPage() {
         setLoading(false)
       }
     }
-    handleXLSX(activeScenarioIdx)
+    [0,1,2].forEach((index) => {
+      handleXLSX(index)
+    })
   }, [])
 
   if (loading) {

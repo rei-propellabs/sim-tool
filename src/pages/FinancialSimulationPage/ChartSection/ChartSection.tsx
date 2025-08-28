@@ -39,16 +39,7 @@ const ChartSection: React.FC<ChartSectionProps> = ({ data, hoveredIndex, setHove
     miningCost: -Math.abs(item.miningCost), // Ensure mining cost is negative
     processingCost: -Math.abs(item.processingCost), // Ensure processing cost is negative
   }))
-
-
-  const generateYTicks = (min: number, max: number, step: number) => {
-    const ticks = [];
-    for (let i = min; i <= max; i += step) {
-      ticks.push(i);
-    }
-    return ticks;
-  };
-
+  
   const CustomXAxisTick = ({ x, y, payload, index }: {
     x: number, y: number, payload: any, index: number,
     isHovered: boolean
@@ -60,7 +51,7 @@ const ChartSection: React.FC<ChartSectionProps> = ({ data, hoveredIndex, setHove
     if (!showLabel) return null;
 
     return (
-      <g transform={`translate(${x},${y})`}>
+      <g key={"x-axis-" + index} transform={`translate(${x},${y})`}>
         <rect
           x={-24}
           y={0}
@@ -168,15 +159,12 @@ const ChartSection: React.FC<ChartSectionProps> = ({ data, hoveredIndex, setHove
             tickLine={false}
             domain={domain}
             ticks={ticks}
-            // ticks={generateYTicks(-10000000, 70000000, 10000000)}
             tickFormatter={(value) => `$${value / 1_000_000}M`}
             interval={0}
             axisLine={false}
           />
 
           <ReferenceLine y={0} stroke="var(--tab-active)" strokeWidth={1} />
-
-
 
           {/* Define the gradient */}
           <defs>
@@ -197,7 +185,7 @@ const ChartSection: React.FC<ChartSectionProps> = ({ data, hoveredIndex, setHove
           <Bar dataKey="revenue" stackId="stack" name="Revenue" barSize={20} >
             {data.map((entry, index) => (
               <Cell
-                key={`cell-${index}`}
+                key={`cell-revenue-${index}`}
                 fill="var(--revenue)"
                 fillOpacity={hoveredIndex == null || index === hoveredIndex ? 1 : 0.5}
               />
@@ -209,7 +197,7 @@ const ChartSection: React.FC<ChartSectionProps> = ({ data, hoveredIndex, setHove
           >
             {data.map((entry, index) => (
               <Cell
-                key={`cell-${index}`}
+                key={`cell-mining-cost-${index}`}
                 fill="var(--mining-cost)"
                 fillOpacity={hoveredIndex == null || index === hoveredIndex ? 1 : 0.5}
               />
@@ -221,7 +209,7 @@ const ChartSection: React.FC<ChartSectionProps> = ({ data, hoveredIndex, setHove
           >
             {data.map((entry, index) => (
               <Cell
-                key={`cell-${index}`}
+                key={`cell-processing-cost-${index}`}
                 fill="var(--processing-cost)"
                 fillOpacity={hoveredIndex == null || index === hoveredIndex ? 1 : 0.5}
               />
@@ -245,6 +233,7 @@ const ChartSection: React.FC<ChartSectionProps> = ({ data, hoveredIndex, setHove
               const isActive = index === hoveredIndex;
               return (
                 <circle
+                  key={`cumulative-net-cash-plot-${index}`}
                   cx={cx}
                   cy={cy}
                   r={isActive ? 3 : 2}
