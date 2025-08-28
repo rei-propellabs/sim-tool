@@ -3,7 +3,7 @@ import { ComposedChart, Bar, Line, XAxis, YAxis, CartesianGrid, ResponsiveContai
 import styles from "./ChartSection.module.css"
 import { useRef, useState } from "react"
 import { TooltipIndex } from "recharts/types/state/tooltipSlice"
-import { hover } from "@testing-library/user-event/dist/hover"
+import { getYAxisTicksAndDomain } from "../NPVSection/NPVHelper"
 
 interface ChartSectionProps {
   data: Array<{
@@ -13,11 +13,13 @@ interface ChartSectionProps {
     processingCost: number
     cumulativeNetCash: number
   }>
+  hoveredIndex: number | null
+  setHoveredIndex: (index: number | null) => void
 }
 
-const ChartSection: React.FC<ChartSectionProps> = ({ data }) => {
-  const [hoveredIndex, setHoveredIndex] = useState<number | null>(null)
+const ChartSection: React.FC<ChartSectionProps> = ({ data, hoveredIndex, setHoveredIndex }) => {
   const activeDotRef = useRef<{ x: number, y: number } | null>(null);
+  const { ticks, domain } = getYAxisTicksAndDomain(data)
 
   const handleMouseEnter = (_: any, index: number | TooltipIndex | undefined) => {
     if (typeof index === "number") {
@@ -47,7 +49,10 @@ const ChartSection: React.FC<ChartSectionProps> = ({ data }) => {
     return ticks;
   };
 
-  const CustomXAxisTick = ({ x, y, payload, index }: { x: number, y: number, payload: any, index: number, isHovered: boolean }) => {
+  const CustomXAxisTick = ({ x, y, payload, index }: {
+    x: number, y: number, payload: any, index: number,
+    isHovered: boolean
+  }) => {
     const isHovered = hoveredIndex === index;
 
     // Skip every second label
@@ -135,11 +140,10 @@ const ChartSection: React.FC<ChartSectionProps> = ({ data }) => {
     }
     return null
   }
-
   return (
     <div className={styles.chartContainer}>
       <ResponsiveContainer
-        width="100%" minHeight={400}>
+        width="100%" height={400}>
         <ComposedChart
           stackOffset="sign"
           data={transformedData}
@@ -155,15 +159,16 @@ const ChartSection: React.FC<ChartSectionProps> = ({ data }) => {
         >
           <CartesianGrid horizontal={true} vertical={false} stroke="var(--chart-grid)" />
 
-          <XAxis dataKey="month" axisLine={false} tickLine={false}
+          <XAxis dataKey="month" interval={0} axisLine={false} tickLine={false}
             tick={(props) => <CustomXAxisTick {...props} />}
           />
 
           <YAxis
-            tick={{ fill: "#9CA3AF", fontSize: 12 }}
+            tick={{ fill: "var(--darker-text)", fontSize: 12 }}
             tickLine={false}
-            domain={[-10000000, 70000000]}
-            ticks={generateYTicks(-10000000, 70000000, 10000000)}
+            domain={domain}
+            ticks={ticks}
+            // ticks={generateYTicks(-10000000, 70000000, 10000000)}
             tickFormatter={(value) => `$${value / 1_000_000}M`}
             interval={0}
             axisLine={false}
@@ -171,37 +176,7 @@ const ChartSection: React.FC<ChartSectionProps> = ({ data }) => {
 
           <ReferenceLine y={0} stroke="var(--tab-active)" strokeWidth={1} />
 
-          {/* Cumulative net cash flow line */}
-          <Line
-            animateNewValues={true}
-            isAnimationActive={false}
-            type="monotone"
-            dataKey="cumulativeNetCash"
-            fill="var(--accent)"
-            stroke="var(--accent)"
-            name="Cumulative Net Cash"
-            dot={(props) => {
-              const { cx, cy, index } = props;
-              const shouldHighlight = hoveredIndex == null || index === hoveredIndex
-              if (shouldHighlight) {
-                activeDotRef.current = { x: cx, y: cy }
-              }
-              const isActive = index === hoveredIndex;
-              return (
-                <circle
-                  cx={cx}
-                  cy={cy}
-                  r={isActive ? 3 : 2}
-                  strokeWidth={isActive ? 12 : 0}
-                  stroke="#E5F3Eb"
-                  strokeOpacity={0.38}
-                  fill="var(--accent)"
-                  fillOpacity={shouldHighlight ? 1 : 0.5}
-                />
-              );
-            }}
-            opacity={hoveredIndex === null ? 1 : 0.5}
-          />
+
 
           {/* Define the gradient */}
           <defs>
@@ -252,7 +227,37 @@ const ChartSection: React.FC<ChartSectionProps> = ({ data }) => {
               />
             ))}
           </Bar>
-
+          {/* Cumulative net cash flow line */}
+          <Line
+            animateNewValues={true}
+            isAnimationActive={false}
+            type="monotone"
+            dataKey="cumulativeNetCash"
+            fill="var(--accent)"
+            stroke="var(--accent)"
+            name="Cumulative Net Cash"
+            dot={(props) => {
+              const { cx, cy, index } = props;
+              const shouldHighlight = hoveredIndex == null || index === hoveredIndex
+              if (shouldHighlight) {
+                activeDotRef.current = { x: cx, y: cy }
+              }
+              const isActive = index === hoveredIndex;
+              return (
+                <circle
+                  cx={cx}
+                  cy={cy}
+                  r={isActive ? 3 : 2}
+                  strokeWidth={isActive ? 12 : 0}
+                  stroke="#E5F3Eb"
+                  strokeOpacity={0.38}
+                  fill="var(--accent)"
+                  fillOpacity={shouldHighlight ? 1 : 0.5}
+                />
+              );
+            }}
+            opacity={hoveredIndex === null ? 1 : 0.5}
+          />
           <Tooltip content={<CustomTooltip />}
             cursor={{ strokeDasharray: "4 4", stroke: "var(--tab-active)" }} />
 

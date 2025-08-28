@@ -81,7 +81,9 @@
     align-items: center;
     display: flex;
 }
-
+.gap-8 {
+    gap: 8px;
+}
 .cursor-pointer {
     cursor: pointer;
 }

@@ -1,11 +1,12 @@
-export function formatNumberWithAbbreviation(value: number,
-  decimals: number = 1) {
-  if (value >= 1_000_000_000) {
-    return (value / 1_000_000_000).toLocaleString(undefined, { maximumFractionDigits: decimals }) + "B";
-  } else if (value >= 1_000_000) {
-    return (value / 1_000_000).toLocaleString(undefined, { maximumFractionDigits: decimals }) + "M";
-  } else if (value >= 10_000) {
-    return (value / 1_000).toLocaleString(undefined, { maximumFractionDigits: decimals }) + "K";
+export function formatNumberWithAbbreviation(value: number, decimals: number = 1) {
+  const absValue = Math.abs(value);
+  const sign = value < 0 ? "-" : "";
+  if (absValue >= 1_000_000_000) {
+    return sign + (absValue / 1_000_000_000).toLocaleString(undefined, { maximumFractionDigits: decimals }) + "B";
+  } else if (absValue >= 1_000_000) {
+    return sign + (absValue / 1_000_000).toLocaleString(undefined, { maximumFractionDigits: decimals }) + "M";
+  } else if (absValue >= 10_000) {
+    return sign + (absValue / 1_000).toLocaleString(undefined, { maximumFractionDigits: decimals }) + "K";
   } else {
     return value.toLocaleString();
   }

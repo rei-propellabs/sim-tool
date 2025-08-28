@@ -3,17 +3,19 @@ import styles from "./TabBar.module.css"
 interface TabBarProps {
   texts: string[]
   activeText: string
-  onActiveTextChange: (text: string) => void
+  onActiveIdxChange: (index: number) => void
 }
 
-export function TabBar({ texts, activeText, onActiveTextChange }: TabBarProps) {
+export function TabBar({ texts, activeText, onActiveIdxChange }: TabBarProps) {
   return (
     <div className={styles.tabToggle}>
-      {texts.map((text) => (
+      {texts.map((text, index) => (
         <button
           key={text}
           className={`${styles.tabButton} ${activeText === text ? styles.active : ""}`}
-          onClick={() => onActiveTextChange(text)}
+          onClick={() => {
+            onActiveIdxChange(index)
+          }}
         >
           {text}
         </button>

@@ -12,13 +12,18 @@ import { MetricCardComposite } from "components/MetricCard/MetricCardComposite"
 import { MetricCardThreeRows } from "components/MetricCard/MetricCardThreeRows"
 import { formatNumberWithAbbreviation } from "utils/NumberFormatter"
 
-export function SummarySection() {
+interface SummarySectionProps {
+  activeScenario: string,
+  setActiveScenarioIdx: (index: number) => void,
+}
+export const SummarySection: React.FC<SummarySectionProps> = (props) => {
+  const { activeScenario, setActiveScenarioIdx } = props
   const scenarioData = scenarioData_mock
   const financialData = financialOutput_mock
   const operationalData = operationalOutput_mock
 
-  const [activeScenario, setActiveScenario] = useState<string>("SCENARIO 1")
-  const [activeOutput, setActiveOutput] = useState<string>("financial")
+  // const [activeScenario, setActiveScenario] = useState<string>("SCENARIO 1")
+  const [activeOutputIdx, setActiveOutputIdx] = useState<number>(0)
 
   const scenarios = Object.keys(scenarioData)
   const outputs = ["financial", "operational"]
@@ -125,7 +130,7 @@ export function SummarySection() {
         <div className={styles.scenarioTab}>
           <TabBar
             texts={scenarios} activeText={activeScenario}
-            onActiveTextChange={setActiveScenario} />
+            onActiveIdxChange={setActiveScenarioIdx} />
         </div>
         {InputPanel(currentData)}
       </div>
@@ -134,10 +139,11 @@ export function SummarySection() {
       <div>
         <div className={styles.outputTab}>
           <TabBar
-            texts={outputs} activeText={activeOutput}
-            onActiveTextChange={setActiveOutput} />
+            texts={outputs} activeText={outputs[activeOutputIdx]}
+            onActiveIdxChange={setActiveOutputIdx}
+          />
         </div>
-        {activeOutput === "financial" ? FinancialOutputPanel(currentFinancialData) : OperationalOutputPanel(currentOperationalData)}
+        {activeOutputIdx === 0 ? FinancialOutputPanel(currentFinancialData) : OperationalOutputPanel(currentOperationalData)}
       </div>
 
     </div>

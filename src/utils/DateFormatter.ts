@@ -19,3 +19,9 @@ export function daysElapsed(date: string | number | Date): string {
   if (daysPassed >= DAYS_PER_YEAR) return `${Math.floor(daysPassed / DAYS_PER_YEAR)}y`;
   return `${daysPassed}d`;
 }
+
+export const excelDateToJSDate = (serial: number) => {
+  const utcDays = Math.floor(serial - 25569)
+  const utcValue = utcDays * 86400 // seconds
+  return new Date(utcValue * 1000) // milliseconds
+}

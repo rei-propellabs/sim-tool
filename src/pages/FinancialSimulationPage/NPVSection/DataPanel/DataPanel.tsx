@@ -6,6 +6,7 @@ interface DataPanelProps {
   totalMiningCost: number
   totalProcessingCost: number
   totalNetCashFlow: number
+  totalNetCashFlowPeriod?: number
   netCashFlowRate?: number
 }
 
@@ -14,8 +15,11 @@ export default function DataPanel({
   totalMiningCost,
   totalProcessingCost,
   totalNetCashFlow,
+  totalNetCashFlowPeriod,
   netCashFlowRate = 5,
 }: DataPanelProps) {
+
+  const isHovered = totalNetCashFlowPeriod !== undefined;
 
   return (
     <div className={styles.dataPanel}>
@@ -36,7 +40,7 @@ export default function DataPanel({
           />
           <div className={styles.value}>
             <span className="dim">$</span>
-            {formatNumberWithAbbreviation(totalMiningCost, 1)}
+            {formatNumberWithAbbreviation(Math.abs(totalMiningCost), 1)}
           </div>
         </div>
         <div className={styles.label}>Total Mining Cost</div>
@@ -48,22 +52,49 @@ export default function DataPanel({
           />
           <div className={styles.value}>
             <span className="dim">$</span>
-            {formatNumberWithAbbreviation(totalProcessingCost, 1)}
+            {formatNumberWithAbbreviation(Math.abs(totalProcessingCost), 1)}
           </div>
         </div>
         <div className={styles.label}>Total Processing Cost</div>
       </div>
 
       <div className={`${styles.metricCard} ${styles.darkBackground}`}>
-        <div className={styles.valueContainer}>
-          <div className={`${styles.colorIndicator} ${styles.netCash}`}/>
-          <div className={styles.value}>
-            <span className="dim">$</span>
-            {formatNumberWithAbbreviation(totalNetCashFlow, 1)}
-            <span className="dim"> @ {netCashFlowRate}%</span>
+        <div className={"flex flex-row gap-8"}>
+          {
+            isHovered &&
+            // insert period net cash flow if a bar is hovered
+            <div className={styles.netCashFlowContainer}>
+              <div className={styles.valueContainer}>
+                <div className={`${styles.colorIndicator} ${styles.netCash}`} />
+                <div className={styles.value}>
+                  <span className="dim">$</span>
+                  {formatNumberWithAbbreviation(totalNetCashFlowPeriod, 1)}
+                </div>
+              </div>
+              <div className={styles.label}>
+                Net Cash Flow (Period)
+              </div>
+            </div>
+          }
+
+          <div className={styles.netCashFlowContainer}>
+            <div className={styles.valueContainer}>
+              <div className={`${isHovered ? "" : styles.colorIndicator} ${styles.netCash}`} />
+              <div className={styles.value}>
+                <span className="dim">$</span>
+                {formatNumberWithAbbreviation(totalNetCashFlow, 1)}
+                {
+                  !isHovered && <span className="dim"> @ {netCashFlowRate}%</span>
+                }
+              </div>
+            </div>
+            <div className={styles.label}>
+              {
+                isHovered ? "(Cumulative)" : "Total Net Cash Flow"
+              }
+            </div>
           </div>
         </div>
-        <div className={styles.label}>Total Net Cash Flow</div>
       </div>
     </div >
   )
