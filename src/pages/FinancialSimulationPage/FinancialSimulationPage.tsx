@@ -6,6 +6,10 @@ import * as XLSX from 'xlsx'
 import { CashFlowRow } from "models/CashFlow"
 import { FinancialSimulationData } from "models/FinancialSimulationData"
 import MonthlySummarySection from "./MonthlySummarySection/MonthlySummarySection"
+import ComparisonSection from "./ComparisonSection/ComparisonSection"
+import { ScenarioData } from "types/ScenarioData"
+import { operationalOutput_mock } from "api/mock/OperationOutputMock"
+import { financialOutput_mock } from "api/mock/FinancialOutputMock"
 
 const demoScenarios = [
   {
@@ -19,6 +23,88 @@ const demoScenarios = [
   {
     fileName: "/demo/scenario3/West Red Lake Cashflows.xlsx",
     title: "SCENARIO 3"
+  },
+]
+const scenarioData: ScenarioData[] = [
+  {
+    id: 1,
+    timeHorizonData: [10, 15, 20, 25, 30, 35, 40],
+    keyAssumptions: {
+      cutterHeadSize: "2m",
+    },
+    financials: {
+      revenue: 127845731,
+      miningCost: 80314891,
+      totalProcessingCost: 7482234,
+      netCashFlow: 31828606,
+    },
+    operational: {
+      lifeOfMine: "54 months",
+      extractionHoles: 730,
+      totalLength: "36,065m",
+      oreMass: "330,840 tonnes",
+      grade: "5.91 g/tonnes",
+    },
+    holeLength: { min: 3, max: 132, avg: 44 },
+    holeInclination: { min: 40, max: 90, avg: 55 },
+    quantityOfHoleInclinations: {
+      ranges: ["35-39", "40-49", "50-59", "60-69", "70-79", "80-90"],
+      values: [25, 74, 0, 0, 95, 25],
+    },
+  },
+  {
+    id: 2,
+    timeHorizonData: [12, 18, 24, 28, 32, 36, 38],
+    keyAssumptions: {
+      cutterHeadSize: "2.5m",
+      change: "+25%",
+    },
+    financials: {
+      revenue: 135425720,
+      miningCost: 82941936,
+      totalProcessingCost: 8259759,
+      netCashFlow: 36220000,
+    },
+    operational: {
+      lifeOfMine: "55 months",
+      extractionHoles: 541,
+      totalLength: "25,332m",
+      oreMass: "335,097 tonnes",
+      grade: "5.66 g/tonnes",
+    },
+    holeLength: { min: 3, max: 132, avg: 44 },
+    holeInclination: { min: 60, max: 90, avg: 55 },
+    quantityOfHoleInclinations: {
+      ranges: ["35-39", "40-49", "50-59", "60-69", "70-79", "80-90"],
+      values: [25, 74, 0, 0, 95, 25],
+    },
+  },
+  {
+    id: 3,
+    timeHorizonData: [8, 12, 18, 22, 28, 32, 35],
+    keyAssumptions: {
+      cutterHeadSize: "3m",
+      change: "+20%",
+    },
+    financials: {
+      revenue: 137032338,
+      miningCost: 82067206,
+      totalProcessingCost: 8259759,
+      netCashFlow: 38245574,
+    },
+    operational: {
+      lifeOfMine: "54 months",
+      extractionHoles: 407,
+      totalLength: "18,032m",
+      oreMass: "372,185 tonnes",
+      grade: "5.52 g/tonnes",
+    },
+    holeLength: { min: 3, max: 132, avg: 44 },
+    holeInclination: { min: 40, max: 90, avg: 55 },
+    quantityOfHoleInclinations: {
+      ranges: ["35-39", "40-49", "50-59", "60-69", "70-79", "80-90"],
+      values: [25, 74, 0, 0, 95, 25],
+    },
   },
 ]
 
@@ -100,6 +186,11 @@ export function FinancialSimulationPage() {
       <MonthlySummarySection
         data={1}
         scenario={demoScenarios[activeScenarioIdx].title} />
+      <ComparisonSection 
+        scenarios={scenarioData}
+        financialOutputData={Object.values(financialOutput_mock)}
+        operationalOutputData={Object.values(operationalOutput_mock)}
+      />
     </div>
 
   )

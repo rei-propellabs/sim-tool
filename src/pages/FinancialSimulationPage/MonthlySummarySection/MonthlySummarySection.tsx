@@ -114,8 +114,6 @@ const tableData = {
 }
 
 const MonthlySummarySection: React.FC<MonthlySummarySectionProps> = ({ data, scenario }) => {
-
-
   return (
     <div className={finSimStyles.sectionContainer}>
 
@@ -130,10 +128,7 @@ const MonthlySummarySection: React.FC<MonthlySummarySectionProps> = ({ data, sce
             Download</button>
         </div>
       </div>
-      {/* <div style={{padding: "24px"}}> */}
       <SummaryTable columns={tableData.columns} sections={tableData.sections} />
-
-      {/* </div> */}
 
     </div>
   )
