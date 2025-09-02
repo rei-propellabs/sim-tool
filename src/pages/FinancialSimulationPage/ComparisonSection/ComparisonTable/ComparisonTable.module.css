@@ -46,11 +46,13 @@
   border-right: 1px solid var(--table-border);
   display: flex;
   flex-direction: column;
-  justify-content: center;
+  justify-content: flex-start;
 }
+
 .rightAlign {
   justify-content: right !important;
 }
+
 .sectionCell {
   padding-top: 36px;
   padding-left: 16px;
@@ -84,7 +86,6 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  flex-grow: 1;
 }
 
 .textCell {
@@ -131,93 +132,49 @@
   color: var(--default-text);
 }
 
-.changeIndicator {
-  background-color: #059669;
-  color: white;
-  padding: 2px 6px;
-  border-radius: 4px;
-  font-size: 12px;
-  font-weight: 600;
-}
-
-.financialCell {
-  width: 100%;
-}
-
-.financialValue {
-  padding: 8px 12px;
-  border-radius: 4px;
-  font-weight: 600;
-  margin-top: 8px;
-}
-
-.revenue {
-  background-color: #dc2626;
-  color: white;
-}
-
-.miningCost {
-  background-color: #059669;
-  color: white;
-}
-
-.netCashFlow {
-  background-color: #dc2626;
-  color: white;
-}
-
-.operationalCell {
-  text-align: center;
-  width: 100%;
-}
-
-.operationalValue {
-  margin-top: 8px;
-  font-weight: 500;
-}
-
+/** BAR CHART STYLES */
 .horizontalBarChart {
   width: 100%;
-  max-width: 120px;
+  padding: 8px 16px;
+  gap: 2px;
+  display: flex;
+  flex-direction: column;
 }
 
 .barRow {
   display: flex;
   align-items: center;
-  gap: 8px;
-  margin-bottom: 4px;
+  gap: 4px;
 }
 
 .barLabel {
-  font-size: 12px;
-  color: #9ca3af;
+  font-size: 0.7rem;
+  color: var(--darker-text);
   width: 30px;
   text-align: right;
 }
 
 .barContainer {
   flex: 1;
-  height: 8px;
-  background-color: #374151;
-  border-radius: 4px;
+  height: 18px;
   overflow: hidden;
 }
 
 .bar {
   height: 100%;
-  background-color: #22d3ee;
-  border-radius: 4px;
+  background-color: var(--accent);
 }
 
 .barValue {
-  font-size: 12px;
-  color: #f9fafb;
+  font-size: 0.9rem;
+  color: var(--default-text);
   width: 30px;
+  text-align: right;
 }
 
+/** INCLINATION STYLES */
 .inclinationIndicator {
   width: 100%;
-  max-width: 120px;
 }
 
 .inclinationRow {
@@ -248,38 +205,51 @@
   width: 30px;
 }
 
+/** QUANTITY STYLES */
 .quantityChart {
   display: flex;
   align-items: end;
-  gap: 4px;
-  height: 80px;
+  gap: 8px;
 }
 
 .quantityBar {
+  /* display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px; */
+
+  position: relative;
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 4px;
+  height: 80px;
+  /* adjust as needed */
+  justify-content: flex-end;
 }
 
 .quantityBarFill {
-  width: 12px;
-  background-color: #22d3ee;
-  border-radius: 2px 2px 0 0;
-  transition: height 0.3s ease;
+  width: 18px;
+  background: var(--accent);
+  z-index: 1;
 }
 
 .quantityLabel {
   font-size: 10px;
-  color: #9ca3af;
-  writing-mode: vertical-rl;
-  text-orientation: mixed;
+  color: var(--darker-text);
 }
 
 .quantityValue {
-  font-size: 10px;
-  color: #f9fafb;
-  font-weight: 600;
+  mix-blend-mode: difference;
+  position: absolute;
+  top: 0;
+  width: 18px;
+  text-align: right;
+  transform-origin: top left;
+  transform:  translateY(120%) rotate(-90deg);
+  font-size: 0.85rem;
+  font-weight: 400;
+  z-index: 2;
+
 }
 
 .seeMoreButton {
@@ -296,6 +266,7 @@
 }
 
 @media (max-width: 768px) {
+
   .header,
   .row {
     grid-template-columns: 150px repeat(3, 1fr);

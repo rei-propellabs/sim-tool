@@ -5,8 +5,7 @@ import styles from "./ComparisonTable.module.css"
 import { FinancialOutputData, OperationalOutputData } from "api/models/OutputData"
 import { CashFlowData } from "models/CashFlow"
 import { ScenarioData } from "types/ScenarioData"
-import { financialOutput_mock } from "api/mock/FinancialOutputMock"
-import { getMetricBgClasses } from "./ComparisonTableHelper"
+import { getMetricBgClasses, getNormalizedValues } from "./ComparisonTableHelper"
 
 
 interface ComparisonTableProps {
@@ -60,14 +59,14 @@ const ComparisonTable = (props: ComparisonTableProps) => {
       <div className={styles.barRow}>
         <span className={styles.barLabel}>MAX</span>
         <div className={styles.barContainer}>
-          <div className={styles.bar} style={{ width: "90%", backgroundColor: "#22d3ee" }}></div>
+          <div className={styles.bar} style={{ width: "90%" }}></div>
         </div>
         <span className={styles.barValue}>{max}m</span>
       </div>
       <div className={styles.barRow}>
         <span className={styles.barLabel}>AVG</span>
         <div className={styles.barContainer}>
-          <div className={styles.bar} style={{ width: "30%", backgroundColor: "#22d3ee" }}></div>
+          <div className={styles.bar} style={{ width: "30%" }}></div>
         </div>
         <span className={styles.barValue}>{avg}m</span>
       </div>
@@ -94,23 +93,30 @@ const ComparisonTable = (props: ComparisonTableProps) => {
     </div>
   )
 
-  const QuantityChart = ({ ranges, values }: { ranges: string[]; values: number[] }) => (
-    <div className={styles.quantityChart}>
-      {ranges.map((range, index) => (
-        <div key={range} className={styles.quantityBar}>
-          <div
-            className={styles.quantityBarFill}
-            style={{
-              height: `${(values[index] / Math.max(...values)) * 60}px`,
-              backgroundColor: index === 0 || index === ranges.length - 1 ? "#22d3ee" : "#374151",
-            }}
-          ></div>
-          <span className={styles.quantityLabel}>{range}</span>
-          <span className={styles.quantityValue}>{values[index]}</span>
-        </div>
-      ))}
-    </div>
-  )
+  const QuantityChart = ({ ranges, values }: { ranges: string[]; values: number[] }) => {
+    const heights = getNormalizedValues(values)
+
+    return (
+      <div className={styles.quantityChart}>
+        {ranges.map((range, index) => (
+          <div key={range} className={styles.quantityBar}>
+            <div className={styles.quantityValue}>{values[index]}</div>
+
+              
+            <div
+              className={styles.quantityBarFill}
+              style={{
+                height: heights[index] > 0 ? `${heights[index] * 100}%` : "2px",
+                background: heights[index] > 0 ? "var(--accent)" : "var(--completed)"
+              }}
+            ></div>
+            <span className={styles.quantityLabel}>{range}°</span>
+          </div>
+        ))}
+      </div>
+    )
+
+  }
 
   const visibleRows = [
     "timeHorizon",
@@ -196,6 +202,18 @@ const ComparisonTable = (props: ComparisonTableProps) => {
     )
   }
 
+  const sectionTitleRow = (title: string) => {
+    return (
+      <div className={styles.row}>
+        {Array.from({ length: scenarios.length + 1 }).map((_, idx) => (
+          <div key={idx} className={styles.sectionCell}>
+            <div className={styles.sectionTitle}>{title}</div>
+          </div>
+        ))}
+      </div>
+    )
+  }
+
   return (
     <div className={styles.tableContainer}>
       <div className={styles.header}>
@@ -224,13 +242,7 @@ const ComparisonTable = (props: ComparisonTableProps) => {
 
       {visibleRows.includes("financials") && (
         <>
-          <div className={styles.row}>
-            {Array.from({ length: scenarios.length + 1 }).map((_, idx) => (
-              <div key={idx} className={styles.sectionCell}>
-                <div className={styles.sectionTitle}>FINANCIALS</div>
-              </div>
-            ))}
-          </div>
+          {sectionTitleRow("FINANCIALS")}
           {financialRow("Revenue", "revenue", true)}
           {financialRow("Mining Cost", "miningCost", false)}
           {financialRow("Total Processing Cost", "totalProcessingCost", false)}
@@ -240,13 +252,7 @@ const ComparisonTable = (props: ComparisonTableProps) => {
 
       {visibleRows.includes("operational") && (
         <>
-          <div className={styles.row}>
-            {Array.from({ length: scenarios.length + 1 }).map((_, idx) => (
-              <div key={idx} className={styles.sectionCell}>
-                <div className={styles.sectionTitle}>OPERATIONAL</div>
-              </div>
-            ))}
-          </div>
+          {sectionTitleRow("OPERATIONAL")}
           {operationalRow("Life of Mine (LOM)", "LOMMoth", " months")}
           {operationalRow("Extraction Holes", "extractionHoles", "")}
           {operationalRow("Total Length", "totalLength", "m")}
@@ -256,7 +262,7 @@ const ComparisonTable = (props: ComparisonTableProps) => {
       )}
 
       {visibleRows.includes("holeLength") && (
-        <div className={styles.row}>
+        <div className={`${styles.row} ${styles.borderBottom}`}>
           <div className={styles.rowLabel}>
             <span className={styles.rowSubLabel}>Hole Length</span>
           </div>
@@ -269,7 +275,7 @@ const ComparisonTable = (props: ComparisonTableProps) => {
       )}
 
       {visibleRows.includes("holeInclination") && (
-        <div className={styles.row}>
+        <div className={`${styles.row} ${styles.borderBottom}`}>
           <div className={styles.rowLabel}>
             <span className={styles.rowSubLabel}>Hole Inclination</span>
           </div>
@@ -282,7 +288,7 @@ const ComparisonTable = (props: ComparisonTableProps) => {
       )}
 
       {visibleRows.includes("quantityOfHoleInclinations") && (
-        <div className={styles.row}>
+        <div className={`${styles.row} ${styles.borderBottom}`}>
           <div className={styles.rowLabel}>
             <span className={styles.rowSubLabel}>Quantity of Hole Inclinations</span>
           </div>
@@ -294,7 +300,7 @@ const ComparisonTable = (props: ComparisonTableProps) => {
         </div>
       )}
 
-      <div className={styles.seeMoreButton}  onClick={() => setShowMore(!showMore)}>
+      <div className={styles.seeMoreButton} onClick={() => setShowMore(!showMore)}>
         {showMore ? "See less" : "See more"}
       </div>
     </div>

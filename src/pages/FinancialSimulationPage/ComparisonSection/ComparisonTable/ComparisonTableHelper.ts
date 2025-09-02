@@ -42,3 +42,13 @@ export function getMetricBgClasses(values: number[], higherIsBetter: boolean): s
     }
   });
 }
+
+export function getNormalizedValues(values: number[]): number[] {
+  const min = Math.min(...values);
+  const max = Math.max(...values);
+  if (max === min) {
+    // All values are the same, return 1.00 for all
+    return values.map(() => 1.00);
+  }
+  return values.map(v => ((v - min) / (max - min)));
+}
