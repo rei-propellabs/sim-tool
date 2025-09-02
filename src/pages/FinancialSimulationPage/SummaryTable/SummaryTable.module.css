@@ -1,0 +1,62 @@
+.tableContainer {
+  border-radius: 8px;
+  margin: 24px;
+  overflow-x: auto;
+}
+
+.table {
+  border-collapse: collapse;
+  font-size: 0.9rem;
+  color: var(--default-text);
+  border-radius: 8px;
+
+}
+
+.headerRow {
+  background: var(--metric-card-background);
+  border-bottom: 1px solid var(--option-divider);
+
+}
+
+.headerCell {
+  padding: 20px 16px 4px 16px;
+  text-align: right;
+  font-weight: 600;
+  color: var(--default-text);
+  white-space: nowrap;
+}
+
+.headerCell:first-child {
+  min-width: 200px;
+  background: var(--metric-card-background);
+  text-align: left;
+  width: 100%;  
+  position: sticky;
+  left: 0;
+  z-index: 2;
+}
+
+.dataRow {
+  background: var(--table-cell);
+  border-bottom: 1px solid  var(--table-border);
+
+}
+
+.labelCell {
+  padding: 14px 16px;
+  font-weight: 400;
+  color: var(--default-text);
+  position: sticky;
+  left: 0;
+  background: inherit;
+  z-index: 1;
+  min-width: 200px;
+}
+
+.dataCell {
+  padding: 14px 16px;
+  text-align: right;
+  color: var(--default-text);
+  white-space: nowrap;
+  font-variant-numeric: tabular-nums;
+}

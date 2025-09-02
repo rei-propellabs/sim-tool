@@ -5,6 +5,7 @@ import { SummarySection } from "./SummarySection/SummarySection"
 import * as XLSX from 'xlsx'
 import { CashFlowRow } from "models/CashFlow"
 import { FinancialSimulationData } from "models/FinancialSimulationData"
+import MonthlySummarySection from "./MonthlySummarySection/MonthlySummarySection"
 
 const demoScenarios = [
   {
@@ -55,7 +56,7 @@ export function FinancialSimulationPage() {
             })
             const result: any = {}
             headers.forEach(h => {
-                result[h] = Number(trimmedRow[h]) || 0
+              result[h] = Number(trimmedRow[h]) || 0
             })
             return result
           }) as CashFlowRow[]
@@ -80,7 +81,7 @@ export function FinancialSimulationPage() {
         setLoading(false)
       }
     }
-    [0,1,2].forEach((index) => {
+    [0, 1, 2].forEach((index) => {
       handleXLSX(index)
     })
   }, [])
@@ -93,8 +94,11 @@ export function FinancialSimulationPage() {
       <SummarySection
         activeScenario={demoScenarios[activeScenarioIdx].title}
         setActiveScenarioIdx={setActiveScenarioIdx} />
-      <NPVSection 
+      <NPVSection
         cashFlowData={parsedData[activeScenarioIdx].cashFlow}
+        scenario={demoScenarios[activeScenarioIdx].title} />
+      <MonthlySummarySection
+        data={1}
         scenario={demoScenarios[activeScenarioIdx].title} />
     </div>
 

@@ -3,4 +3,45 @@
   box-sizing: border-box;
   display: flex;
   flex-direction: column;
+  overflow-x: hidden;
+}
+
+.sectionContainer {
+  min-height: 100vh;
+  width: 100%;
+  justify-items: center;
+  box-sizing: border-box;
+  padding: 6vh 0;
+  display: flex;
+  flex-direction: column;
+}
+
+.scenarioLabel {
+  font-size: 0.7rem;
+  color: var(--darker-text);
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+.title {
+  font-size: 2rem;
+  font-weight: 400;
+  margin: 4px 0 0;
+}
+
+.heading {
+  display: flex;
+  justify-content: space-between;
+  color: var(--default-text);
+  align-items: flex-end;
+  padding: 1vh 10vw;
+}
+
+.left {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  height: 100%;
+  flex: 1;
+
 }

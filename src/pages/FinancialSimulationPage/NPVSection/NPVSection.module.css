@@ -6,37 +6,6 @@
   display: flex;
   flex-direction: column;
 }
-
-.heading {
-  display: flex;
-  justify-content: space-between;
-  padding: 16px 24px;
-  color: var(--default-text);
-  align-items: flex-end;
-}
-
-.left {
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
-  height: 100%;
-  flex: 1;
-
-}
-
-.scenarioLabel {
-  font-size: 0.7rem;
-  color: var(--darker-text);
-  text-transform: uppercase;
-  letter-spacing: 1px;
-}
-
-.title {
-  font-size: 2rem;
-  font-weight: 400;
-  margin: 4px 0 0;
-}
-
 .legend {
   display: flex;
   flex-direction: column;
