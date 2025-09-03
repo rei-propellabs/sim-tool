@@ -31,7 +31,6 @@ const ComparisonTable = (props: ComparisonTableProps) => {
       <div className={styles.miniChart}>
         <ResponsiveContainer width="100%" height={80}>
           <ComposedChart data={data}>
-            {/* Gradient definition for the area fill */}
             <defs>
               <linearGradient id="lineGradient" x1="0" y1="0" x2="0" y2="1">
                 <stop offset="0%" stopColor="var(--accent)" stopOpacity={0.4} />
@@ -42,14 +41,14 @@ const ComparisonTable = (props: ComparisonTableProps) => {
             <Line
               isAnimationActive={false}
               type="linear"
-              dataKey={v=>v}
+              dataKey={v => v}
               stroke="var(--accent)"
               dot={false}
             />
             <Area
               isAnimationActive={false}
               type="linear"
-              dataKey={v=>v}
+              dataKey={v => v}
               stroke="none"
               fill="url(#lineGradient)"
             />
@@ -142,29 +141,37 @@ const ComparisonTable = (props: ComparisonTableProps) => {
   ]
 
   const keyAssumptionRow = () => {
+    const dia = [2, 2.5, 1] //scenarios.map(scenario => scenario.keyAssumptions);
+    const relativeDifferences = dia.map((value, idx) =>
+      idx === 0 ? 0 : Number(((value - dia[0]) / dia[0] * 100).toFixed(2))
+    );
     return (
       <>
-        {sectionTitleRow("KEY ASSUMPTIONS")}
+        {sectionTitleRow("KEY ASSUMPTIONS", true)}
 
         <div className={`${styles.row} ${styles.borderBottom}`}>
           <div className={styles.rowLabel}>
             <span className={styles.rowSubLabel}>Cutter Head Size</span>
           </div>
 
-          {scenarios.map((scenario) => (
+          {scenarios.map((scenario, index) => (
             <div key={scenario.id} className={styles.cell}>
               <div className={styles.assumptionValue}>
-                {scenario.keyAssumptions.change ? (
+                {relativeDifferences[index] === 0 ?
                   <div className={styles.diaDifference}>
-                    {scenario.keyAssumptions.change}
-                    <span className={styles.diaDifferenceIcon}>▲</span>
-                  </div>)
+                    <div className={styles.noData}/>
+                  </div>
                   :
                   <div className={styles.diaDifference}>
-                    <span className={styles.diaDifferenceIcon}>-</span>
+                    {relativeDifferences[index] > 0 ? "+" : ""}
+                    {relativeDifferences[index]}%
+                    <span className={styles.diaDifferenceIcon}>
+                      {relativeDifferences[index] > 0 ? "▲" : "▼"}
+                    </span>
                   </div>
+
                 }
-                <span>{scenario.keyAssumptions.cutterHeadSize}</span>
+                <span>{dia[index]}m</span>
 
               </div>
             </div>
@@ -217,11 +224,11 @@ const ComparisonTable = (props: ComparisonTableProps) => {
     )
   }
 
-  const sectionTitleRow = (title: string) => {
+  const sectionTitleRow = (title: string, isSmall?: boolean) => {
     return (
       <div className={styles.row}>
         {Array.from({ length: scenarios.length + 1 }).map((_, idx) => (
-          <div key={idx} className={styles.sectionCellSmall}>
+          <div key={idx} className={`${styles.sectionCell} ${isSmall ? styles.sectionCellSmall : ""}`}>
             <div className={styles.sectionTitle}>{title}</div>
           </div>
         ))}
