@@ -39,7 +39,7 @@ const NPVChart: React.FC<NPVChartProps> = ({ data, hoveredIndex, setHoveredIndex
     miningCost: -Math.abs(item.miningCost), // Ensure mining cost is negative
     processingCost: -Math.abs(item.processingCost), // Ensure processing cost is negative
   }))
-  
+
   const CustomXAxisTick = ({ x, y, payload, index }: {
     x: number, y: number, payload: any, index: number,
     isHovered: boolean
@@ -180,6 +180,7 @@ const NPVChart: React.FC<NPVChartProps> = ({ data, hoveredIndex, setHoveredIndex
             dataKey="cumulativeNetCash"
             stroke="none"
             fill="url(#colorNetCash)"
+            activeDot={false}
           />
 
           <Bar dataKey="revenue" stackId="stack" name="Revenue" barSize={20} >
@@ -190,6 +191,7 @@ const NPVChart: React.FC<NPVChartProps> = ({ data, hoveredIndex, setHoveredIndex
                 fillOpacity={hoveredIndex == null || index === hoveredIndex ? 1 : 0.5}
               />
             ))}
+
           </Bar>
 
           <Bar dataKey="miningCost" stackId="stack"
@@ -224,24 +226,19 @@ const NPVChart: React.FC<NPVChartProps> = ({ data, hoveredIndex, setHoveredIndex
             fill="var(--accent)"
             stroke="var(--accent)"
             name="Cumulative Net Cash"
-            dot={(props) => {
-              const { cx, cy, index } = props;
-              const shouldHighlight = hoveredIndex == null || index === hoveredIndex
-              if (shouldHighlight) {
-                activeDotRef.current = { x: cx, y: cy }
-              }
-              const isActive = index === hoveredIndex;
+            dot={{ fill: "var(--accent)", r: 2, }}
+            activeDot={(props) => {
+              const { cx, cy } = props;
+              activeDotRef.current = { x: cx, y: cy };
               return (
                 <circle
-                  key={`cumulative-net-cash-plot-${index}`}
                   cx={cx}
                   cy={cy}
-                  r={isActive ? 3 : 2}
-                  strokeWidth={isActive ? 12 : 0}
-                  stroke="#E5F3Eb"
-                  strokeOpacity={0.38}
+                  r={3}
                   fill="var(--accent)"
-                  fillOpacity={shouldHighlight ? 1 : 0.5}
+                  stroke="#E5F3Eb"
+                  strokeWidth={12}
+                  strokeOpacity={0.38}
                 />
               );
             }}

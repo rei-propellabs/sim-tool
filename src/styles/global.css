@@ -222,12 +222,3 @@
 ::-webkit-scrollbar-thumb:hover {
     background: #555;
 }
-
-.recharts-wrapper,
-.recharts-wrapper svg {
-    outline: none; /* removes default browser focus border */
-}
-.recharts-layer,
-.recharts-active-dot circle {
-    stroke: none;
-}

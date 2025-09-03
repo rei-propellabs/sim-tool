@@ -44,6 +44,8 @@ const ComparisonTable = (props: ComparisonTableProps) => {
               dataKey={v => v}
               stroke="var(--accent)"
               dot={false}
+              activeDot={false}
+              
             />
             <Area
               isAnimationActive={false}
@@ -51,6 +53,7 @@ const ComparisonTable = (props: ComparisonTableProps) => {
               dataKey={v => v}
               stroke="none"
               fill="url(#lineGradient)"
+              activeDot={false}
             />
           </ComposedChart>
         </ResponsiveContainer>
