@@ -1,7 +1,7 @@
 .tableContainer {
   border-radius: 8px;
   overflow: hidden;
-  margin: 24px;
+  margin: 2vh 10vw;
   border: 1px solid var(--table-border);
 }
 
@@ -104,17 +104,15 @@
   height: 40px;
 }
 
-.keyAssumptions {
-  flex-grow: 1;
-}
-
 .assumptionValue {
+  flex: 1;
   display: flex;
   flex-direction: row;
   align-items: center;
   gap: 4px;
   margin-top: 8px;
   justify-content: space-between;
+  padding: 0 8px;
 }
 
 .diaDifference {
@@ -175,34 +173,41 @@
 /** INCLINATION STYLES */
 .inclinationIndicator {
   width: 100%;
+  display: flex;
+  flex-direction: row;
+  padding-top: 12px;
 }
 
-.inclinationRow {
+.inclinationColumn {
   display: flex;
   align-items: center;
   gap: 8px;
   margin-bottom: 8px;
+  flex: 1;
+  flex-direction: column;
 }
 
 .inclinationLabel {
-  font-size: 12px;
-  color: #9ca3af;
-  width: 30px;
-  text-align: right;
+  font-size: 0.7rem;
+  color: var(--darker-text);
+}
+.angleIndicatorContainer {
+  width: 80px;
+  height: 40px;
+  align-items: center;
 }
 
 .angleIndicator {
   width: 20px;
   height: 2px;
-  background-color: #22d3ee;
+  background-color: var(--white);
   transform-origin: left center;
   border-radius: 1px;
 }
 
 .inclinationValue {
-  font-size: 12px;
-  color: #f9fafb;
-  width: 30px;
+  font-size: 0.8rem;
+  color: var(--default-text);
 }
 
 /** QUANTITY STYLES */

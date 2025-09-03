@@ -6,6 +6,7 @@ import { FinancialOutputData, OperationalOutputData } from "api/models/OutputDat
 import { CashFlowData } from "models/CashFlow"
 import { ScenarioData } from "types/ScenarioData"
 import { getMetricBgClasses, getNormalizedValues } from "./ComparisonTableHelper"
+import AngleIndicator from "./AngleIndicator"
 
 
 interface ComparisonTableProps {
@@ -47,47 +48,52 @@ const ComparisonTable = (props: ComparisonTableProps) => {
     </div>
   )
 
-  const HorizontalBarChart = ({ min, max, avg }: { min: number; max: number; avg: number }) => (
+  const HorizontalBarChart = ({ min, max, avg }: { min: number; max: number; avg: number }) => {
+    const widths = getNormalizedValues([min, max, avg])
+  
+    return (
     <div className={styles.horizontalBarChart}>
       <div className={styles.barRow}>
         <span className={styles.barLabel}>MIN</span>
         <div className={styles.barContainer}>
-          <div className={styles.bar} style={{ width: "10%" }}></div>
+          <div className={styles.bar} style={{ width: `${Math.max(widths[0], 0.01) * 100}%` }}></div>
         </div>
         <span className={styles.barValue}>{min}m</span>
       </div>
       <div className={styles.barRow}>
         <span className={styles.barLabel}>MAX</span>
         <div className={styles.barContainer}>
-          <div className={styles.bar} style={{ width: "90%" }}></div>
+          <div className={styles.bar} style={{ width: `${widths[1] * 100}%` }}></div>
         </div>
         <span className={styles.barValue}>{max}m</span>
       </div>
       <div className={styles.barRow}>
         <span className={styles.barLabel}>AVG</span>
         <div className={styles.barContainer}>
-          <div className={styles.bar} style={{ width: "30%" }}></div>
+          <div className={styles.bar} style={{ width: `${widths[2] * 100}%` }}></div>
         </div>
         <span className={styles.barValue}>{avg}m</span>
       </div>
     </div>
   )
+}
+
 
   const InclinationIndicator = ({ min, max, avg }: { min: number; max: number; avg: number }) => (
     <div className={styles.inclinationIndicator}>
-      <div className={styles.inclinationRow}>
+      <div className={styles.inclinationColumn}>
         <span className={styles.inclinationLabel}>MIN</span>
-        <div className={styles.angleIndicator} style={{ transform: `rotate(${min}deg)` }}></div>
+        <AngleIndicator angle={min} />
         <span className={styles.inclinationValue}>{min}°</span>
       </div>
-      <div className={styles.inclinationRow}>
+      <div className={styles.inclinationColumn}>
         <span className={styles.inclinationLabel}>MAX</span>
-        <div className={styles.angleIndicator} style={{ transform: `rotate(${max}deg)` }}></div>
+        <AngleIndicator angle={max} />
         <span className={styles.inclinationValue}>{max}°</span>
       </div>
-      <div className={styles.inclinationRow}>
+      <div className={styles.inclinationColumn}>
         <span className={styles.inclinationLabel}>AVG</span>
-        <div className={styles.angleIndicator} style={{ transform: `rotate(${avg}deg)` }}></div>
+        <AngleIndicator angle={avg} />
         <span className={styles.inclinationValue}>{avg}°</span>
       </div>
     </div>
@@ -102,7 +108,7 @@ const ComparisonTable = (props: ComparisonTableProps) => {
           <div key={range} className={styles.quantityBar}>
             <div className={styles.quantityValue}>{values[index]}</div>
 
-              
+
             <div
               className={styles.quantityBarFill}
               style={{
@@ -115,7 +121,6 @@ const ComparisonTable = (props: ComparisonTableProps) => {
         ))}
       </div>
     )
-
   }
 
   const visibleRows = [
@@ -128,34 +133,34 @@ const ComparisonTable = (props: ComparisonTableProps) => {
 
   const keyAssumptionRow = () => {
     return (
-      <div className={styles.row}>
-        <div className={styles.rowLabel}>
-          <span className={styles.sectionTitle}>KEY ASSUMPTIONS</span>
-          <span className={styles.rowSubLabel}>Cutter Head Size</span>
-        </div>
-        {scenarios.map((scenario) => (
-          <div key={scenario.id} className={styles.cell}>
-            <div className={styles.keyAssumptions}>
-              <span className={styles.sectionTitle}>KEY ASSUMPTIONS</span>
+      <>
+        {sectionTitleRow("KEY ASSUMPTIONS")}
 
-              <div className={styles.assumptionValue}>
-                {scenario.keyAssumptions.change ? (
-                  <div className={styles.diaDifference}>
-                    {scenario.keyAssumptions.change}
-                    <span className={styles.diaDifferenceIcon}>▲</span>
-                  </div>)
-                  :
-                  <div className={styles.diaDifference}>
-                    <span className={styles.diaDifferenceIcon}>-</span>
-                  </div>
-                }
-                <span>{scenario.keyAssumptions.cutterHeadSize}</span>
-
-              </div>
-            </div>
+        <div className={`${styles.row} ${styles.borderBottom}`}>
+          <div className={styles.rowLabel}>
+            <span className={styles.rowSubLabel}>Cutter Head Size</span>
           </div>
-        ))}
-      </div>
+
+          {scenarios.map((scenario) => (
+            <div key={scenario.id} className={styles.cell}>
+               <div className={styles.assumptionValue}>
+                  {scenario.keyAssumptions.change ? (
+                    <div className={styles.diaDifference}>
+                      {scenario.keyAssumptions.change}
+                      <span className={styles.diaDifferenceIcon}>▲</span>
+                    </div>)
+                    :
+                    <div className={styles.diaDifference}>
+                      <span className={styles.diaDifferenceIcon}>-</span>
+                    </div>
+                  }
+                  <span>{scenario.keyAssumptions.cutterHeadSize}</span>
+
+                </div>
+            </div>
+          ))}
+        </div>
+      </>
     )
   }
 
