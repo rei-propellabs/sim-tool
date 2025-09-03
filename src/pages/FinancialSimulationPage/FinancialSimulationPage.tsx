@@ -28,7 +28,7 @@ const demoScenarios = [
 const scenarioData: ScenarioData[] = [
   {
     id: 1,
-    timeHorizonData: [10, 15, 20, 25, 30, 35, 40],
+    timeHorizonData: [10, 25, 20, 18, 30, 42, 43],
     keyAssumptions: {
       cutterHeadSize: "2m",
     },

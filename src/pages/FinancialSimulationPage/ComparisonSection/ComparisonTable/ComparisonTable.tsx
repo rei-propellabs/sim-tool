@@ -4,6 +4,7 @@ import { FinancialOutputData, OperationalOutputData } from "api/models/OutputDat
 import { ScenarioData } from "types/ScenarioData"
 import { getMetricBgClasses, getNormalizedValues } from "./ComparisonTableHelper"
 import AngleIndicator from "./AngleIndicator"
+import { Area, ComposedChart, Line, LineChart, ResponsiveContainer } from "recharts"
 
 interface ComparisonTableProps {
   scenarios: ScenarioData[]
@@ -25,20 +26,38 @@ const ComparisonTable = (props: ComparisonTableProps) => {
     }).format(value)
   }
 
-  const MiniChart = ({ data }: { data: number[] }) => (
-    <div className={styles.miniChart}>
-      <svg width="80" height="40" viewBox="0 0 80 40">
-        <polyline
-          points={data
-            .map((value, index) => `${(index / (data.length - 1)) * 80},${40 - (value / Math.max(...data)) * 30}`)
-            .join(" ")}
-          fill="none"
-          stroke="#4ade80"
-          strokeWidth="2"
-        />
-      </svg>
-    </div>
-  )
+  const MiniChart = ({ data }: { data: number[] }) => {
+    return (
+      <div className={styles.miniChart}>
+        <ResponsiveContainer width="100%" height={80}>
+          <ComposedChart data={data}>
+            {/* Gradient definition for the area fill */}
+            <defs>
+              <linearGradient id="lineGradient" x1="0" y1="0" x2="0" y2="1">
+                <stop offset="0%" stopColor="var(--accent)" stopOpacity={0.4} />
+                <stop offset="100%" stopColor="var(--accent)" stopOpacity={0} />
+              </linearGradient>
+            </defs>
+
+            <Line
+              isAnimationActive={false}
+              type="linear"
+              dataKey={v=>v}
+              stroke="var(--accent)"
+              dot={false}
+            />
+            <Area
+              isAnimationActive={false}
+              type="linear"
+              dataKey={v=>v}
+              stroke="none"
+              fill="url(#lineGradient)"
+            />
+          </ComposedChart>
+        </ResponsiveContainer>
+      </div>
+    )
+  }
 
   const HorizontalBarChart = ({ min, max, avg }: { min: number; max: number; avg: number }) => {
     const widths = getNormalizedValues([min, max, avg])
@@ -202,7 +221,7 @@ const ComparisonTable = (props: ComparisonTableProps) => {
     return (
       <div className={styles.row}>
         {Array.from({ length: scenarios.length + 1 }).map((_, idx) => (
-          <div key={idx} className={styles.sectionCell}>
+          <div key={idx} className={styles.sectionCellSmall}>
             <div className={styles.sectionTitle}>{title}</div>
           </div>
         ))}

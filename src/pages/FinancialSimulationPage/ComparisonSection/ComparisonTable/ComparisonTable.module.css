@@ -12,7 +12,7 @@
 }
 
 .headerCell {
-  padding: 16px;
+  padding: 16px 16px 0 16px;
   color: var(--white);
   font-weight: 700;
   border-right: 1px solid var(--table-border);
@@ -58,6 +58,11 @@
   padding-left: 16px;
   border-right: 1px solid var(--table-border);
 }
+.sectionCellSmall {
+  padding-top: 8px;
+  padding-left: 16px;
+  border-right: 1px solid var(--table-border);
+}
 
 .sectionCell:last-child {
   border-right: none;
@@ -100,8 +105,9 @@
 }
 
 .miniChart {
-  width: 80px;
-  height: 40px;
+  width: 100%;
+  padding: 0 16px;
+  height: 80px;
 }
 
 .assumptionValue {

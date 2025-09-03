@@ -176,7 +176,7 @@ const ChartSection: React.FC<ChartSectionProps> = ({ data, hoveredIndex, setHove
 
           {/* Fill under the line with gradient */}
           <Area
-            type="monotone"
+            type="linear"
             dataKey="cumulativeNetCash"
             stroke="none"
             fill="url(#colorNetCash)"
@@ -219,7 +219,7 @@ const ChartSection: React.FC<ChartSectionProps> = ({ data, hoveredIndex, setHove
           <Line
             animateNewValues={true}
             isAnimationActive={false}
-            type="monotone"
+            type="linear"
             dataKey="cumulativeNetCash"
             fill="var(--accent)"
             stroke="var(--accent)"
