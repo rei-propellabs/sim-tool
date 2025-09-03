@@ -9,10 +9,14 @@
 
 .scenarioTab {
   width: 20vw;
+  position: fixed;
+  top: 1vw;
+  z-index: 100;
+  
 }
 
 .metricsGridLeft {
-  margin-top: 2vh;
+  margin-top: 5vh;
   display: grid;
   grid-template-columns: repeat(2, 1fr);
   gap: 0.8vh;

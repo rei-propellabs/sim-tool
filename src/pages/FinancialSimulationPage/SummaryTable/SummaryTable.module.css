@@ -41,6 +41,9 @@
   border-bottom: 1px solid  var(--table-border);
 
 }
+.dataRow:hover {
+  background: var(--table-border);
+}
 
 .labelCell {
   padding: 14px 16px;
@@ -48,9 +51,10 @@
   color: var(--default-text);
   position: sticky;
   left: 0;
-  background: inherit;
   z-index: 1;
   min-width: 200px;
+    border-bottom: 1px solid  var(--table-border);
+
 }
 
 .dataCell {
