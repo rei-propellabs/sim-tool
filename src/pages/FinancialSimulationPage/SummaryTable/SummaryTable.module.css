@@ -39,10 +39,10 @@
 .dataRow {
   background: var(--table-cell);
   border-bottom: 1px solid  var(--table-border);
-
 }
-.dataRow:hover {
-  background: var(--table-border);
+.dataRow:hover,
+.dataRow:hover .labelCell {
+  background: var(--table-row-hover);
 }
 
 .labelCell {
@@ -53,8 +53,8 @@
   left: 0;
   z-index: 1;
   min-width: 200px;
-    border-bottom: 1px solid  var(--table-border);
-
+  border-bottom: 1px solid  var(--table-border);
+  background: var(--table-cell);
 }
 
 .dataCell {
