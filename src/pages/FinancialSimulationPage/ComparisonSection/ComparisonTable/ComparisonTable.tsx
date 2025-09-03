@@ -1,13 +1,9 @@
-"use client"
-
 import { useState } from "react"
 import styles from "./ComparisonTable.module.css"
 import { FinancialOutputData, OperationalOutputData } from "api/models/OutputData"
-import { CashFlowData } from "models/CashFlow"
 import { ScenarioData } from "types/ScenarioData"
 import { getMetricBgClasses, getNormalizedValues } from "./ComparisonTableHelper"
 import AngleIndicator from "./AngleIndicator"
-
 
 interface ComparisonTableProps {
   scenarios: ScenarioData[]
@@ -29,10 +25,6 @@ const ComparisonTable = (props: ComparisonTableProps) => {
     }).format(value)
   }
 
-  const formatNumber = (value: number) => {
-    return new Intl.NumberFormat("en-US").format(value)
-  }
-
   const MiniChart = ({ data }: { data: number[] }) => (
     <div className={styles.miniChart}>
       <svg width="80" height="40" viewBox="0 0 80 40">
@@ -50,34 +42,33 @@ const ComparisonTable = (props: ComparisonTableProps) => {
 
   const HorizontalBarChart = ({ min, max, avg }: { min: number; max: number; avg: number }) => {
     const widths = getNormalizedValues([min, max, avg])
-  
-    return (
-    <div className={styles.horizontalBarChart}>
-      <div className={styles.barRow}>
-        <span className={styles.barLabel}>MIN</span>
-        <div className={styles.barContainer}>
-          <div className={styles.bar} style={{ width: `${Math.max(widths[0], 0.01) * 100}%` }}></div>
-        </div>
-        <span className={styles.barValue}>{min}m</span>
-      </div>
-      <div className={styles.barRow}>
-        <span className={styles.barLabel}>MAX</span>
-        <div className={styles.barContainer}>
-          <div className={styles.bar} style={{ width: `${widths[1] * 100}%` }}></div>
-        </div>
-        <span className={styles.barValue}>{max}m</span>
-      </div>
-      <div className={styles.barRow}>
-        <span className={styles.barLabel}>AVG</span>
-        <div className={styles.barContainer}>
-          <div className={styles.bar} style={{ width: `${widths[2] * 100}%` }}></div>
-        </div>
-        <span className={styles.barValue}>{avg}m</span>
-      </div>
-    </div>
-  )
-}
 
+    return (
+      <div className={styles.horizontalBarChart}>
+        <div className={styles.barRow}>
+          <span className={styles.barLabel}>MIN</span>
+          <div className={styles.barContainer}>
+            <div className={styles.bar} style={{ width: `${Math.max(widths[0], 0.01) * 100}%` }}></div>
+          </div>
+          <span className={styles.barValue}>{min}m</span>
+        </div>
+        <div className={styles.barRow}>
+          <span className={styles.barLabel}>MAX</span>
+          <div className={styles.barContainer}>
+            <div className={styles.bar} style={{ width: `${widths[1] * 100}%` }}></div>
+          </div>
+          <span className={styles.barValue}>{max}m</span>
+        </div>
+        <div className={styles.barRow}>
+          <span className={styles.barLabel}>AVG</span>
+          <div className={styles.barContainer}>
+            <div className={styles.bar} style={{ width: `${widths[2] * 100}%` }}></div>
+          </div>
+          <span className={styles.barValue}>{avg}m</span>
+        </div>
+      </div>
+    )
+  }
 
   const InclinationIndicator = ({ min, max, avg }: { min: number; max: number; avg: number }) => (
     <div className={styles.inclinationIndicator}>
@@ -112,7 +103,7 @@ const ComparisonTable = (props: ComparisonTableProps) => {
             <div
               className={styles.quantityBarFill}
               style={{
-                height: heights[index] > 0 ? `${heights[index] * 100}%` : "2px",
+                height: `${Math.max(heights[index], 0.02) * 100}%`,
                 background: heights[index] > 0 ? "var(--accent)" : "var(--completed)"
               }}
             ></div>
@@ -143,20 +134,20 @@ const ComparisonTable = (props: ComparisonTableProps) => {
 
           {scenarios.map((scenario) => (
             <div key={scenario.id} className={styles.cell}>
-               <div className={styles.assumptionValue}>
-                  {scenario.keyAssumptions.change ? (
-                    <div className={styles.diaDifference}>
-                      {scenario.keyAssumptions.change}
-                      <span className={styles.diaDifferenceIcon}>▲</span>
-                    </div>)
-                    :
-                    <div className={styles.diaDifference}>
-                      <span className={styles.diaDifferenceIcon}>-</span>
-                    </div>
-                  }
-                  <span>{scenario.keyAssumptions.cutterHeadSize}</span>
+              <div className={styles.assumptionValue}>
+                {scenario.keyAssumptions.change ? (
+                  <div className={styles.diaDifference}>
+                    {scenario.keyAssumptions.change}
+                    <span className={styles.diaDifferenceIcon}>▲</span>
+                  </div>)
+                  :
+                  <div className={styles.diaDifference}>
+                    <span className={styles.diaDifferenceIcon}>-</span>
+                  </div>
+                }
+                <span>{scenario.keyAssumptions.cutterHeadSize}</span>
 
-                </div>
+              </div>
             </div>
           ))}
         </div>

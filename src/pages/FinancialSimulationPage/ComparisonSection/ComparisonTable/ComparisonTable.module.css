@@ -218,17 +218,11 @@
 }
 
 .quantityBar {
-  /* display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 4px; */
-
   position: relative;
   display: flex;
   flex-direction: column;
   align-items: center;
   height: 80px;
-  /* adjust as needed */
   justify-content: flex-end;
 }
 
@@ -239,7 +233,8 @@
 }
 
 .quantityLabel {
-  font-size: 10px;
+  font-size: 9px;
+  margin-top: 4px;
   color: var(--darker-text);
 }
 
@@ -268,26 +263,4 @@
 
 .seeMoreButton:hover {
   background-color: var(--table-border);
-}
-
-@media (max-width: 768px) {
-
-  .header,
-  .row {
-    grid-template-columns: 150px repeat(3, 1fr);
-  }
-
-  .rowLabel,
-  .headerCell,
-  .cell {
-    padding: 12px 8px;
-  }
-
-  .sectionTitle {
-    font-size: 10px;
-  }
-
-  .rowSubLabel {
-    font-size: 12px;
-  }
 }
