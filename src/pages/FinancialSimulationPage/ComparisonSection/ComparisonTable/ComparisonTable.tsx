@@ -202,7 +202,7 @@ const ComparisonTable = (props: ComparisonTableProps) => {
     const colorCodes = getMetricBgClasses(values, higherIsBetter);
 
     return renderDataRow(label, values.map((value, id) => (
-      <div className={styles.textCell}>
+      <div key={id} className={styles.textCell}>
         {formatCurrency(value)}
       </div>
     )), colorCodes);
@@ -216,7 +216,7 @@ const ComparisonTable = (props: ComparisonTableProps) => {
     }
 
     return renderDataRow(label, values.map((value, id) => (
-      <div className={styles.textCell}>
+      <div  key={id} className={styles.textCell}>
         {typeof value === "number" ? `${value}${unit}` : ""}
       </div>
     )));
@@ -233,7 +233,7 @@ const ComparisonTable = (props: ComparisonTableProps) => {
 
   const renderDataRow = (label: string, cellContents: React.ReactNode[], backgroundColors?: string[]) => {
     return (
-      <div className={`${styles.row} ${styles.borderBottom}`}>
+      <div key={label} className={`${styles.row} ${styles.borderBottom}`}>
         <div className={styles.rowLabel}>
           <span className={styles.rowSubLabel}>{label}</span>
         </div>
@@ -323,12 +323,10 @@ const ComparisonTable = (props: ComparisonTableProps) => {
       chartDataRow("Hole Inclination", "holeInclination", InclinationIndicator),
       chartDataRow("Quantity of Hole Inclinations", "numHoles", QuantityBarChart)
     ];
-    const visibleRows = operationalRows.filter(Boolean);
-
     return (
       <>
-        {visibleRows.length > 0 && sectionTitleRow("OPERATIONAL")}
-        {visibleRows}
+        {sectionTitleRow("OPERATIONAL")}
+        {operationalRows}
       </>
     )
   }

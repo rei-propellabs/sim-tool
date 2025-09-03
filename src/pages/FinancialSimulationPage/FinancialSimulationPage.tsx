@@ -7,10 +7,11 @@ import { CashFlowRow } from "models/CashFlow"
 import { FinancialSimulationData } from "models/FinancialSimulationData"
 import MonthlySummarySection from "./MonthlySummarySection/MonthlySummarySection"
 import ComparisonSection from "./ComparisonSection/ComparisonSection"
-import { ScenarioData } from "types/ScenarioData"
 import { operationalOutput_mock } from "api/mock/OperationOutputMock"
 import { financialOutput_mock } from "api/mock/FinancialOutputMock"
 import { scenarioData_mock } from "api/mock/MiningScenarioDataMock"
+import useGetScenarios from "api/hooks/useGetScenarios"
+import { getToken } from "utils/TokenManager"
 
 const demoScenarios = [
   {
@@ -26,88 +27,6 @@ const demoScenarios = [
     title: "SCENARIO 3"
   },
 ]
-const scenarioData: ScenarioData[] = [
-  {
-    id: 1,
-    timeHorizonData: [10, 25, 20, 18, 30, 42, 43],
-    keyAssumptions: {
-      cutterHeadSize: "2m",
-    },
-    financials: {
-      revenue: 127845731,
-      miningCost: 80314891,
-      totalProcessingCost: 7482234,
-      netCashFlow: 31828606,
-    },
-    operational: {
-      lifeOfMine: "54 months",
-      extractionHoles: 730,
-      totalLength: "36,065m",
-      oreMass: "330,840 tonnes",
-      grade: "5.91 g/tonnes",
-    },
-    holeLength: { min: 3, max: 132, avg: 44 },
-    holeInclination: { min: 40, max: 90, avg: 55 },
-    quantityOfHoleInclinations: {
-      ranges: ["35-39", "40-49", "50-59", "60-69", "70-79", "80-90"],
-      values: [25, 75, 50, 0, 100, 10],
-    },
-  },
-  {
-    id: 2,
-    timeHorizonData: [12, 18, 24, 28, 32, 36, 38],
-    keyAssumptions: {
-      cutterHeadSize: "2.5m",
-      change: "+25%",
-    },
-    financials: {
-      revenue: 135425720,
-      miningCost: 82941936,
-      totalProcessingCost: 8259759,
-      netCashFlow: 36220000,
-    },
-    operational: {
-      lifeOfMine: "55 months",
-      extractionHoles: 541,
-      totalLength: "25,332m",
-      oreMass: "335,097 tonnes",
-      grade: "5.66 g/tonnes",
-    },
-    holeLength: { min: 3, max: 132, avg: 44 },
-    holeInclination: { min: 60, max: 90, avg: 55 },
-    quantityOfHoleInclinations: {
-      ranges: ["35-39", "40-49", "50-59", "60-69", "70-79", "80-90"],
-      values: [25, 74, 0, 0, 95, 25],
-    },
-  },
-  {
-    id: 3,
-    timeHorizonData: [8, 12, 18, 22, 28, 32, 35],
-    keyAssumptions: {
-      cutterHeadSize: "3m",
-      change: "+20%",
-    },
-    financials: {
-      revenue: 137032338,
-      miningCost: 82067206,
-      totalProcessingCost: 8259759,
-      netCashFlow: 38245574,
-    },
-    operational: {
-      lifeOfMine: "54 months",
-      extractionHoles: 407,
-      totalLength: "18,032m",
-      oreMass: "372,185 tonnes",
-      grade: "5.52 g/tonnes",
-    },
-    holeLength: { min: 3, max: 132, avg: 44 },
-    holeInclination: { min: 40, max: 90, avg: 55 },
-    quantityOfHoleInclinations: {
-      ranges: ["35-39", "40-49", "50-59", "60-69", "70-79", "80-90"],
-      values: [25, 74, 0, 0, 95, 25],
-    },
-  },
-]
 
 export function FinancialSimulationPage() {
   const [activeScenarioIdx, setActiveScenarioIdx] = useState<number>(0)
@@ -115,6 +34,8 @@ export function FinancialSimulationPage() {
   const [loading, setLoading] = useState(true)
   const [parsedData, setParsedData] = useState<FinancialSimulationData[]>([])
   const scenarioData = scenarioData_mock
+  const token = getToken("uploadAdmin")
+  // const { isLoading: loadingScenarios } = useGetScenarios(token)
 
   useEffect(() => {
     const handleXLSX = async (index: number) => {
@@ -171,6 +92,12 @@ export function FinancialSimulationPage() {
       setLoading(false)
     })
   }, [])
+
+  useEffect(() => {
+    if (!loadingScenarios) {
+      // Perform actions when scenarios are loaded
+    }
+  }, [loadingScenarios])
 
   if (loading) {
     return <div className={styles.spinner}>Loading...</div>
