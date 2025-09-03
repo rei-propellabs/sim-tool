@@ -2,7 +2,7 @@ import styles from './NPVSection.module.css';
 import finSimStyles from '../FinancialSimulationPage.module.css';
 
 import DataPanel from "./DataPanel/DataPanel";
-import ChartSection from "../ChartSection/ChartSection";
+import NPVChart from "./NPVChart/NPVChart";
 import { CashFlowData } from "models/CashFlow";
 import { useEffect, useState } from "react";
 import { cashFlowToChartData, getTotalValues } from "./NPVHelper";
@@ -61,7 +61,7 @@ export function NPVSection({ scenario, cashFlowData }: NPVSectionProps) {
       </div>
 
       <div className={styles.chartContainer}>
-        <ChartSection data={chartData}
+        <NPVChart data={chartData}
           hoveredIndex={hoveredIndex}
           setHoveredIndex={setHoveredIndex}
         />

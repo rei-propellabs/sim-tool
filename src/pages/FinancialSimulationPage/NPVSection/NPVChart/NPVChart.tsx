@@ -1,11 +1,11 @@
 import type React from "react"
 import { ComposedChart, Bar, Line, XAxis, YAxis, CartesianGrid, ResponsiveContainer, ReferenceLine, Area, Tooltip, Cell } from "recharts"
-import styles from "./ChartSection.module.css"
+import styles from "./NPVChart.module.css"
 import { useRef, useState } from "react"
 import { TooltipIndex } from "recharts/types/state/tooltipSlice"
-import { getYAxisTicksAndDomain } from "../NPVSection/NPVHelper"
+import { getYAxisTicksAndDomain } from "../NPVHelper"
 
-interface ChartSectionProps {
+interface NPVChartProps {
   data: Array<{
     month: string
     revenue: number
@@ -17,7 +17,7 @@ interface ChartSectionProps {
   setHoveredIndex: (index: number | null) => void
 }
 
-const ChartSection: React.FC<ChartSectionProps> = ({ data, hoveredIndex, setHoveredIndex }) => {
+const NPVChart: React.FC<NPVChartProps> = ({ data, hoveredIndex, setHoveredIndex }) => {
   const activeDotRef = useRef<{ x: number, y: number } | null>(null);
   const { ticks, domain } = getYAxisTicksAndDomain(data)
 
@@ -256,4 +256,4 @@ const ChartSection: React.FC<ChartSectionProps> = ({ data, hoveredIndex, setHove
   )
 }
 
-export default ChartSection
+export default NPVChart
