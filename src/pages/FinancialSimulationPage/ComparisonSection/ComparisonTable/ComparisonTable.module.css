@@ -273,12 +273,13 @@
 }
 
 .seeMoreButton {
-  padding: 16px;
+  padding: 12px;
   text-align: center;
   color: var(--default-text);
   cursor: pointer;
   background: var(--table-cell);
   transition: background-color 0.2s ease;
+  user-select: none;
 }
 
 .seeMoreButton:hover {

@@ -132,92 +132,110 @@ const ComparisonTable = (props: ComparisonTableProps) => {
     )
   }
 
-  const visibleRows = [
-    "timeHorizon",
-    "keyAssumptions",
-    "financials",
-    "operational",
-    ...(showMore ? ["holeLength", "holeInclination", "quantityOfHoleInclinations"] : []),
-  ]
+  // const visibleRows = [
+  //   "timeHorizon",
+  //   "keyAssumptions",
+  //   "financials",
+  //   "operational",
+  //   ...(showMore ? ["holeLength", "holeInclination", "quantityOfHoleInclinations"] : []),
+  // ]
 
-  const keyAssumptionRow = () => {
-    const dia = [2, 2.5, 1] //scenarios.map(scenario => scenario.keyAssumptions);
+  const keyAssumptionRow = (label: string, key: string, unit: string) => {
+    const dia = [2, 2, 2]
     const relativeDifferences = dia.map((value, idx) =>
       idx === 0 ? 0 : Number(((value - dia[0]) / dia[0] * 100).toFixed(2))
     );
+
+    const sameValues = relativeDifferences.every((val) => val === 0);
+    if (sameValues && !showMore) {
+      return null
+    }
+
+    const formatValue = (value: number) => {
+      if (unit === "$") {
+        return formatCurrency(value);
+      } else if (unit.startsWith("$/")) {
+        return <span>{formatCurrency(value)} / {unit.slice(2)}</span>;
+      } else {
+        return `${value}${unit}`;
+      }
+    };
+
     return (
-      <>
-        {sectionTitleRow("KEY ASSUMPTIONS", true)}
-
-        <div className={`${styles.row} ${styles.borderBottom}`}>
-          <div className={styles.rowLabel}>
-            <span className={styles.rowSubLabel}>Cutter Head Size</span>
-          </div>
-
-          {scenarios.map((scenario, index) => (
-            <div key={scenario.id} className={styles.cell}>
-              <div className={styles.assumptionValue}>
-                {relativeDifferences[index] === 0 ?
-                  <div className={styles.diaDifference}>
-                    <div className={styles.noData}/>
-                  </div>
-                  :
-                  <div className={styles.diaDifference}>
-                    {relativeDifferences[index] > 0 ? "+" : ""}
-                    {relativeDifferences[index]}%
-                    <span className={styles.diaDifferenceIcon}>
-                      {relativeDifferences[index] > 0 ? "▲" : "▼"}
-                    </span>
-                  </div>
-
-                }
-                <span>{dia[index]}m</span>
-
-              </div>
+      renderDataRow(label, scenarios.map((scenario, index) => (
+        <div className={styles.assumptionValue}>
+          {relativeDifferences[index] === 0 ?
+            <div className={styles.diaDifference}>
+              <div className={styles.noData} />
             </div>
-          ))}
+            :
+            <div className={styles.diaDifference}>
+              {relativeDifferences[index] > 0 ? "+" : ""}
+              {relativeDifferences[index]}%
+              <span className={styles.diaDifferenceIcon}>
+                {relativeDifferences[index] > 0 ? "▲" : "▼"}
+              </span>
+            </div>
+          }
+          <span>{formatValue(dia[index])}</span>
         </div>
-      </>
+      )))
     )
   }
 
   const financialRow = (label: string, key: string, higherIsBetter: boolean) => {
     const values = financialOutputData.map((item) => item[key as keyof FinancialOutputData]);
+
+    const sameValues = values.every((val, _, arr) => val === arr[0]);
+    if (sameValues && !showMore) {
+      return null
+    }
+
     const colorCodes = getMetricBgClasses(values, higherIsBetter);
 
-    return (
-      <div className={`${styles.row} ${styles.borderBottom}`}>
-        <div className={styles.rowLabel}>
-          <span className={styles.rowSubLabel}>{label}</span>
-        </div>
-        {values.map((value, id) => (
-          <div key={id} className={styles.cell}
-            style={{ backgroundColor: colorCodes[id] }}
-          >
-            <div className={styles.textCell}>
-              {formatCurrency(value)}
-            </div>
-          </div>
-        ))}
+    return renderDataRow(label, values.map((value, id) => (
+      <div className={styles.textCell}>
+        {formatCurrency(value)}
       </div>
-    )
+    )), colorCodes);
   }
 
   const operationalRow = (label: string, key: string, unit: string) => {
     const values = operationalOutputData.map((item) => item[key as keyof OperationalOutputData]);
+    const sameValues = values.every((val, _, arr) => val === arr[0]);
+    if (sameValues && !showMore) {
+      return null
+    }
 
+    return renderDataRow(label, values.map((value, id) => (
+      <div className={styles.textCell}>
+        {typeof value === "number" ? `${value}${unit}` : ""}
+      </div>
+    )));
+  }
+
+  const chartDataRow = (label: string, dataKey: keyof ScenarioData, Component: React.ComponentType<any>) => {
+    return renderDataRow(label, scenarios.map((scenario) => {
+      const value = scenario[dataKey];
+      return typeof value === "object" && value !== null
+        ? <Component {...value} />
+        : <Component value={value} />;
+    }));
+  }
+
+  const renderDataRow = (label: string, cellContents: React.ReactNode[], backgroundColors?: string[]) => {
     return (
       <div className={`${styles.row} ${styles.borderBottom}`}>
         <div className={styles.rowLabel}>
           <span className={styles.rowSubLabel}>{label}</span>
         </div>
-        {values.map((value, id) => (
-          <div key={id} className={styles.cell}>
-            <div className={styles.textCell}>
-              {
-                typeof value === "number" ? `${value}${unit}` : ""
-              }
-            </div>
+        {cellContents.map((content, index) => (
+          <div
+            key={index}
+            className={styles.cell}
+            style={backgroundColors ? { backgroundColor: backgroundColors[index] } : {}}
+          >
+            {content}
           </div>
         ))}
       </div>
@@ -247,80 +265,44 @@ const ComparisonTable = (props: ComparisonTableProps) => {
         ))}
       </div>
 
-      {visibleRows.includes("timeHorizon") && (
-        <div className={styles.row}>
-          <div className={styles.subheader}>TIME HORIZON</div>
-          {scenarios.map((scenario) => (
-            <div key={scenario.id} className={styles.cell}>
-              <MiniChart data={scenario.timeHorizonData} />
-            </div>
-          ))}
-        </div>
-      )}
-
-      {visibleRows.includes("keyAssumptions") && (
-        keyAssumptionRow()
-      )}
-
-      {visibleRows.includes("financials") && (
-        <>
-          {sectionTitleRow("FINANCIALS")}
-          {financialRow("Revenue", "revenue", true)}
-          {financialRow("Mining Cost", "miningCost", false)}
-          {financialRow("Total Processing Cost", "totalProcessingCost", false)}
-          {financialRow("Net Cash Flow", "netCashFlow", true)}
-        </>
-      )}
-
-      {visibleRows.includes("operational") && (
-        <>
-          {sectionTitleRow("OPERATIONAL")}
-          {operationalRow("Life of Mine (LOM)", "LOMMoth", " months")}
-          {operationalRow("Extraction Holes", "extractionHoles", "")}
-          {operationalRow("Total Length", "totalLength", "m")}
-          {operationalRow("Ore Mass", "oreMass", " tonnes")}
-          {operationalRow("Grade", "gradeGramPerTonne", " g/ tonnes")}
-        </>
-      )}
-
-      {visibleRows.includes("holeLength") && (
-        <div className={`${styles.row} ${styles.borderBottom}`}>
-          <div className={styles.rowLabel}>
-            <span className={styles.rowSubLabel}>Hole Length</span>
+      <div className={styles.row}>
+        <div className={styles.subheader}>TIME HORIZON</div>
+        {scenarios.map((scenario) => (
+          <div key={scenario.id} className={styles.cell}>
+            <MiniChart data={scenario.timeHorizonData} />
           </div>
-          {scenarios.map((scenario) => (
-            <div key={scenario.id} className={styles.cell}>
-              <HorizontalBarChart {...scenario.holeLength} />
-            </div>
-          ))}
-        </div>
-      )}
+        ))}
+      </div>
 
-      {visibleRows.includes("holeInclination") && (
-        <div className={`${styles.row} ${styles.borderBottom}`}>
-          <div className={styles.rowLabel}>
-            <span className={styles.rowSubLabel}>Hole Inclination</span>
-          </div>
-          {scenarios.map((scenario) => (
-            <div key={scenario.id} className={styles.cell}>
-              <InclinationIndicator {...scenario.holeInclination} />
-            </div>
-          ))}
-        </div>
-      )}
+      {sectionTitleRow("KEY ASSUMPTIONS", true)}
+      {keyAssumptionRow("Cutter Head Size", "dia", "m")}
+      {keyAssumptionRow("Baseline Mining Cost/Tonne", "dia", "$")}
+      {keyAssumptionRow("Processing Cost per Tonne", "dia", "$")}
+      {keyAssumptionRow("Waste Cost per Tonne", "dia", "$")}
+      {keyAssumptionRow("Commodity Price", "dia", "$/oz")}
+      {keyAssumptionRow("Mill Recovery", "dia", "%")}
+      {keyAssumptionRow("Number of Drills", "dia", "")}
+      {keyAssumptionRow("Rate of Penetration", "dia", "m / hr")}
+      {keyAssumptionRow("Availability", "dia", "%")}
+      {keyAssumptionRow("Maximum Hole Length", "dia", "m")}
+      {keyAssumptionRow("Minimum Hole Inclination", "dia", "°")}
 
-      {visibleRows.includes("quantityOfHoleInclinations") && (
-        <div className={`${styles.row} ${styles.borderBottom}`}>
-          <div className={styles.rowLabel}>
-            <span className={styles.rowSubLabel}>Quantity of Hole Inclinations</span>
-          </div>
-          {scenarios.map((scenario) => (
-            <div key={scenario.id} className={styles.cell}>
-              <QuantityChart {...scenario.quantityOfHoleInclinations} />
-            </div>
-          ))}
-        </div>
-      )}
+      {sectionTitleRow("FINANCIALS")}
+      {financialRow("Revenue", "revenue", true)}
+      {financialRow("Mining Cost", "miningCost", false)}
+      {financialRow("Total Processing Cost", "totalProcessingCost", false)}
+      {financialRow("Net Cash Flow", "netCashFlow", true)}
+
+      {sectionTitleRow("OPERATIONAL")}
+      {operationalRow("Life of Mine (LOM)", "LOMMoth", " months")}
+      {operationalRow("Extraction Holes", "extractionHoles", "")}
+      {operationalRow("Total Length", "totalLength", "m")}
+      {operationalRow("Ore Mass", "oreMass", " tonnes")}
+      {operationalRow("Grade", "gradeGramPerTonne", " g/ tonnes")}
+
+      {chartDataRow("Hole Length", "holeLength", HorizontalBarChart)}
+      {chartDataRow("Hole Inclination", "holeInclination", InclinationIndicator)}
+      {chartDataRow("Quantity of Hole Inclinations", "quantityOfHoleInclinations", QuantityChart)}
 
       <div className={styles.seeMoreButton} onClick={() => setShowMore(!showMore)}>
         {showMore ? "See less" : "See more"}

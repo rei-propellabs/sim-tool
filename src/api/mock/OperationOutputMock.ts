@@ -3,7 +3,7 @@ import { OperationalOutputData } from "api/models/OutputData";
 export const operationalOutput_mock: Record<string, OperationalOutputData> = {
   "SCENARIO 1": {
     gradeGramPerTonne: 5,
-    LOMMoth: 12,
+    LOMMoth: 14,
     extractionHoles: 10,
     totalLength: 1000,
     wasteMass: 500,
@@ -55,7 +55,7 @@ export const operationalOutput_mock: Record<string, OperationalOutputData> = {
   },
   "SCENARIO 3": {
     gradeGramPerTonne: 7,
-    LOMMoth: 16,
+    LOMMoth: 14,
     extractionHoles: 14,
     totalLength: 1400,
     wasteMass: 700,
