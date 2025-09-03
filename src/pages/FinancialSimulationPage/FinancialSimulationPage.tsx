@@ -10,6 +10,7 @@ import ComparisonSection from "./ComparisonSection/ComparisonSection"
 import { ScenarioData } from "types/ScenarioData"
 import { operationalOutput_mock } from "api/mock/OperationOutputMock"
 import { financialOutput_mock } from "api/mock/FinancialOutputMock"
+import { scenarioData_mock } from "api/mock/MiningScenarioDataMock"
 
 const demoScenarios = [
   {
@@ -113,14 +114,13 @@ export function FinancialSimulationPage() {
 
   const [loading, setLoading] = useState(true)
   const [parsedData, setParsedData] = useState<FinancialSimulationData[]>([])
+  const scenarioData = scenarioData_mock
 
   useEffect(() => {
     const handleXLSX = async (index: number) => {
       try {
         const response = await fetch(demoScenarios[index].fileName)
-        if (!response.ok) {
-          throw new Error("Failed to fetch file")
-        }
+        if (!response.ok) throw new Error("Failed to fetch file")
         const arrayBuffer = await response.arrayBuffer()
         const data = new Uint8Array(arrayBuffer)
         const workbook = XLSX.read(data, { type: 'array' })
@@ -135,7 +135,6 @@ export function FinancialSimulationPage() {
 
         const filterRows = (rows: any[]): CashFlowRow[] =>
           rows.map(row => {
-            // Create a new object with trimmed keys
             const trimmedRow: Record<string, any> = {}
             Object.keys(row).forEach(k => {
               trimmedRow[k.trim()] = row[k]
@@ -156,19 +155,20 @@ export function FinancialSimulationPage() {
           annually: annuallyCashFlow
         }
 
-        setParsedData((data) => [...data, {
+        return {
           title: demoScenarios[index].title,
           cashFlow: cashFlow
-        }])
-
-        setLoading(false)
+        }
       } catch (error) {
         console.error(error)
         setLoading(false)
+        return null
       }
     }
-    [0, 1, 2].forEach((index) => {
-      handleXLSX(index)
+
+    Promise.all([handleXLSX(0), handleXLSX(1), handleXLSX(2)]).then(results => {
+      setParsedData(results.filter(Boolean) as FinancialSimulationData[]) // filter out nulls
+      setLoading(false)
     })
   }, [])
 
@@ -186,8 +186,9 @@ export function FinancialSimulationPage() {
       <MonthlySummarySection
         data={1}
         scenario={demoScenarios[activeScenarioIdx].title} />
-      <ComparisonSection 
-        scenarios={scenarioData}
+      <ComparisonSection
+        cashFlowData={Object.values(parsedData).map(d => d.cashFlow!.monthly!)}
+        keyAssumptions={Object.values(scenarioData)}
         financialOutputData={Object.values(financialOutput_mock)}
         operationalOutputData={Object.values(operationalOutput_mock)}
       />

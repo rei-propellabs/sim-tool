@@ -13,7 +13,7 @@ export function getMetricBgClasses(values: number[], higherIsBetter: boolean): s
   const maxCount = values.filter(v => v === max).length;
 
   // If all values are the same
-  if (min === max) return values.map(() => medium);
+  if (min === max) return values.map(() => "transparent");
 
   // If two values are the same
   if (minCount === 2 || maxCount === 2) {
@@ -43,12 +43,9 @@ export function getMetricBgClasses(values: number[], higherIsBetter: boolean): s
   });
 }
 
-export function getNormalizedValues(values: number[]): number[] {
-  const min = Math.min(...values);
+export function getValuesRelativeToMax(values: number[]): number[] {
   const max = Math.max(...values);
-  if (max === min) {
-    // All values are the same, return 1.00 for all
-    return values.map(() => 1.00);
-  }
-  return values.map(v => ((v - min) / (max - min)));
+  if (max === 0) return values.map(() => 0);  
+
+  return values.map(v => ((v / max)));
 }

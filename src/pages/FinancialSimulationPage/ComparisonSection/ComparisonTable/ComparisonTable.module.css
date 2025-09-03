@@ -38,13 +38,13 @@
 }
 
 .borderBottom {
-  border-bottom: 1px solid var(--table-border);
+  border-bottom: 1px solid var(--table-border-transparent);
 }
 
 .rowLabel {
   padding: 8px 16px 16px 16px;
   background-color: var(--table-cell);
-  border-right: 1px solid var(--table-border);
+  border-right: 1px solid var(--table-border-transparent);
   display: flex;
   flex-direction: column;
   justify-content: flex-start;
@@ -57,13 +57,13 @@
 .sectionCell {
   padding-top: 36px;
   padding-left: 16px;
-  border-right: 1px solid var(--table-border);
+  border-right: 1px solid var(--table-border-transparent);
 }
 
 .sectionCellSmall {
   padding-top: 8px;
   padding-left: 16px;
-  border-right: 1px solid var(--table-border);
+  border-right: 1px solid var(--table-border-transparent);
 }
 
 .sectionCell:last-child {
@@ -89,7 +89,7 @@
 .cell {
   padding: 8px;
   color: var(--default-text);
-  border-right: 1px solid var(--table-border);
+  border-right: 1px solid var(--table-border-transparent);
   display: flex;
   align-items: center;
   justify-content: center;

@@ -1,20 +1,21 @@
 import { useState } from "react"
 import styles from "./ComparisonTable.module.css"
 import { FinancialOutputData, OperationalOutputData } from "api/models/OutputData"
-import { ScenarioData } from "types/ScenarioData"
-import { getMetricBgClasses, getNormalizedValues } from "./ComparisonTableHelper"
+import { getMetricBgClasses, getValuesRelativeToMax } from "./ComparisonTableHelper"
 import AngleIndicator from "./AngleIndicator"
 import { Area, ComposedChart, Line, ResponsiveContainer } from "recharts"
+import { MiningScenarioData } from "api/models/MiningScenarioData"
+import { CashFlowRow } from "models/CashFlow"
 
 interface ComparisonTableProps {
-  scenarios: ScenarioData[]
+  cashFlowData: CashFlowRow[][];
+  keyAssumptions: MiningScenarioData[]
   financialOutputData: FinancialOutputData[]
   operationalOutputData: OperationalOutputData[]
-  hideRows?: string[]
 }
 
 const ComparisonTable = (props: ComparisonTableProps) => {
-  const { scenarios, financialOutputData, operationalOutputData, hideRows = [] } = props
+  const { cashFlowData, keyAssumptions, financialOutputData, operationalOutputData } = props
   const [showMore, setShowMore] = useState(false)
 
   const formatCurrency = (value: number) => {
@@ -61,8 +62,9 @@ const ComparisonTable = (props: ComparisonTableProps) => {
     )
   }
 
-  const HorizontalBarChart = ({ min, max, avg }: { min: number; max: number; avg: number }) => {
-    const widths = getNormalizedValues([min, max, avg])
+  const HorizontalBarChart = ({ data }: { data: Record<string, number> }) => {
+    const { min, max, average } = data;
+    const widths = getValuesRelativeToMax([min, max, average])
 
     return (
       <div className={styles.horizontalBarChart}>
@@ -85,13 +87,14 @@ const ComparisonTable = (props: ComparisonTableProps) => {
           <div className={styles.barContainer}>
             <div className={styles.bar} style={{ width: `${widths[2] * 100}%` }}></div>
           </div>
-          <span className={styles.barValue}>{avg}m</span>
+          <span className={styles.barValue}>{average}m</span>
         </div>
       </div>
     )
   }
 
-  const InclinationIndicator = ({ min, max, avg }: { min: number; max: number; avg: number }) => {
+  const InclinationIndicator = ({ data }: { data: Record<string, number> }) => {
+    const { min, max, average } = data;
     const radiusVw = 2.3
     const radiusPx = window.innerWidth * (radiusVw / 100);
 
@@ -99,7 +102,7 @@ const ComparisonTable = (props: ComparisonTableProps) => {
       <div className={styles.inclinationIndicator}>
         <div className={styles.inclinationColumn}>
           <span className={styles.inclinationLabel}>MIN</span>
-          <AngleIndicator angle={min} radius={radiusPx}/>
+          <AngleIndicator angle={min} radius={radiusPx} />
           <span className={styles.inclinationValue}>{min}°</span>
         </div>
         <div className={styles.inclinationColumn}>
@@ -109,16 +112,17 @@ const ComparisonTable = (props: ComparisonTableProps) => {
         </div>
         <div className={styles.inclinationColumn}>
           <span className={styles.inclinationLabel}>AVG</span>
-          <AngleIndicator angle={avg} radius={radiusPx} />
-          <span className={styles.inclinationValue}>{avg}°</span>
+          <AngleIndicator angle={average} radius={radiusPx} />
+          <span className={styles.inclinationValue}>{average}°</span>
         </div>
       </div>
     )
   }
 
-  const QuantityChart = ({ ranges, values }: { ranges: string[]; values: number[] }) => {
-    const heights = getNormalizedValues(values)
-    console.log(heights)
+  const QuantityBarChart = ({ data }: { data: Record<string, number> }) => {
+    const ranges = Object.keys(data)
+    const values = Object.values(data) as number[]
+    const heights = getValuesRelativeToMax(values)
 
     return (
       <div className={styles.quantityChart}>
@@ -144,9 +148,10 @@ const ComparisonTable = (props: ComparisonTableProps) => {
   }
 
   const keyAssumptionRow = (label: string, key: string, unit: string) => {
-    const dia = [2, 2, 2]
-    const relativeDifferences = dia.map((value, idx) =>
-      idx === 0 ? 0 : Number(((value - dia[0]) / dia[0] * 100).toFixed(2))
+    // const values = [2, 2.5, 3]
+    const values = keyAssumptions.map((item) => item[key as keyof MiningScenarioData] as number);
+    const relativeDifferences = values.map((value, idx) =>
+      idx === 0 ? 0 : Number(((value - values[0]) / values[0] * 100).toFixed(2))
     );
 
     const sameValues = relativeDifferences.every((val) => val === 0);
@@ -165,7 +170,7 @@ const ComparisonTable = (props: ComparisonTableProps) => {
     };
 
     return (
-      renderDataRow(label, scenarios.map((scenario, index) => (
+      renderDataRow(label, keyAssumptions.map((scenario, index) => (
         <div className={styles.assumptionValue}>
           {relativeDifferences[index] === 0 ?
             <div className={styles.diaDifference}>
@@ -180,7 +185,7 @@ const ComparisonTable = (props: ComparisonTableProps) => {
               </span>
             </div>
           }
-          <span>{formatValue(dia[index])}</span>
+          <span>{formatValue(values[index])}</span>
         </div>
       )))
     )
@@ -217,12 +222,12 @@ const ComparisonTable = (props: ComparisonTableProps) => {
     )));
   }
 
-  const chartDataRow = (label: string, dataKey: keyof ScenarioData, Component: React.ComponentType<any>) => {
-    return renderDataRow(label, scenarios.map((scenario) => {
+  const chartDataRow = (label: string, dataKey: keyof OperationalOutputData, Component: React.ComponentType<any>) => {
+    return renderDataRow(label, operationalOutputData.map((scenario) => {
       const value = scenario[dataKey];
       return typeof value === "object" && value !== null
-        ? <Component {...value} />
-        : <Component value={value} />;
+        ? <Component data={value} />
+        : null;
     }));
   }
 
@@ -248,7 +253,7 @@ const ComparisonTable = (props: ComparisonTableProps) => {
   const sectionTitleRow = (title: string, isSmall?: boolean) => {
     return (
       <div className={styles.row}>
-        {Array.from({ length: scenarios.length + 1 }).map((_, idx) => (
+        {Array.from({ length: keyAssumptions.length + 1 }).map((_, idx) => (
           <div key={idx} className={`${styles.sectionCell} ${isSmall ? styles.sectionCellSmall : ""}`}>
             <div className={styles.sectionTitle}>{title}</div>
           </div>
@@ -257,55 +262,102 @@ const ComparisonTable = (props: ComparisonTableProps) => {
     )
   }
 
+  const keyAssumptionSection = () => {
+    const keyAssumptionRows = [
+      keyAssumptionRow("Cutter Head Size", "cutterHeadSize", "m"),
+      keyAssumptionRow("Baseline Mining Cost/Tonne", "baselineMiningCost", "$"),
+      keyAssumptionRow("Processing Cost per Tonne", "processingCost", "$"),
+      keyAssumptionRow("Waste Cost per Tonne", "wasteCost", "$"),
+      keyAssumptionRow("Commodity Price", "commodityPrice", "$/oz"),
+      keyAssumptionRow("Mill Recovery", "millRecovery", "%"),
+      keyAssumptionRow("Number of Drills", "numberOfDrills", ""),
+      keyAssumptionRow("Rate of Penetration", "rateOfPenetration", "m / hr"),
+      keyAssumptionRow("Availability", "availability", "%"),
+      keyAssumptionRow("Maximum Hole Length", "maxHoleLength", "m"),
+      keyAssumptionRow("Minimum Hole Inclination", "minHoleInclination", "°"),
+    ];
+    const visibleRows = keyAssumptionRows.filter(Boolean);
+
+    return (
+      <>
+        {visibleRows.length > 0 && sectionTitleRow("KEY ASSUMPTIONS", true)}
+        {visibleRows}
+      </>
+    )
+  }
+
+  const financialSection = () => {
+    const financialRows = [
+      financialRow("Revenue", "revenue", true),
+      financialRow("Mining Cost", "miningCost", false),
+      financialRow("Processing Cost (Ore)", "processingCostOre", false),
+      financialRow("Processing Cost (Waste)", "processingCostWaste", false),
+      financialRow("Total Processing Cost", "totalProcessingCost", false),
+      financialRow("CapEx", "capex", false),
+      financialRow("Net Cash Flow", "netCashFlow", true),
+      financialRow("All In Cost / Tonne", "allInCostTonne", false),
+      financialRow("All In Sustaining Costs (AISC)", "aisc", false),
+      financialRow("All In Cost / Meter", "allInCostMeter", false),
+      financialRow("Revenue / Meter", "revenueMeter", true),
+      financialRow("Cash Flow / Meter", "cashFlowMeter", true),
+    ];
+
+    const visibleRows = financialRows.filter(Boolean);
+
+    return (
+      <>
+        {visibleRows.length > 0 && sectionTitleRow("FINANCIALS")}
+        {visibleRows}
+      </>
+    )
+  }
+
+  const operationalSection = () => {
+    const operationalRows = [
+      operationalRow("Life of Mine (LOM)", "LOMMoth", " months"),
+      operationalRow("Extraction Holes", "extractionHoles", ""),
+      operationalRow("Total Length", "totalLength", "m"),
+      operationalRow("Ore Mass", "oreMass", " tonnes"),
+      operationalRow("Grade", "gradeGramPerTonne", " g/ tonnes"),
+      chartDataRow("Hole Length", "holeLength", HorizontalBarChart),
+      chartDataRow("Hole Inclination", "holeInclination", InclinationIndicator),
+      chartDataRow("Quantity of Hole Inclinations", "numHoles", QuantityBarChart)
+    ];
+    const visibleRows = operationalRows.filter(Boolean);
+
+    return (
+      <>
+        {visibleRows.length > 0 && sectionTitleRow("OPERATIONAL")}
+        {visibleRows}
+      </>
+    )
+  }
+
   return (
     <div className={styles.tableContainer}>
       <div className={styles.header}>
         <div className={styles.subheader}>SCENARIO</div>
-        {scenarios.map((scenario) => (
-          <div key={scenario.id} className={styles.headerCell}>
-            {scenario.id}
+        {keyAssumptions.map((scenario, index) => (
+          <div key={index} className={styles.headerCell}>
+            {index + 1}
           </div>
         ))}
       </div>
 
       <div className={styles.row}>
         <div className={styles.subheader}>TIME HORIZON</div>
-        {scenarios.map((scenario) => (
-          <div key={scenario.id} className={styles.cell}>
-            <LineChart data={scenario.timeHorizonData} />
+        {cashFlowData.map((scenario, index) => (
+          <div key={index} className={styles.cell}>
+            <LineChart data={scenario.map(d => d["Net Revenue"])} />
           </div>
         ))}
       </div>
 
-      {sectionTitleRow("KEY ASSUMPTIONS", true)}
-      {keyAssumptionRow("Cutter Head Size", "dia", "m")}
-      {keyAssumptionRow("Baseline Mining Cost/Tonne", "dia", "$")}
-      {keyAssumptionRow("Processing Cost per Tonne", "dia", "$")}
-      {keyAssumptionRow("Waste Cost per Tonne", "dia", "$")}
-      {keyAssumptionRow("Commodity Price", "dia", "$/oz")}
-      {keyAssumptionRow("Mill Recovery", "dia", "%")}
-      {keyAssumptionRow("Number of Drills", "dia", "")}
-      {keyAssumptionRow("Rate of Penetration", "dia", "m / hr")}
-      {keyAssumptionRow("Availability", "dia", "%")}
-      {keyAssumptionRow("Maximum Hole Length", "dia", "m")}
-      {keyAssumptionRow("Minimum Hole Inclination", "dia", "°")}
+      {keyAssumptionSection()}
 
-      {sectionTitleRow("FINANCIALS")}
-      {financialRow("Revenue", "revenue", true)}
-      {financialRow("Mining Cost", "miningCost", false)}
-      {financialRow("Total Processing Cost", "totalProcessingCost", false)}
-      {financialRow("Net Cash Flow", "netCashFlow", true)}
+      {financialSection()}
 
-      {sectionTitleRow("OPERATIONAL")}
-      {operationalRow("Life of Mine (LOM)", "LOMMoth", " months")}
-      {operationalRow("Extraction Holes", "extractionHoles", "")}
-      {operationalRow("Total Length", "totalLength", "m")}
-      {operationalRow("Ore Mass", "oreMass", " tonnes")}
-      {operationalRow("Grade", "gradeGramPerTonne", " g/ tonnes")}
-
-      {chartDataRow("Hole Length", "holeLength", HorizontalBarChart)}
-      {chartDataRow("Hole Inclination", "holeInclination", InclinationIndicator)}
-      {chartDataRow("Quantity of Hole Inclinations", "quantityOfHoleInclinations", QuantityChart)}
+      {operationalSection()}
 
       <div className={styles.seeMoreButton} onClick={() => setShowMore(!showMore)}>
         {showMore ? "See less" : "See more"}

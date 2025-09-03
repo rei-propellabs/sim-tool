@@ -13,6 +13,7 @@ export const scenarioData_mock: Record<string, MiningScenarioData> = {
     maxHoleLength: 300,
     minHoleInclination: 60,
     discountRate: 5,
+    rateOfPenetration: 0.8,
   },
   "SCENARIO 2": {
     baselineMiningCost: 180,
@@ -26,6 +27,7 @@ export const scenarioData_mock: Record<string, MiningScenarioData> = {
     maxHoleLength: 350,
     minHoleInclination: 65,
     discountRate: 4.5,
+    rateOfPenetration: 0.8,
   },
   "SCENARIO 3": {
     baselineMiningCost: 220,
@@ -39,5 +41,6 @@ export const scenarioData_mock: Record<string, MiningScenarioData> = {
     maxHoleLength: 280,
     minHoleInclination: 55,
     discountRate: 5.5,
+    rateOfPenetration: 0.8,
   },
 }

@@ -10,4 +10,6 @@ export interface MiningScenarioData {
   maxHoleLength: number
   minHoleInclination: number
   discountRate: number
+  rateOfPenetration: number
+  
 }
