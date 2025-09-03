@@ -3,6 +3,7 @@
   overflow: hidden;
   margin: 2vh 10vw;
   border: 1px solid var(--table-border);
+  min-width: 690px;
 }
 
 .header {
@@ -246,30 +247,59 @@
   justify-content: flex-end;
 }
 
+.quantityBarFillOuter {
+  height: 100%;
+  display: flex;
+  flex-direction: column-reverse;
+}
+
 .quantityBarFill {
   width: 18px;
   background: var(--accent);
   z-index: 1;
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  /* fallback support layering for mix-blend-mode */
+  isolation: isolate;
 }
 
 .quantityLabel {
   font-size: 9px;
   margin-top: 4px;
   color: var(--darker-text);
+
 }
 
 .quantityValue {
   mix-blend-mode: difference;
   position: absolute;
   top: 0;
-  width: 18px;
+  width: 28px;
+  line-height: 28px;
   text-align: right;
   transform-origin: top left;
-  transform: translateY(120%) rotate(-90deg);
+  transform: translateY(100%) rotate(-90deg);
   font-size: 0.85rem;
   font-weight: 400;
   z-index: 2;
+  color: var(--default-text);
 
+  /* (webkit) - makes text act as mask */
+  background: black;
+  -webkit-mask-image: text;
+  -webkit-mask-repeat: no-repeat;
+  -webkit-mask-position: center;
+  -webkit-mask-size: contain;
+  -webkit-mask-composite: xor;
+
+  mask-image: text;
+  mask-composite: exclude;
+
+  /* FALLBACK: Blend mode for browsers that ignore masks */
+  mix-blend-mode: destination-out;
 }
 
 .seeMoreButton {

@@ -4,7 +4,7 @@ import { FinancialOutputData, OperationalOutputData } from "api/models/OutputDat
 import { ScenarioData } from "types/ScenarioData"
 import { getMetricBgClasses, getNormalizedValues } from "./ComparisonTableHelper"
 import AngleIndicator from "./AngleIndicator"
-import { Area, ComposedChart, Line, LineChart, ResponsiveContainer } from "recharts"
+import { Area, ComposedChart, Line, ResponsiveContainer } from "recharts"
 
 interface ComparisonTableProps {
   scenarios: ScenarioData[]
@@ -26,7 +26,7 @@ const ComparisonTable = (props: ComparisonTableProps) => {
     }).format(value)
   }
 
-  const MiniChart = ({ data }: { data: number[] }) => {
+  const LineChart = ({ data }: { data: number[] }) => {
     return (
       <div className={styles.miniChart}>
         <ResponsiveContainer width="100%" height={80}>
@@ -45,7 +45,7 @@ const ComparisonTable = (props: ComparisonTableProps) => {
               stroke="var(--accent)"
               dot={false}
               activeDot={false}
-              
+
             />
             <Area
               isAnimationActive={false}
@@ -91,28 +91,34 @@ const ComparisonTable = (props: ComparisonTableProps) => {
     )
   }
 
-  const InclinationIndicator = ({ min, max, avg }: { min: number; max: number; avg: number }) => (
-    <div className={styles.inclinationIndicator}>
-      <div className={styles.inclinationColumn}>
-        <span className={styles.inclinationLabel}>MIN</span>
-        <AngleIndicator angle={min} />
-        <span className={styles.inclinationValue}>{min}°</span>
+  const InclinationIndicator = ({ min, max, avg }: { min: number; max: number; avg: number }) => {
+    const radiusVw = 2.3
+    const radiusPx = window.innerWidth * (radiusVw / 100);
+
+    return (
+      <div className={styles.inclinationIndicator}>
+        <div className={styles.inclinationColumn}>
+          <span className={styles.inclinationLabel}>MIN</span>
+          <AngleIndicator angle={min} radius={radiusPx}/>
+          <span className={styles.inclinationValue}>{min}°</span>
+        </div>
+        <div className={styles.inclinationColumn}>
+          <span className={styles.inclinationLabel}>MAX</span>
+          <AngleIndicator angle={max} radius={radiusPx} />
+          <span className={styles.inclinationValue}>{max}°</span>
+        </div>
+        <div className={styles.inclinationColumn}>
+          <span className={styles.inclinationLabel}>AVG</span>
+          <AngleIndicator angle={avg} radius={radiusPx} />
+          <span className={styles.inclinationValue}>{avg}°</span>
+        </div>
       </div>
-      <div className={styles.inclinationColumn}>
-        <span className={styles.inclinationLabel}>MAX</span>
-        <AngleIndicator angle={max} />
-        <span className={styles.inclinationValue}>{max}°</span>
-      </div>
-      <div className={styles.inclinationColumn}>
-        <span className={styles.inclinationLabel}>AVG</span>
-        <AngleIndicator angle={avg} />
-        <span className={styles.inclinationValue}>{avg}°</span>
-      </div>
-    </div>
-  )
+    )
+  }
 
   const QuantityChart = ({ ranges, values }: { ranges: string[]; values: number[] }) => {
     const heights = getNormalizedValues(values)
+    console.log(heights)
 
     return (
       <div className={styles.quantityChart}>
@@ -120,28 +126,22 @@ const ComparisonTable = (props: ComparisonTableProps) => {
           <div key={range} className={styles.quantityBar}>
             <div className={styles.quantityValue}>{values[index]}</div>
 
-
             <div
-              className={styles.quantityBarFill}
-              style={{
-                height: `${Math.max(heights[index], 0.02) * 100}%`,
-                background: heights[index] > 0 ? "var(--accent)" : "var(--completed)"
-              }}
-            ></div>
+              className={styles.quantityBarFillOuter}
+
+            >
+              <div className={styles.quantityBarFill}
+                style={{
+                  height: `${Math.max(heights[index], 0.02) * 100}%`,
+                  background: heights[index] > 0 ? "var(--accent)" : "var(--completed)"
+                }} />
+            </div>
             <span className={styles.quantityLabel}>{range}°</span>
           </div>
         ))}
       </div>
     )
   }
-
-  // const visibleRows = [
-  //   "timeHorizon",
-  //   "keyAssumptions",
-  //   "financials",
-  //   "operational",
-  //   ...(showMore ? ["holeLength", "holeInclination", "quantityOfHoleInclinations"] : []),
-  // ]
 
   const keyAssumptionRow = (label: string, key: string, unit: string) => {
     const dia = [2, 2, 2]
@@ -272,7 +272,7 @@ const ComparisonTable = (props: ComparisonTableProps) => {
         <div className={styles.subheader}>TIME HORIZON</div>
         {scenarios.map((scenario) => (
           <div key={scenario.id} className={styles.cell}>
-            <MiniChart data={scenario.timeHorizonData} />
+            <LineChart data={scenario.timeHorizonData} />
           </div>
         ))}
       </div>

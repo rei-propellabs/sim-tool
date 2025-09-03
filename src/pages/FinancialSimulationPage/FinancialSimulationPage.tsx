@@ -49,7 +49,7 @@ const scenarioData: ScenarioData[] = [
     holeInclination: { min: 40, max: 90, avg: 55 },
     quantityOfHoleInclinations: {
       ranges: ["35-39", "40-49", "50-59", "60-69", "70-79", "80-90"],
-      values: [25, 74, 0, 0, 95, 25],
+      values: [25, 75, 50, 0, 100, 10],
     },
   },
   {
