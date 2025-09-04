@@ -22,6 +22,8 @@
   gap: 0.8vh;
   max-width: 16vw;
   max-height: 40vh;
+  z-index: 1;
+  position: relative;
 }
 .outputTab {
   width: 16vw;
@@ -33,4 +35,6 @@
   gap: 0.8vh;
   max-width: 16vw;
   max-height: 40vh;
+  z-index: 1;
+  position: relative;
 }

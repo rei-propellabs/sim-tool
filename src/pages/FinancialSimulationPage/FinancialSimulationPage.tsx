@@ -93,11 +93,11 @@ export function FinancialSimulationPage() {
     })
   }, [])
 
-  useEffect(() => {
-    if (!loadingScenarios) {
-      // Perform actions when scenarios are loaded
-    }
-  }, [loadingScenarios])
+  // useEffect(() => {
+  //   if (!loadingScenarios) {
+  //     // Perform actions when scenarios are loaded
+  //   }
+  // }, [loadingScenarios])
 
   if (loading) {
     return <div className={styles.spinner}>Loading...</div>

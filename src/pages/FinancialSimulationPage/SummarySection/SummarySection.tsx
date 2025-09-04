@@ -11,6 +11,7 @@ import { FinancialOutputData, OperationalOutputData } from "api/models/OutputDat
 import { MetricCardComposite } from "components/MetricCard/MetricCardComposite"
 import { MetricCardThreeRows } from "components/MetricCard/MetricCardThreeRows"
 import { formatNumberWithAbbreviation } from "utils/NumberFormatter"
+import STLPage from "../stl-viewer/stl-viewer-page"
 
 interface SummarySectionProps {
   activeScenario: string,
@@ -125,6 +126,10 @@ export const SummarySection: React.FC<SummarySectionProps> = (props) => {
   }
   return (
     <div className={styles.summary}>
+
+      <div className="absolute-fill behind">
+        <STLPage />
+      </div>
       {/* Input Panel */}
       <div>
         <div className={styles.scenarioTab}>
@@ -134,6 +139,7 @@ export const SummarySection: React.FC<SummarySectionProps> = (props) => {
         </div>
         {InputPanel(currentData)}
       </div>
+      
 
       {/* Output Panel */}
       <div>

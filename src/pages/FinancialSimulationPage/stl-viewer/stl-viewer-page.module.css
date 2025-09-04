@@ -1,0 +1,27 @@
+.container {
+  position: relative;
+  border: 2px solid var(--blue-500);
+  height: 100vh;
+  overflow: hidden;
+}
+.resetButton {
+  position: absolute;
+  bottom: 20px;
+  right: 20px;
+  background-color: var(--blue-500);
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 5px;
+  cursor: pointer;
+}
+.loading {
+  display: flex;
+  flex-direction: row;
+  height: 100%;
+  width: 100%;
+  align-items: center;
+  justify-content: center;
+  color: var(--darker-text);
+  font-size: 1rem;
+}
