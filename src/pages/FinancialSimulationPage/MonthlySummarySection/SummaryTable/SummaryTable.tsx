@@ -1,21 +1,7 @@
 import React from "react"
 import styles from "./SummaryTable.module.css"
+import { SummaryTableType } from "types/SummaryTableType"
 
-export interface TableRow {
-  label: string
-  values: (string | number)[]
-  type?: "currency" | "number" | "header"
-}
-
-export interface TableSection {
-  title?: string
-  rows: TableRow[]
-}
-
-export interface FinancialDataTableProps {
-  columns: string[]
-  sections: TableSection[]
-}
 
 const formatValue = (value: string | number, type?: string): string => {
   if (typeof value === "string") return value
@@ -35,7 +21,7 @@ const formatValue = (value: string | number, type?: string): string => {
   }
 }
 
-export default function SummaryTable({ columns, sections }: FinancialDataTableProps) {
+export default function SummaryTable({ columns, sections }: SummaryTableType) {
   return (
     <div className={styles.tableContainer}>
       <table className={styles.table}>

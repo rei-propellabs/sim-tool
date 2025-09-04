@@ -1,11 +1,15 @@
+export interface TableRow {
+  label: string
+  values: number[]
+  type?: "currency" | "number"
+}
+
+export interface TableSection {
+  title?: string
+  rows: TableRow[]
+}
+
 export interface SummaryTableType {
-  columns: string[];
-  sections: {
-    title: string;
-    rows: {
-      label: string;
-      values: number[];
-      type: "number" | "currency";
-    }[];
-  }[];
+  columns: string[]
+  sections: TableSection[]
 }

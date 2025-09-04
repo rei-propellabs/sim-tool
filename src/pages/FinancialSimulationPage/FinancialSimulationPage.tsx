@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react"
 import styles from "./FinancialSimulationPage.module.css"
 import { NPVSection } from "./NPVSection/NPVSection"
-import { SummarySection } from "./SummarySection/SummarySection"
+import { OverviewSection } from "./OverviewSection/OverviewSection"
 import * as XLSX from 'xlsx'
 import { CashFlowRow } from "models/CashFlow"
 import { FinancialSimulationData } from "models/FinancialSimulationData"
@@ -105,7 +105,7 @@ export function FinancialSimulationPage() {
   }
   return (
     <div className={styles.dashboard}>
-      <SummarySection
+      <OverviewSection
         activeScenario={demoScenarios[activeScenarioIdx].title}
         setActiveScenarioIdx={setActiveScenarioIdx} />
       <NPVSection

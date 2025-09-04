@@ -1,6 +1,6 @@
 import { Download } from "images/Dynamic/Download";
 import finSimStyles from '../FinancialSimulationPage.module.css';
-import SummaryTable from "../SummaryTable/SummaryTable";
+import SummaryTable from "./SummaryTable/SummaryTable";
 import { exportToExcel } from "./ExportToExcel";
 import { SummaryTableType } from "types/SummaryTableType"
 
@@ -124,7 +124,7 @@ const MonthlySummarySection: React.FC<MonthlySummarySectionProps> = ({ data, sce
       <div className={finSimStyles.heading}>
         <div className={finSimStyles.left}>
           <div className={finSimStyles.scenarioLabel}>{scenario}</div>
-          <div className={finSimStyles.title}>Project Summary by Month</div>
+          <div className={finSimStyles.title}>Project Summary by Year</div>
         </div>
         <div className={finSimStyles.right}>
           <button onClick={() => exportToExcel(scenarioTableData, fileName)} className={"primary-button"}>

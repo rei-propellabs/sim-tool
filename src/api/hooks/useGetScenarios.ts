@@ -8,7 +8,9 @@ const useGetScenarios = (token: string | null, orgId: string) => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const apiEndpoint = `${API_BASE_URL}/admin/scenario/s3?organizationId=${orgId}&path=simulation_2`;
+        const encodedPath = encodeURIComponent("simulation_1/run_1");
+
+        const apiEndpoint = `${API_BASE_URL}/admin/scenario?organizationId=${orgId}&path=${encodedPath}`;
         console.log("Fetching", apiEndpoint);
         
         const response = await fetch(apiEndpoint, {

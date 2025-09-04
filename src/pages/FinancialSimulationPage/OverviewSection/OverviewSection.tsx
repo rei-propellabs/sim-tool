@@ -1,5 +1,5 @@
 import { useState } from "react"
-import styles from "./SummarySection.module.css"
+import styles from "./OverviewSection.module.css"
 import { MetricCardTwoRows } from "components/MetricCard/MetricCardTwoRows"
 import { TabBar } from "components/TabBar/TabBar"
 import { scenarioData_mock } from "api/mock/MiningScenarioDataMock"
@@ -13,11 +13,11 @@ import { MetricCardThreeRows } from "components/MetricCard/MetricCardThreeRows"
 import { formatNumberWithAbbreviation } from "utils/NumberFormatter"
 import STLPage from "../stl-viewer/stl-viewer-page"
 
-interface SummarySectionProps {
+interface OverviewSectionProps {
   activeScenario: string,
   setActiveScenarioIdx: (index: number) => void,
 }
-export const SummarySection: React.FC<SummarySectionProps> = (props) => {
+export const OverviewSection: React.FC<OverviewSectionProps> = (props) => {
   const { activeScenario, setActiveScenarioIdx } = props
   const scenarioData = scenarioData_mock
   const financialData = financialOutput_mock

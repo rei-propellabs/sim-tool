@@ -49,13 +49,11 @@ function STLGroup({ stls, objects }: {
                 stls.map((stl, index) => {
                     console.log(`Rendering STL URL[${index}]`)
                     return (
-                        <>
-                            <STLMesh key={index}
-                                color={objects[index].color}
-                                opacity={objects[index].opacity}
-                                wireframe={objects[index].wireframe}
-                                stl={stl} />
-                        </>
+                        <STLMesh key={index}
+                            color={objects[index].color}
+                            opacity={objects[index].opacity}
+                            wireframe={objects[index].wireframe}
+                            stl={stl} />
                     )
                 }
                 )
@@ -87,9 +85,9 @@ export interface STLCanvasProps {
 
 
 export default function STLCanvas({ objects, debugMode, resetButton, className }: STLCanvasProps) {
-const orbitRef = useRef<ThreeOrbitControls | null>(null);
+    const orbitRef = useRef<ThreeOrbitControls | null>(null);
 
-const containerRef = useRef<HTMLDivElement>(null);
+    const containerRef = useRef<HTMLDivElement>(null);
 
     const stls = objects.map((object, index) => {
         console.log(`Loading STL URL[${index}] : ${object.url}`);
