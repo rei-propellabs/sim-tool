@@ -101,7 +101,9 @@
 .behind {
     z-index: 0;
 }
-
+.front {
+    z-index: 100;
+}
 .custom-slider {
     & .MuiSlider-thumb {
         background-color: #E5F3EBDE;

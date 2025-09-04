@@ -131,7 +131,7 @@ export const SummarySection: React.FC<SummarySectionProps> = (props) => {
         <STLPage />
       </div>
       {/* Input Panel */}
-      <div>
+      <div className="front">
         <div className={styles.scenarioTab}>
           <TabBar
             texts={scenarios} activeText={activeScenario}
@@ -142,7 +142,7 @@ export const SummarySection: React.FC<SummarySectionProps> = (props) => {
       
 
       {/* Output Panel */}
-      <div>
+      <div className="front">
         <div className={styles.outputTab}>
           <TabBar
             texts={outputs} activeText={outputs[activeOutputIdx]}

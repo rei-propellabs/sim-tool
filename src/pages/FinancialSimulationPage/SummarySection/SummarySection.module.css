@@ -5,6 +5,7 @@
   box-sizing: border-box;
   display: flex;
   justify-content: space-between;
+  background: #000;
 }
 
 .scenarioTab {
@@ -27,6 +28,7 @@
 }
 .outputTab {
   width: 16vw;
+  z-index: 2;
 }
 .outputGridRight {
   margin-top: 2vh;
