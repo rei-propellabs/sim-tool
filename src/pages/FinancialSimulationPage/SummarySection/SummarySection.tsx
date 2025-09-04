@@ -142,7 +142,7 @@ export const SummarySection: React.FC<SummarySectionProps> = (props) => {
       
 
       {/* Output Panel */}
-      <div className="front">
+      <div>
         <div className={styles.outputTab}>
           <TabBar
             texts={outputs} activeText={outputs[activeOutputIdx]}
