@@ -1,13 +1,14 @@
 import { Download } from "images/Dynamic/Download";
 import finSimStyles from '../FinancialSimulationPage.module.css';
 import SummaryTable from "../SummaryTable/SummaryTable";
-
+import { exportToExcel } from "./ExportToExcel";
+import { SummaryTableType } from "types/SummaryTableType";
 
 interface MonthlySummarySectionProps {
   data: any;
   scenario: string;
 }
-const tableData = {
+const tableData: SummaryTableType = {
   columns: ["-1", "0", "1", "2", "3", "4", "5", "6", "7", "8", "9", "10"],
   sections: [
     {
@@ -16,47 +17,47 @@ const tableData = {
         {
           label: "Production in Tonnes",
           values: [123, 123, 123, 123, 123, 123, 123, 123, 123, 123, 123, 123],
-          type: "number" as const,
+          type: "number",
         },
         {
           label: "Production in Oz",
           values: [123, 123, 123, 123, 123, 123, 123, 123, 123, 123, 123, 123],
-          type: "number" as const,
+          type: "number",
         },
         {
           label: "Meters Drilled",
           values: [123, 123, 123, 123, 123, 123, 123, 123, 123, 123, 123, 123],
-          type: "number" as const,
+          type: "number",
         },
         {
           label: "Holes",
           values: [123, 123, 123, 123, 123, 123, 123, 123, 123, 123, 123, 123],
-          type: "number" as const,
+          type: "number",
         },
         {
           label: "Revenue",
           values: [123, 123, 123, 123, 123, 123, 123, 123, 123, 123, 123, 123],
-          type: "number" as const,
+          type: "currency",
         },
         {
           label: "Operating Cost",
           values: [123, 123, 123, 123, 123, 123, 123, 123, 123, 123, 123, 123],
-          type: "number" as const,
+          type: "currency",
         },
         {
           label: "Operating Income",
           values: [123, 123, 123, 123, 123, 123, 123, 123, 123, 123, 123, 123],
-          type: "number" as const,
+          type: "currency",
         },
         {
           label: "CAPEX",
           values: [123, 123, 123, 123, 123, 123, 123, 123, 123, 123, 123, 123],
-          type: "number" as const,
+          type: "currency",
         },
         {
           label: "Project FCF*",
           values: [123, 123, 123, 123, 123, 123, 123, 123, 123, 123, 123, 123],
-          type: "number" as const,
+          type: "currency",
         },
       ],
     },
@@ -66,22 +67,22 @@ const tableData = {
         {
           label: "Revenue",
           values: [123456, 123456, 123456, 123456, 123456, 123456, 123456, 123456, 123456, 123456, 123456, 123456],
-          type: "currency" as const,
+          type: "currency",
         },
         {
           label: "Mining Cost",
           values: [123456, 123456, 123456, 123456, 123456, 123456, 123456, 123456, 123456, 123456, 123456, 123456],
-          type: "currency" as const,
+          type: "currency",
         },
         {
           label: "Operating Cost",
           values: [123456, 123456, 123456, 123456, 123456, 123456, 123456, 123456, 123456, 123456, 123456, 123456],
-          type: "currency" as const,
+          type: "currency",
         },
         {
           label: "All-In Cost",
           values: [123456, 123456, 123456, 123456, 123456, 123456, 123456, 123456, 123456, 123456, 123456, 123456],
-          type: "currency" as const,
+          type: "currency",
         },
       ],
     },
@@ -91,27 +92,30 @@ const tableData = {
         {
           label: "Revenue",
           values: [123456, 123456, 123456, 123456, 123456, 123456, 123456, 123456, 123456, 123456, 123456, 123456],
-          type: "currency" as const,
+          type: "currency",
         },
         {
           label: "Mining Cost",
           values: [123456, 123456, 123456, 123456, 123456, 123456, 123456, 123456, 123456, 123456, 123456, 123456],
-          type: "currency" as const,
+          type: "currency",
         },
         {
           label: "Operating Cost",
           values: [123456, 123456, 123456, 123456, 123456, 123456, 123456, 123456, 123456, 123456, 123456, 123456],
-          type: "currency" as const,
+          type: "currency",
         },
         {
           label: "All-In Cost",
           values: [123456, 123456, 123456, 123456, 123456, 123456, 123456, 123456, 123456, 123456, 123456, 123456],
-          type: "currency" as const,
+          type: "currency",
         },
       ],
     },
   ],
 }
+
+const scenarioTableData = [tableData, tableData, tableData]
+const fileName = "SummaryTable"
 
 const MonthlySummarySection: React.FC<MonthlySummarySectionProps> = ({ data, scenario }) => {
   return (
@@ -123,7 +127,7 @@ const MonthlySummarySection: React.FC<MonthlySummarySectionProps> = ({ data, sce
           <div className={finSimStyles.title}>Project Summary by Month</div>
         </div>
         <div className={finSimStyles.right}>
-          <button className={"primary-button"}>
+          <button onClick={() => exportToExcel(scenarioTableData, fileName)} className={"primary-button"}>
             <Download size={18} color={"var(--primary-button-text)"} />
             Download</button>
         </div>

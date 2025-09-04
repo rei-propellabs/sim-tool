@@ -90,6 +90,11 @@ button:focus {
   outline: none;
 }
 
+*:focus {
+  outline: none;
+  box-shadow: none;
+}
+
 :root {
   --station-panel-height-dynamic: calc(100vh - var(--header) - var(--paging-height) - 25px);
   

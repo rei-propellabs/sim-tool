@@ -8,7 +8,7 @@ const useGetScenarios = (token: string | null) => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const apiEndpoint = `${API_BASE_URL}/admin/scenario/s3`;
+        const apiEndpoint = `${API_BASE_URL}/admin/scenario`;
         console.log("Fetching", apiEndpoint);
         
         const response = await fetch(apiEndpoint, {

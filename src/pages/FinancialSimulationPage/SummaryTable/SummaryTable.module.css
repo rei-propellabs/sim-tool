@@ -38,7 +38,7 @@
 
 .dataRow {
   background: var(--table-cell);
-  border-bottom: 1px solid  var(--table-border-transparent);
+  border-bottom: 1px solid  var(--table-border);
 }
 .dataRow:hover,
 .dataRow:hover .labelCell {
