@@ -1,7 +1,7 @@
 import { SummaryTableType } from "types/SummaryTableType";
 import * as XLSX from "xlsx";
 
-export const exportToExcel = (tableData: SummaryTableType[], fileName: string) => {
+export const exportToExcel = async (tableData: SummaryTableType[], fileName: string) => {
   const workbook = XLSX.utils.book_new();
 
   const worksheet1 = tableToSheet(tableData[0])
@@ -26,7 +26,7 @@ const tableToSheet = (tableData: SummaryTableType) => {
     sheetData.push([section.title]);
 
     merges.push({ s: { r: sheetData.length - 1, c: 0 }, e: { r: sheetData.length - 1, c: headers.length - 1 } });
-    
+
     sheetData.push(["Year", ...tableData.columns])
 
     section.rows.map((row) => {
@@ -38,7 +38,6 @@ const tableToSheet = (tableData: SummaryTableType) => {
 
   const worksheet = XLSX.utils.aoa_to_sheet(sheetData);
 
-  
   /** Stylings */
   worksheet["!merges"] = merges;
 
@@ -47,3 +46,5 @@ const tableToSheet = (tableData: SummaryTableType) => {
 
   return worksheet
 }
+
+

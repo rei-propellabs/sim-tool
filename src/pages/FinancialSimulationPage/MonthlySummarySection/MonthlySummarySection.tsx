@@ -2,7 +2,7 @@ import { Download } from "images/Dynamic/Download";
 import finSimStyles from '../FinancialSimulationPage.module.css';
 import SummaryTable from "../SummaryTable/SummaryTable";
 import { exportToExcel } from "./ExportToExcel";
-import { SummaryTableType } from "types/SummaryTableType";
+import { SummaryTableType } from "types/SummaryTableType"
 
 interface MonthlySummarySectionProps {
   data: any;
@@ -130,6 +130,7 @@ const MonthlySummarySection: React.FC<MonthlySummarySectionProps> = ({ data, sce
           <button onClick={() => exportToExcel(scenarioTableData, fileName)} className={"primary-button"}>
             <Download size={18} color={"var(--primary-button-text)"} />
             Download</button>
+
         </div>
       </div>
       <SummaryTable columns={tableData.columns} sections={tableData.sections} />

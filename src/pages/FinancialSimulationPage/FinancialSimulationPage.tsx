@@ -35,7 +35,8 @@ export function FinancialSimulationPage() {
   const [parsedData, setParsedData] = useState<FinancialSimulationData[]>([])
   const scenarioData = scenarioData_mock
   const token = getToken("uploadAdmin")
-  const { isLoading: loadingScenarios } = useGetScenarios(token)
+  const orgId = "33264945-70c1-4725-8b01-17503d578783"
+  const { isLoading: loadingScenarios } = useGetScenarios(token, orgId)
 
   useEffect(() => {
     const handleXLSX = async (index: number) => {

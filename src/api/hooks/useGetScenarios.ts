@@ -1,14 +1,14 @@
 import { API_BASE_URL } from "config";
 import { useEffect, useState } from "react";
 
-const useGetScenarios = (token: string | null) => {
+const useGetScenarios = (token: string | null, orgId: string) => {
 
   const [isLoading, setIsLoading] = useState(true);
   
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const apiEndpoint = `${API_BASE_URL}/admin/scenario`;
+        const apiEndpoint = `${API_BASE_URL}/admin/scenario/s3?organizationId=${orgId}&path=simulation_2`;
         console.log("Fetching", apiEndpoint);
         
         const response = await fetch(apiEndpoint, {
