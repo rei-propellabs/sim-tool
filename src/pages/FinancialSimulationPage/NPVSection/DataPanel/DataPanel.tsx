@@ -7,7 +7,7 @@ interface DataPanelProps {
   totalProcessingCost: number
   totalNetCashFlow: number
   totalNetCashFlowPeriod?: number
-  netCashFlowRate?: number
+  discountRate: number
 }
 
 export default function DataPanel({
@@ -16,7 +16,7 @@ export default function DataPanel({
   totalProcessingCost,
   totalNetCashFlow,
   totalNetCashFlowPeriod,
-  netCashFlowRate = 5,
+  discountRate,
 }: DataPanelProps) {
 
   const isHovered = totalNetCashFlowPeriod !== undefined;
@@ -84,7 +84,7 @@ export default function DataPanel({
                 <span className="dim">$</span>
                 {formatNumberWithAbbreviation(totalNetCashFlow, 1)}
                 {
-                  !isHovered && <span className="dim"> @ {netCashFlowRate}%</span>
+                  !isHovered && <span className="dim"> @ {discountRate * 100}%</span>
                 }
               </div>
             </div>

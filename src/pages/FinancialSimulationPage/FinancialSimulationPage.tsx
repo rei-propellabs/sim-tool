@@ -55,6 +55,7 @@ export function FinancialSimulationPage() {
           "Period Beginning"
         ]
 
+        let cumulativeNetCash = 0
         const filterRows = (rows: any[]): CashFlowRow[] =>
           rows.map(row => {
             const trimmedRow: Record<string, any> = {}
@@ -65,6 +66,8 @@ export function FinancialSimulationPage() {
             headers.forEach(h => {
               result[h] = Number(trimmedRow[h]) || 0
             })
+            cumulativeNetCash += result["Net Revenue"]
+            result["Cumulative Net Cash"] = cumulativeNetCash
             return result
           }) as CashFlowRow[]
 
@@ -110,10 +113,12 @@ export function FinancialSimulationPage() {
         setActiveScenarioIdx={setActiveScenarioIdx} />
       <NPVSection
         cashFlowData={parsedData[activeScenarioIdx].cashFlow}
-        scenario={demoScenarios[activeScenarioIdx].title} />
-      <MonthlySummarySection
+        scenario={demoScenarios[activeScenarioIdx].title}
+        discountRate={0.05}
+      />
+      {/* <MonthlySummarySection
         data={1}
-        scenario={demoScenarios[activeScenarioIdx].title} />
+        scenario={demoScenarios[activeScenarioIdx].title} /> */}
       <ComparisonSection
         cashFlowData={Object.values(parsedData).map(d => d.cashFlow!.monthly!)}
         keyAssumptions={Object.values(scenarioData)}

@@ -9,7 +9,9 @@ import { cashFlowToChartData, getTotalValues } from "./NPVHelper";
 
 export interface NPVSectionProps {
   scenario: string;
-  cashFlowData?: CashFlowData
+  cashFlowData?: CashFlowData;
+  discountRate: number;
+
 }
 
 const legendItems = [
@@ -19,7 +21,7 @@ const legendItems = [
   { label: "CUMULATIVE NET CASH", color: "var(--cumulative-net-cash)" },
 ];
 
-export function NPVSection({ scenario, cashFlowData }: NPVSectionProps) {
+export function NPVSection({ scenario, cashFlowData, discountRate }: NPVSectionProps) {
   const [hoveredIndex, setHoveredIndex] = useState<number | null>(null)
 
   if (cashFlowData === undefined) {
@@ -28,6 +30,8 @@ export function NPVSection({ scenario, cashFlowData }: NPVSectionProps) {
 
   const chartData = cashFlowToChartData(cashFlowData)
   const totalValue = getTotalValues(cashFlowData)
+  const npv = chartData[chartData.length - 1].cumulativeNetCash / ((1 + discountRate) ** (cashFlowData.annually.length))
+
   return (
     <div className={finSimStyles.sectionContainer}>
 
@@ -41,12 +45,10 @@ export function NPVSection({ scenario, cashFlowData }: NPVSectionProps) {
             <div key={item.label} className={styles.legendItem}>
 
               <span className={styles.legendText}>{item.label}</span>
-
               {
-                index === 3 ?
+                index === 3 ? // icon for cumulative-net-cash
                   <div className={styles.lineLegendIconBackground}>
                     <div className={styles.lineLegendIcon} />
-
                   </div>
                   :
                   <span
@@ -54,7 +56,6 @@ export function NPVSection({ scenario, cashFlowData }: NPVSectionProps) {
                     style={{ backgroundColor: item.color }}
                   />
               }
-
             </div>
           ))}
         </div>
@@ -72,9 +73,9 @@ export function NPVSection({ scenario, cashFlowData }: NPVSectionProps) {
           totalGrossRevenue={hoveredIndex !== null ? chartData[hoveredIndex].revenue : totalValue.totalGrossRevenue}
           totalMiningCost={hoveredIndex !== null ? chartData[hoveredIndex].miningCost : totalValue.totalMiningCost}
           totalProcessingCost={hoveredIndex !== null ? chartData[hoveredIndex].processingCost : totalValue.totalProcessingCost}
-          totalNetCashFlow={hoveredIndex !== null ? chartData[hoveredIndex].cumulativeNetCash : chartData[chartData.length - 1].cumulativeNetCash}
+          totalNetCashFlow={hoveredIndex !== null ? chartData[hoveredIndex].cumulativeNetCash : npv}
           totalNetCashFlowPeriod={hoveredIndex !== null ? chartData[hoveredIndex].revenue + chartData[hoveredIndex].miningCost + chartData[hoveredIndex].processingCost : undefined}
-          netCashFlowRate={5} // is this discount rate??
+          discountRate={discountRate}
         />
       </div>
 

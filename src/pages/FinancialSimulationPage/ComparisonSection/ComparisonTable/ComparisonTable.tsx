@@ -346,7 +346,7 @@ const ComparisonTable = (props: ComparisonTableProps) => {
         <div className={styles.subheader}>TIME HORIZON</div>
         {cashFlowData.map((scenario, index) => (
           <div key={index} className={styles.cell}>
-            <LineChart data={scenario.map(d => d["Net Revenue"])} />
+            <LineChart data={scenario.map(d => d["Cumulative Net Cash"])} />
           </div>
         ))}
       </div>

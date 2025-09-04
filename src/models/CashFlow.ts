@@ -3,7 +3,7 @@ export interface CashFlowRow {
   "Total Processing Cost": number
   "Net Revenue": number
   "Period Beginning": number
-  [key: string]: any // just in case I need other data
+  "Cumulative Net Cash": number
 }
 
 export interface CashFlowData {
