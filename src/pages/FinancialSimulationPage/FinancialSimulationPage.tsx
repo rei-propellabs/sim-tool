@@ -110,6 +110,7 @@ export function FinancialSimulationPage() {
     <div className={styles.dashboard}>
       <OverviewSection
         activeScenario={demoScenarios[activeScenarioIdx].title}
+        activeScenarioIdx={activeScenarioIdx}
         setActiveScenarioIdx={setActiveScenarioIdx} />
       <NPVSection
         cashFlowData={parsedData[activeScenarioIdx].cashFlow}

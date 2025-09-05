@@ -9,11 +9,9 @@
 }
 
 .scenarioTab {
-  width: 20vw;
   position: fixed;
   top: 1vw;
   z-index: 100;
-  
 }
 
 .metricsGridLeft {
@@ -38,4 +36,12 @@
   max-height: 40vh;
   z-index: 1;
   position: relative;
+}
+
+.orebodyViewTab {
+  width: fit-content;
+  position: absolute;
+  left: 1vw;
+  bottom: 1vw;
+  z-index: 100;
 }

@@ -1,4 +1,4 @@
-import { type RefObject, Suspense, useEffect, useRef, useState } from "react";
+import { type RefObject, Suspense, useCallback, useEffect, useRef, useState } from "react";
 import { Canvas, useLoader } from "@react-three/fiber";
 import { Html, OrbitControls, useHelper } from "@react-three/drei";
 import { Box3, PointLightHelper, SpotLightHelper, Vector3 } from "three";
@@ -81,20 +81,48 @@ export interface STLCanvasProps {
     resetButton?: RefObject<RefObject<HTMLButtonElement> | null> | RefObject<HTMLButtonElement | null> | null,
     /**Style the containing div of the 3D canvas. Note that by default it has some predefined tailwind styles applied, including `absolute inset-0 bg-slate-800` **/
     className?: string,
+    /**If true, play animation*/
+    autoRotate?: boolean,
+    /**If true, rotate to show the surface */
+    showSurface?: boolean,
+    setShowSurface?: (value: boolean) => void,
 }
 
 
-export default function STLCanvas({ objects, debugMode, resetButton, className }: STLCanvasProps) {
+export default function STLCanvas({ objects, debugMode, resetButton, showSurface, setShowSurface, autoRotate }: STLCanvasProps) {
     const orbitRef = useRef<ThreeOrbitControls | null>(null);
+    const [controlsReady, setControlsReady] = useState(false);
 
     const containerRef = useRef<HTMLDivElement>(null);
 
+    // Callback ref to detect when OrbitControls is mounted
+    const handleOrbitControls = useCallback((controls: ThreeOrbitControls | null) => {
+        orbitRef.current = controls;
+        if (controls) setControlsReady(true);
+    }, []);
+    
     const stls = objects.map((object, index) => {
         console.log(`Loading STL URL[${index}] : ${object.url}`);
         return useLoader(STLLoader, object.url);
     })
 
-    // Add this useEffect to detect button clicks and reset OrbitControls
+    // reset showSurface when user interacts with the model
+    useEffect(() => {
+        if (!setShowSurface || !orbitRef.current) return;
+
+        const controls = orbitRef.current;
+        const handleChange = () => {
+            console.log("User interacted - disabling showSurface");
+            setShowSurface(false);
+        };
+
+        controls.addEventListener('start', handleChange);
+
+        return () => {
+            controls.removeEventListener('start', handleChange);
+        };
+    }, [setShowSurface, controlsReady]);
+
     // Add this useEffect to detect button clicks and reset OrbitControls
     useEffect(() => {
         if (resetButton?.current) {
@@ -116,6 +144,14 @@ export default function STLCanvas({ objects, debugMode, resetButton, className }
             };
         }
     }, [resetButton]);
+
+    useEffect(() => {
+        if (showSurface && orbitRef.current) {
+            orbitRef.current.object.position.set(0, 200, 0);
+            orbitRef.current.target.set(0, 0, 0);
+            orbitRef.current.update();
+        }
+    }, [showSurface]);
 
     useEffect(() => {
         // Hold Control to enable scrolling
@@ -148,8 +184,10 @@ export default function STLCanvas({ objects, debugMode, resetButton, className }
                     zoomToCursor
                     zoomSpeed={2}
                     maxAzimuthAngle={0}
-                    ref={orbitRef}
+                    ref={handleOrbitControls}
                     enableZoom={false}
+                    autoRotate={autoRotate}
+                    autoRotateSpeed={1.0}
                 />
                 {debugMode && <Helpers />}
                 <Lights showHelpers={debugMode} />

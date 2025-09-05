@@ -1,0 +1,63 @@
+.container {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
+.imageContainer {
+  flex: 1;
+  overflow: hidden;
+  position: relative;
+  cursor: grab;
+}
+
+.imageContainer:active {
+  cursor: grabbing;
+}
+
+.image {
+  height: 100%;
+  width: auto;
+  object-fit: contain;
+  display: block;
+  transform-origin: center;
+  transition: transform 0.1s ease-out;
+  user-select: none;
+  pointer-events: none;
+}
+
+.scrollIndicator {
+  position: absolute;
+  bottom: 8px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 12rem;
+  height: 0.8rem;
+  background: var(--dark-background-200);
+  border-radius: 0.8rem;
+  border: var(--box-border);
+  padding: 0 0.8rem;
+  align-items: center;
+  justify-content: center;
+  display: flex;
+}
+
+.scrollTrack {
+  position: relative;
+  width: 100%;
+  height: 0.2rem;
+  background: var(--darker-text-300);
+  border-radius: 2px;
+}
+
+.scrollThumb {
+  position: absolute;
+  top: -0.05rem;
+  left: 0;
+  height: 0.3rem;
+  background: var(--tab-active);
+  border-radius: 3px;
+  transition: transform 0.1s ease-out;
+}

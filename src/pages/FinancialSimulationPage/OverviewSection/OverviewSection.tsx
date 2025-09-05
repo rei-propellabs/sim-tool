@@ -12,26 +12,35 @@ import { MetricCardComposite } from "components/MetricCard/MetricCardComposite"
 import { MetricCardThreeRows } from "components/MetricCard/MetricCardThreeRows"
 import { formatNumberWithAbbreviation } from "utils/NumberFormatter"
 import STLPage from "../stl-viewer/stl-viewer-page"
+import planView from "images/planView.png"
+import planView2 from "images/planView2.png"
+import planView3 from "images/planView3.png"
+import ScrollableImage from "./ScrollableImage/ScrollableImage"
 
 interface OverviewSectionProps {
   activeScenario: string,
+  activeScenarioIdx: number,
   setActiveScenarioIdx: (index: number) => void,
 }
 export const OverviewSection: React.FC<OverviewSectionProps> = (props) => {
-  const { activeScenario, setActiveScenarioIdx } = props
+  const { activeScenario, activeScenarioIdx, setActiveScenarioIdx } = props
   const scenarioData = scenarioData_mock
   const financialData = financialOutput_mock
   const operationalData = operationalOutput_mock
 
-  // const [activeScenario, setActiveScenario] = useState<string>("SCENARIO 1")
   const [activeOutputIdx, setActiveOutputIdx] = useState<number>(0)
+  const [activeOrebodyView, setActiveOrebodyView] = useState<number>(0)
+
+  const [scrollPosition, setScrollPosition] = useState(0.5);
 
   const scenarios = Object.keys(scenarioData)
   const outputs = ["financial", "operational"]
+  const orebodyView = ["3D animation", "plan view"]
+
   const currentData = scenarioData[activeScenario]
   const currentFinancialData = financialData[activeScenario]
   const currentOperationalData = operationalData[activeScenario]
-
+  const planViews = [planView, planView2, planView3]
 
   function InputPanel(metric: MiningScenarioData) {
     return (
@@ -128,8 +137,18 @@ export const OverviewSection: React.FC<OverviewSectionProps> = (props) => {
     <div className={styles.summary}>
 
       <div className="absolute-fill behind">
-        <STLPage />
+        {
+          activeOrebodyView === 0 ?
+            <STLPage /> :
+            <ScrollableImage
+              imageSrc={planViews[activeScenarioIdx]}
+              scrollPosition={scrollPosition}
+              onScrollPositionChange={setScrollPosition}
+            />
+        }
+
       </div>
+
       {/* Input Panel */}
       <div className="front">
         <div className={styles.scenarioTab}>
@@ -139,7 +158,16 @@ export const OverviewSection: React.FC<OverviewSectionProps> = (props) => {
         </div>
         {InputPanel(currentData)}
       </div>
-      
+
+      {/* Orebody view toggle */}
+      <div className="front">
+        <div className={styles.orebodyViewTab}>
+          <TabBar
+            texts={orebodyView} activeText={orebodyView[activeOrebodyView]}
+            onActiveIdxChange={setActiveOrebodyView} />
+        </div>
+      </div>
+
 
       {/* Output Panel */}
       <div>

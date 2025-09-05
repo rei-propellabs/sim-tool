@@ -1,11 +1,18 @@
 import STLCanvas from "./components/STLCanvas";
-import { type RefObject, Suspense, useRef } from "react";
+import { type RefObject, Suspense, useRef, useState } from "react";
 
 import type { STLCanvasProps } from "./components/STLCanvas";
 import styles from "./stl-viewer-page.module.css";
+import play from "images/play.svg";
+import pause from "images/pause.svg";
+import { CheckboxLabel } from "components/CheckboxLabel/CheckboxLabel";
 
 export default function STLPage() {
     const buttonRef = useRef<HTMLButtonElement>(null);
+    // State for checkboxes
+    const [autoRotate, setAutoRotate] = useState(true);
+    const [showSurface, setShowSurface] = useState(false);
+
     const stlCanvasProps: STLCanvasProps = {
         objects: [
             {
@@ -23,6 +30,9 @@ export default function STLPage() {
         ],
         debugMode: false,
         resetButton: buttonRef,
+        autoRotate: autoRotate,
+        showSurface: showSurface,
+        setShowSurface: setShowSurface,
         className: ''
     }
 
@@ -34,6 +44,24 @@ export default function STLPage() {
                 </div>
             }>
                 <STLCanvas {...stlCanvasProps} />
+
+                <div className={styles.controls}>
+
+                    <div className={styles.playPause}>
+                        <img src={autoRotate ? pause : play } />
+                    </div>
+                    <CheckboxLabel
+                        text="AUTOROTATE"
+                        checked={autoRotate}
+                        onValueChange={setAutoRotate}
+                    />
+                    <CheckboxLabel
+                        text="SHOW SURFACE"
+                        checked={showSurface}
+                        onValueChange={setShowSurface}
+                    />
+                </div>
+                
                 <button ref={buttonRef}
                     className={styles.resetButton}>
                     RESET
