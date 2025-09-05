@@ -61,11 +61,11 @@ export default function STLPage() {
                         onValueChange={setShowSurface}
                     />
                 </div>
-                
+{/*                 
                 <button ref={buttonRef}
                     className={styles.resetButton}>
                     RESET
-                </button>
+                </button> */}
             </Suspense>
 
         </div>

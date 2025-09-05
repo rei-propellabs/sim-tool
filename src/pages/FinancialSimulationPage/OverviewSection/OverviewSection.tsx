@@ -150,7 +150,7 @@ export const OverviewSection: React.FC<OverviewSectionProps> = (props) => {
 
       {/* Input Panel */}
       <div className="front">
-        <div className={styles.scenarioTab}>
+        <div className={styles.scenarioTab}  style={{zIndex:1000}}>
           <TabBar
             texts={scenarios} 
             activeIdx={activeScenarioIdx}
@@ -160,15 +160,12 @@ export const OverviewSection: React.FC<OverviewSectionProps> = (props) => {
       </div>
 
       {/* Orebody view toggle */}
-      <div className="front">
-        <div className={styles.orebodyViewTab}>
-          <TabBar
-            texts={orebodyView}
-            activeIdx={activeOrebodyView}
-            onActiveIdxChange={setActiveOrebodyView} />
-        </div>
+      <div className={styles.orebodyViewTab}>
+        <TabBar
+          texts={orebodyView}
+          activeIdx={activeOrebodyView}
+          onActiveIdxChange={setActiveOrebodyView} />
       </div>
-
 
       {/* Output Panel */}
       <div>

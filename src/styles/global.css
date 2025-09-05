@@ -104,6 +104,10 @@
 .front {
     z-index: 100;
 }
+.fallback {
+    color: var(--darker-text);
+    font-size: 1rem;
+}
 .custom-slider {
     & .MuiSlider-thumb {
         background-color: #E5F3EBDE;

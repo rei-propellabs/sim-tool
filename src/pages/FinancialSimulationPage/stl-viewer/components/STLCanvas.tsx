@@ -148,12 +148,7 @@ export default function STLCanvas({ objects, debugMode, resetButton, showSurface
 
     useEffect(() => {
         if (showSurface && orbitRef.current) {
-            const radius = 200; // distance from target
-            const angle = Math.PI / 8; // 45 degrees in radians
-            const x = radius * Math.sin(angle);
-            const z = radius * Math.cos(angle);
-            const y = 0; // or your desired height
-
+            // TODO: the surface view should be calculated
             orbitRef.current.object.position.set(0, 25, 200);
             orbitRef.current.target.set(0, 0, 0);
             orbitRef.current.update();
@@ -198,7 +193,7 @@ export default function STLCanvas({ objects, debugMode, resetButton, showSurface
                 />
                 {debugMode && <Helpers />}
                 <Lights showHelpers={debugMode} />
-                <Suspense fallback={<Html center><span className={'text-blue-500'}> Loading</span></Html>}>
+                <Suspense fallback={<Html center><span className="fallback"> Loading</span></Html>}>
                     <STLGroup stls={stls} objects={objects} />
                 </Suspense>
             </Canvas>
