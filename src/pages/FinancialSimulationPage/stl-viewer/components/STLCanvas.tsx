@@ -100,7 +100,7 @@ export default function STLCanvas({ objects, debugMode, resetButton, showSurface
         orbitRef.current = controls;
         if (controls) setControlsReady(true);
     }, []);
-    
+
     const stls = objects.map((object, index) => {
         console.log(`Loading STL URL[${index}] : ${object.url}`);
         return useLoader(STLLoader, object.url);
@@ -112,7 +112,8 @@ export default function STLCanvas({ objects, debugMode, resetButton, showSurface
 
         const controls = orbitRef.current;
         const handleChange = () => {
-            console.log("User interacted - disabling showSurface");
+            console.log("orbit position", orbitRef.current?.object.position);
+
             setShowSurface(false);
         };
 
@@ -147,7 +148,13 @@ export default function STLCanvas({ objects, debugMode, resetButton, showSurface
 
     useEffect(() => {
         if (showSurface && orbitRef.current) {
-            orbitRef.current.object.position.set(0, 200, 0);
+            const radius = 200; // distance from target
+            const angle = Math.PI / 8; // 45 degrees in radians
+            const x = radius * Math.sin(angle);
+            const z = radius * Math.cos(angle);
+            const y = 0; // or your desired height
+
+            orbitRef.current.object.position.set(0, 25, 200);
             orbitRef.current.target.set(0, 0, 0);
             orbitRef.current.update();
         }

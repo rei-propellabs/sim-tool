@@ -1,7 +1,7 @@
 import { FinancialOutputData } from "api/models/OutputData";
 
-export const financialOutput_mock: Record<string, FinancialOutputData> = {
-  "SCENARIO 1": {
+export const financialOutput_mock: FinancialOutputData[] = [
+  {
     revenue: 1000000,
     netCashFlow: 500000,
     capex: 200000,
@@ -15,7 +15,7 @@ export const financialOutput_mock: Record<string, FinancialOutputData> = {
     revenueMeter: 15,
     cashFlowMeter: 7.5,
   },
-    "SCENARIO 2": {
+  {
     revenue: 2000000,
     netCashFlow: 600000,
     capex: 300000,
@@ -29,7 +29,7 @@ export const financialOutput_mock: Record<string, FinancialOutputData> = {
     revenueMeter: 25,
     cashFlowMeter: 8.5,
   },
-    "SCENARIO 3": {
+  {
     revenue: 3000000,
     netCashFlow: 700000,
     capex: 600000,
@@ -42,5 +42,5 @@ export const financialOutput_mock: Record<string, FinancialOutputData> = {
     allInCostMeter: 30,
     revenueMeter: 35,
     cashFlowMeter: 9.5,
-  },
-}
+  }
+]

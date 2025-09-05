@@ -47,9 +47,9 @@ export default function STLPage() {
 
                 <div className={styles.controls}>
 
-                    <div className={styles.playPause}>
+                    <button className={styles.playPause} onClick={() => setAutoRotate(!autoRotate)}>
                         <img src={autoRotate ? pause : play } />
-                    </div>
+                    </button>
                     <CheckboxLabel
                         text="AUTOROTATE"
                         checked={autoRotate}

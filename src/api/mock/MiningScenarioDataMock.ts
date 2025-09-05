@@ -1,7 +1,7 @@
 import { MiningScenarioData } from "api/models/MiningScenarioData";
 
-export const scenarioData_mock: Record<string, MiningScenarioData> = {
-  "SCENARIO 1": {
+export const scenarioData_mock: MiningScenarioData[] = [
+  {
     baselineMiningCost: 200,
     processingCost: 25,
     wasteCost: 10,
@@ -15,7 +15,7 @@ export const scenarioData_mock: Record<string, MiningScenarioData> = {
     discountRate: 5,
     rateOfPenetration: 0.8,
   },
-  "SCENARIO 2": {
+  {
     baselineMiningCost: 180,
     processingCost: 30,
     wasteCost: 12,
@@ -29,7 +29,7 @@ export const scenarioData_mock: Record<string, MiningScenarioData> = {
     discountRate: 4.5,
     rateOfPenetration: 0.8,
   },
-  "SCENARIO 3": {
+  {
     baselineMiningCost: 220,
     processingCost: 20,
     wasteCost: 8,
@@ -42,5 +42,5 @@ export const scenarioData_mock: Record<string, MiningScenarioData> = {
     minHoleInclination: 55,
     discountRate: 5.5,
     rateOfPenetration: 0.8,
-  },
-}
+  }
+]

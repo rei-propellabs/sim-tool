@@ -1,7 +1,7 @@
 import { OperationalOutputData } from "api/models/OutputData";
 
-export const operationalOutput_mock: Record<string, OperationalOutputData> = {
-  "SCENARIO 1": {
+export const operationalOutput_mock: OperationalOutputData[] = [
+  {
     gradeGramPerTonne: 5,
     LOMMoth: 14,
     extractionHoles: 10,
@@ -27,7 +27,7 @@ export const operationalOutput_mock: Record<string, OperationalOutputData> = {
       "80-90": 0
     }
   },
-  "SCENARIO 2": {
+  {
     gradeGramPerTonne: 6,
     LOMMoth: 14,
     extractionHoles: 12,
@@ -53,7 +53,7 @@ export const operationalOutput_mock: Record<string, OperationalOutputData> = {
       "80-90": 1
     }
   },
-  "SCENARIO 3": {
+  {
     gradeGramPerTonne: 7,
     LOMMoth: 14,
     extractionHoles: 14,
@@ -79,4 +79,4 @@ export const operationalOutput_mock: Record<string, OperationalOutputData> = {
       "80-90": 2
     }
   }
-}
+]

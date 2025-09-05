@@ -5,7 +5,6 @@ import { OverviewSection } from "./OverviewSection/OverviewSection"
 import * as XLSX from 'xlsx'
 import { CashFlowRow } from "models/CashFlow"
 import { FinancialSimulationData } from "models/FinancialSimulationData"
-import MonthlySummarySection from "./MonthlySummarySection/MonthlySummarySection"
 import ComparisonSection from "./ComparisonSection/ComparisonSection"
 import { operationalOutput_mock } from "api/mock/OperationOutputMock"
 import { financialOutput_mock } from "api/mock/FinancialOutputMock"
@@ -109,7 +108,6 @@ export function FinancialSimulationPage() {
   return (
     <div className={styles.dashboard}>
       <OverviewSection
-        activeScenario={demoScenarios[activeScenarioIdx].title}
         activeScenarioIdx={activeScenarioIdx}
         setActiveScenarioIdx={setActiveScenarioIdx} />
       <NPVSection

@@ -18,12 +18,11 @@ import planView3 from "images/planView3.png"
 import ScrollableImage from "./ScrollableImage/ScrollableImage"
 
 interface OverviewSectionProps {
-  activeScenario: string,
   activeScenarioIdx: number,
   setActiveScenarioIdx: (index: number) => void,
 }
 export const OverviewSection: React.FC<OverviewSectionProps> = (props) => {
-  const { activeScenario, activeScenarioIdx, setActiveScenarioIdx } = props
+  const { activeScenarioIdx, setActiveScenarioIdx } = props
   const scenarioData = scenarioData_mock
   const financialData = financialOutput_mock
   const operationalData = operationalOutput_mock
@@ -33,13 +32,13 @@ export const OverviewSection: React.FC<OverviewSectionProps> = (props) => {
 
   const [scrollPosition, setScrollPosition] = useState(0.5);
 
-  const scenarios = Object.keys(scenarioData)
+  const scenarios = ["SCENARIO 1", "SCENARIO 2", "SCENARIO 3"]
   const outputs = ["financial", "operational"]
   const orebodyView = ["3D animation", "plan view"]
 
-  const currentData = scenarioData[activeScenario]
-  const currentFinancialData = financialData[activeScenario]
-  const currentOperationalData = operationalData[activeScenario]
+  const currentData = scenarioData[activeScenarioIdx]
+  const currentFinancialData = financialData[activeScenarioIdx]
+  const currentOperationalData = operationalData[activeScenarioIdx]
   const planViews = [planView, planView2, planView3]
 
   function InputPanel(metric: MiningScenarioData) {
@@ -153,7 +152,8 @@ export const OverviewSection: React.FC<OverviewSectionProps> = (props) => {
       <div className="front">
         <div className={styles.scenarioTab}>
           <TabBar
-            texts={scenarios} activeText={activeScenario}
+            texts={scenarios} 
+            activeIdx={activeScenarioIdx}
             onActiveIdxChange={setActiveScenarioIdx} />
         </div>
         {InputPanel(currentData)}
@@ -163,7 +163,8 @@ export const OverviewSection: React.FC<OverviewSectionProps> = (props) => {
       <div className="front">
         <div className={styles.orebodyViewTab}>
           <TabBar
-            texts={orebodyView} activeText={orebodyView[activeOrebodyView]}
+            texts={orebodyView}
+            activeIdx={activeOrebodyView}
             onActiveIdxChange={setActiveOrebodyView} />
         </div>
       </div>
@@ -173,7 +174,8 @@ export const OverviewSection: React.FC<OverviewSectionProps> = (props) => {
       <div>
         <div className={styles.outputTab}>
           <TabBar
-            texts={outputs} activeText={outputs[activeOutputIdx]}
+            texts={outputs}
+            activeIdx={activeOutputIdx}
             onActiveIdxChange={setActiveOutputIdx}
           />
         </div>
