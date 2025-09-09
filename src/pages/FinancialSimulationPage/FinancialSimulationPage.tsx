@@ -32,10 +32,10 @@ export function FinancialSimulationPage() {
 
   const [loading, setLoading] = useState(true)
   const [parsedData, setParsedData] = useState<FinancialSimulationData[]>([])
-  const scenarioData = scenarioData_mock
+  // const scenarioData = scenarioData_mock
   const token = getToken("uploadAdmin")
   const orgId = "33264945-70c1-4725-8b01-17503d578783"
-  const { isLoading: loadingScenarios } = useGetScenarios(token, orgId)
+  const { isLoading: loadingScenarios, data: scenarioData } = useGetScenarios(token, orgId)
 
   useEffect(() => {
     const handleXLSX = async (index: number) => {
@@ -96,6 +96,11 @@ export function FinancialSimulationPage() {
     })
   }, [])
 
+  useEffect(() => {
+    if (!loadingScenarios) {
+      console.log("Loaded scenarios", scenarioData)
+    }
+  }, [loadingScenarios])
   // useEffect(() => {
   //   if (!loadingScenarios) {
   //     // Perform actions when scenarios are loaded
@@ -109,21 +114,23 @@ export function FinancialSimulationPage() {
     <div className={styles.dashboard}>
       <OverviewSection
         activeScenarioIdx={activeScenarioIdx}
-        setActiveScenarioIdx={setActiveScenarioIdx} />
-      <NPVSection
+        setActiveScenarioIdx={setActiveScenarioIdx}
+        scenarioData={scenarioData ? scenarioData[activeScenarioIdx] : undefined}
+      />
+      {/* <NPVSection
         cashFlowData={parsedData[activeScenarioIdx].cashFlow}
         scenario={demoScenarios[activeScenarioIdx].title}
         discountRate={0.05}
-      />
+      /> */}
       {/* <MonthlySummarySection
         data={1}
         scenario={demoScenarios[activeScenarioIdx].title} /> */}
-      <ComparisonSection
+      {/* <ComparisonSection
         cashFlowData={Object.values(parsedData).map(d => d.cashFlow!.monthly!)}
         keyAssumptions={Object.values(scenarioData)}
         financialOutputData={Object.values(financialOutput_mock)}
         operationalOutputData={Object.values(operationalOutput_mock)}
-      />
+      /> */}
     </div>
 
   )

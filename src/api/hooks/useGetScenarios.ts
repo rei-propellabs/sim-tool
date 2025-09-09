@@ -1,16 +1,18 @@
+import { ScenarioData } from "api/models/ScenarioData";
 import { API_BASE_URL } from "config";
 import { useEffect, useState } from "react";
+import { set } from "react-datepicker/dist/date_utils";
 
 const useGetScenarios = (token: string | null, orgId: string) => {
 
   const [isLoading, setIsLoading] = useState(true);
-  
+  const [data, setData] = useState<ScenarioData[]>();
+
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const encodedPath = encodeURIComponent("simulation_1/run_1");
 
-        const apiEndpoint = `${API_BASE_URL}/admin/scenario?organizationId=${orgId}&path=${encodedPath}`;
+        const apiEndpoint = `${API_BASE_URL}/admin/scenario?organizationId=${orgId}`;
         console.log("Fetching", apiEndpoint);
         
         const response = await fetch(apiEndpoint, {
@@ -25,7 +27,8 @@ const useGetScenarios = (token: string | null, orgId: string) => {
         }
         
         let responseText = await response.text();
-        console.log("Fetched scenario", responseText);
+        const parsed = JSON.parse(responseText);
+        setData(parsed.rows);
         
       } catch (e: any) {
         console.error("Error fetching manifest", e)
@@ -37,7 +40,7 @@ const useGetScenarios = (token: string | null, orgId: string) => {
     fetchData();
 
   }, []);
-  return { isLoading };
+  return { isLoading, data };
 };
 
 export default useGetScenarios;

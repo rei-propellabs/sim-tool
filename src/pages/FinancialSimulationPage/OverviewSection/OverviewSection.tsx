@@ -16,14 +16,16 @@ import planView from "images/planView.png"
 import planView2 from "images/planView2.png"
 import planView3 from "images/planView3.png"
 import ScrollableImage from "./ScrollableImage/ScrollableImage"
+import { ParametersData, ScenarioData } from "api/models/ScenarioData"
 
 interface OverviewSectionProps {
   activeScenarioIdx: number,
   setActiveScenarioIdx: (index: number) => void,
+  scenarioData?: ScenarioData
 }
 export const OverviewSection: React.FC<OverviewSectionProps> = (props) => {
-  const { activeScenarioIdx, setActiveScenarioIdx } = props
-  const scenarioData = scenarioData_mock
+  const { activeScenarioIdx, setActiveScenarioIdx, scenarioData } = props
+  // const scenarioData = scenarioData_mock
   const financialData = financialOutput_mock
   const operationalData = operationalOutput_mock
 
@@ -36,97 +38,127 @@ export const OverviewSection: React.FC<OverviewSectionProps> = (props) => {
   const outputs = ["financial", "operational"]
   const orebodyView = ["3D animation", "plan view"]
 
-  const currentData = scenarioData[activeScenarioIdx]
+  // const currentData = scenarioData[activeScenarioIdx]
+  const currentData = scenarioData // ? scenarioData : scenarioData_mock[0]
   const currentFinancialData = financialData[activeScenarioIdx]
   const currentOperationalData = operationalData[activeScenarioIdx]
   const planViews = [planView, planView2, planView3]
 
-  function InputPanel(metric: MiningScenarioData) {
+  const displayValue = (value: number | string | undefined, prefix?: string, suffix?: string) => {
+    if (value === undefined || value === null || Number.isNaN(value)) return "-";
+    return `${prefix || ""}${value}${suffix || ""}`;
+  }
+
+  // add comma separator
+  const localeNumber = (value: number | undefined, toFixed: number = 0) => {
+    if (value === undefined || value === null || Number.isNaN(value)) return undefined;
+
+    return value.toLocaleString("en-US", { maximumFractionDigits: toFixed });
+  }
+
+  function InputPanel() {
+    if (!currentData) {
+      return null
+    }
+
+    const metric = currentData.parameters
     return (
       <div className={styles.metricsGridLeft}>
-        <MetricCardTwoRows key="baselineMiningCost" value={`$${metric.baselineMiningCost}`} label="Baseline Mining Cost per Tonne" />
+        <MetricCardTwoRows key="baselineMiningCost" value={displayValue(metric.baselineMiningCostPerTonne, "$")} label="Baseline Mining Cost per Tonne" />
 
-        <MetricCardTwoRows key="processingCost" value={`$${metric.processingCost}`} label="Processing Cost per Tonne" />
+        <MetricCardTwoRows key="processingCost" value={displayValue(metric.processingCostPerTonne, "$")} label="Processing Cost per Tonne" />
 
-        <MetricCardTwoRows key="wasteCost" value={`$${metric.wasteCost}`} label="Waste Cost per Tonne" />
+        <MetricCardTwoRows key="wasteCost" value={displayValue(metric.wasteCostPerTonne, "$")} label="Waste Cost per Tonne" />
 
-        <MetricCardTwoRows key="commodityPrice" value={`$${metric.commodityPrice}/oz`} label="Commodity Price" />
+        <MetricCardTwoRows key="commodityPrice" value={displayValue(metric.commodityPrice, "$", "/oz")} label="Commodity Price" />
 
-        <MetricCardTwoRows key="millRecovery" value={`${metric.millRecovery}%`} label="Mill Recovery" />
+        <MetricCardTwoRows key="millRecovery" value={displayValue(metric.millRecovery, "", "%")} label="Mill Recovery" />
 
-        <MetricCardTwoRows key="numberOfDrills" value={metric.numberOfDrills} label="Number of Drills" />
+        <MetricCardTwoRows key="numberOfDrills" value={displayValue(metric.numberOfDrills)} label="Number of Drills" />
 
-        <MetricCardTwoRows key="cutterHeadSize" value={`${metric.cutterHeadSize}m`} label="Cutter Head Size" />
+        <MetricCardTwoRows key="cutterHeadSize" value={displayValue(metric.cutterHeadSize, "", "m")} label="Cutter Head Size" />
 
-        <MetricCardTwoRows key="availability" value={`${metric.availability}%`} label="Availability" />
+        <MetricCardTwoRows key="availability" value={displayValue(metric.availability, "", "%")} label="Availability" />
 
-        <MetricCardTwoRows key="maxHoleLength" value={`${metric.maxHoleLength}m`} label="Maximum Hole Length" />
+        <MetricCardTwoRows key="maxHoleLength" value={displayValue(metric.maximumHoleLength, "", "m")} label="Maximum Hole Length" />
 
-        <MetricCardTwoRows key="minHoleInclination" value={`${metric.minHoleInclination}°`} label="Minimum Hole Inclination" />
+        <MetricCardTwoRows key="minHoleInclination" value={displayValue(metric.minimumHoleInclination, "", "°")} label="Minimum Hole Inclination" />
 
-        <MetricCardTwoRows key="discountRate" value={`${metric.discountRate}%`} label="Discount Rate" fullWidth />
+        <MetricCardTwoRows key="discountRate" value={displayValue(metric.discountRate, "", "%")} label="Discount Rate" fullWidth />
       </div>
     )
   }
 
-  function FinancialOutputPanel(metric: FinancialOutputData) {
+  function FinancialOutputPanel() {
+    if (!currentData) {
+      return null
+    }
+
+    const metric = currentData.financial
+
     return (
       <div className={styles.outputGridRight}>
-        <MetricCardOneRow key="revenue" value={`$${formatNumberWithAbbreviation(metric.revenue, 1)}`} label="Revenue" />
-        <MetricCardOneRow key="netCashFlow" value={`$${formatNumberWithAbbreviation(metric.netCashFlow, 1)}`} label="Net Cash Flow" />
-        <MetricCardOneRow key="capex" value={`$${formatNumberWithAbbreviation(metric.capex, 1)}`} label="Capex" />
-        <MetricCardOneRow key="miningCost" value={`$${formatNumberWithAbbreviation(metric.miningCost, 1)}`} label="Mining Cost" />
+        <MetricCardOneRow key="revenue" value={`${displayValue(formatNumberWithAbbreviation(metric.revenue, 1), "$")}`} label="Revenue" />
+        <MetricCardOneRow key="netCashFlow" value={`${displayValue(formatNumberWithAbbreviation(metric.netCashFlow, 1), "$")}`} label="Net Cash Flow" />
+        <MetricCardOneRow key="capex" value={`${displayValue(formatNumberWithAbbreviation(metric.capex, 1), "$")}`} label="Capex" />
+        <MetricCardOneRow key="miningCost" value={`${displayValue(formatNumberWithAbbreviation(metric.miningCost, 1), "$")}`} label="Mining Cost" />
         <span />
         <MetricCardComposite
-          dataLeft={{ key: "processingCostOre", value: `$${formatNumberWithAbbreviation(metric.processingCostOre, 1)}`, label: "Processing Cost (Ore)" }}
-          dataRight={{ key: "processingCostWaste", value: `$${formatNumberWithAbbreviation(metric.processingCostWaste, 1)}`, label: "Processing Cost (Waste)" }}
-          dataBottom={{ key: "totalProcessingCost", value: `$${formatNumberWithAbbreviation(metric.totalProcessingCost, 1)}`, label: "Total Processing Cost" }}
+          dataLeft={{ key: "processingCostOre", value: `${displayValue(formatNumberWithAbbreviation(metric.processingCostOre, 1), "$")}`, label: "Processing Cost (Ore)" }}
+          dataRight={{ key: "processingCostWaste", value: `${displayValue(formatNumberWithAbbreviation(metric.processingCostWaste, 1), "$")}`, label: "Processing Cost (Waste)" }}
+          dataBottom={{ key: "totalProcessingCost", value: `${displayValue(formatNumberWithAbbreviation(metric.totalProcessingCost, 1), "$")}`, label: "Total Processing Cost" }}
         />
 
-        <MetricCardTwoRows key="allInCostTonne" value={`$${formatNumberWithAbbreviation(metric.allInCostTonne, 1)}`} label="All In Cost / Tonne" dim />
-        <MetricCardTwoRows key="aisc" value={`$${formatNumberWithAbbreviation(metric.aisc, 1)}`} label="AISC" description="All-In Sustaining Costs" dim />
+        <MetricCardTwoRows key="allInCostTonne" value={`${displayValue(formatNumberWithAbbreviation(metric.allInCostTonne, 1), "$")}`} label="All In Cost / Tonne" dim />
+        <MetricCardTwoRows key="aisc" value={`${displayValue(formatNumberWithAbbreviation(metric.aisc, 1), "$")}`} label="AISC" description="All-In Sustaining Costs" dim />
 
-        <MetricCardTwoRows key="allInCostMeter" value={`$${formatNumberWithAbbreviation(metric.allInCostMeter, 1)}`} label="All In Cost / Meter" dim />
-        <MetricCardTwoRows key="revenueMeter" value={`$${formatNumberWithAbbreviation(metric.revenueMeter, 1)}`} label="Revenue / Meter" dim />
+        <MetricCardTwoRows key="allInCostMeter" value={`${displayValue(formatNumberWithAbbreviation(metric.allInCostMeter, 1), "$")}`} label="All In Cost / Meter" dim />
+        <MetricCardTwoRows key="revenueMeter" value={`${displayValue(formatNumberWithAbbreviation(metric.revenueMeter, 1), "$")}`} label="Revenue / Meter" dim />
 
-        <MetricCardTwoRows key="cashFlowMeter" value={`$${formatNumberWithAbbreviation(metric.cashFlowMeter, 1)}`} label="Cash Flow / Meter" dim fullWidth />
+        <MetricCardTwoRows key="cashFlowMeter" value={`${displayValue(formatNumberWithAbbreviation(metric.cashFlowMeter, 1), "$")}`} label="Cash Flow / Meter" dim fullWidth />
 
       </div>
     )
   }
 
-  function OperationalOutputPanel(metric: OperationalOutputData) {
+  function OperationalOutputPanel() {
+     if (!currentData) {
+      return null
+    }
+
+    const metric = currentData.operational
+
+    const numHolesLabels = ["35-49", "50-59", "60-69", "70-79", "80-90"]
     return (
       <div className={styles.outputGridRight}>
-        <MetricCardOneRow key="grade" value={`${metric.gradeGramPerTonne.toFixed(1)}g/t`} label="Grade" />
-        <MetricCardOneRow key="lom" value={`${metric.LOMMoth} mo`} label="LOM" description="Life of Mine" />
+        <MetricCardOneRow key="grade" value={`${displayValue(metric.grade.toFixed(1), "", "g/t")}`} label="Grade" />
+        <MetricCardOneRow key="lom" value={`${displayValue(metric.lom, "", "mo")}`} label="LOM" description="Life of Mine" />
         <span /><span />
-        <MetricCardTwoRows key="extractionHoles" value={`${metric.extractionHoles.toLocaleString(undefined)}`} label="Extraction holes" dim />
-        <MetricCardTwoRows key="totalLength" value={`${metric.totalLength.toLocaleString(undefined)}m`} label="Total Length" dim />
-        <MetricCardTwoRows key="wasteMass" value={`${metric.wasteMass.toLocaleString(undefined)}t`} label="Waste Mass" dim />
-        <MetricCardTwoRows key="oreMass" value={`${metric.oreMass.toLocaleString(undefined)}t`} label="Ore Mass" dim />
+        <MetricCardTwoRows key="extractionHoles" value={`${displayValue(localeNumber(metric.extractionHoles), "", "")}`} label="Extraction holes" dim />
+        <MetricCardTwoRows key="totalLength" value={`${displayValue(localeNumber(metric.totalLength), "", "m")}`} label="Total Length" dim />
+        <MetricCardTwoRows key="wasteMass" value={`${displayValue(localeNumber(metric.wasteMass), "", "t")}`} label="Waste Mass" dim />
+        <MetricCardTwoRows key="oreMass" value={`${displayValue(localeNumber(metric.oreMass), "", "t")}`} label="Ore Mass" dim />
 
-        <MetricCardTwoRows key="totalCommodityVolume" value={`${metric.totalCommodityVolume.toLocaleString(undefined)}oz`} label="Total Commodity Volume" fullWidth dim />
+        <MetricCardTwoRows key="totalCommodityVolume" value={`${displayValue(localeNumber(metric.totalCommodityVolume), "", "oz")}`} label="Total Commodity Volume" fullWidth dim />
         <MetricCardThreeRows label="Hole Length"
           values={[
-            { key: "holeLengthMin", value: `${metric.holeLength.min}m`, label: "MIN" },
-            { key: "holeLengthMax", value: `${metric.holeLength.max}m`, label: "MAX" },
-            { key: "holeLengthAvg", value: `${metric.holeLength.average}m`, label: "AVG" },
+            { key: "holeLengthMin", value: `${displayValue(localeNumber(metric.holeLengthMin), "", "m")}`, label: "MIN" },
+            { key: "holeLengthMax", value: `${displayValue(localeNumber(metric.holeLengthMax), "", "m")}`, label: "MAX" },
+            { key: "holeLengthAvg", value: `${displayValue(localeNumber(Math.round(metric.holeLengthAvg)), "", "m")}`, label: "AVG" },
           ]}
         />
 
         <MetricCardThreeRows label="Hole Inclination"
           values={[
-            { key: "holeInclinationMin", value: `${metric.holeInclination.min}°`, label: "MIN" },
-            { key: "holeInclinationMax", value: `${metric.holeInclination.max}°`, label: "MAX" },
-            { key: "holeInclinationAvg", value: `${metric.holeInclination.average}°`, label: "AVG" },
+            { key: "holeInclinationMin", value: `${displayValue(metric.holeInclinationMin, "", "°")}`, label: "MIN" },
+            { key: "holeInclinationMax", value: `${displayValue(metric.holeInclinationMax, "", "°")}`, label: "MAX" },
+            { key: "holeInclinationAvg", value: `${displayValue(Math.round(metric.holeInclinationAvg), "", "°")}`, label: "AVG" },
           ]}
         />
 
         <MetricCardThreeRows label="Quantity of Holes per Inclination"
-          values={Object.keys(metric.numHoles).map((key) => {
-            const typedKey = key as keyof typeof metric.numHoles
-            return { key: `numHoles${key}`, value: `${metric.numHoles[typedKey]}`, label: `${key}°` }
+          values={numHolesLabels.map((label, index) => {
+            return { key: `numHoles${label}`, value: `${displayValue(localeNumber(metric.quantityOfHolesPerInclination[index]), "", "")}`, label: `${label}°` }
           })}
         />
       </div>
@@ -150,13 +182,13 @@ export const OverviewSection: React.FC<OverviewSectionProps> = (props) => {
 
       {/* Input Panel */}
       <div className="front">
-        <div className={styles.scenarioTab}  style={{zIndex:1000}}>
+        <div className={styles.scenarioTab} style={{ zIndex: 1000 }}>
           <TabBar
-            texts={scenarios} 
+            texts={scenarios}
             activeIdx={activeScenarioIdx}
             onActiveIdxChange={setActiveScenarioIdx} />
         </div>
-        {InputPanel(currentData)}
+        {InputPanel()}
       </div>
 
       {/* Orebody view toggle */}
@@ -176,7 +208,7 @@ export const OverviewSection: React.FC<OverviewSectionProps> = (props) => {
             onActiveIdxChange={setActiveOutputIdx}
           />
         </div>
-        {activeOutputIdx === 0 ? FinancialOutputPanel(currentFinancialData) : OperationalOutputPanel(currentOperationalData)}
+        {activeOutputIdx === 0 ? FinancialOutputPanel() : OperationalOutputPanel()}
       </div>
 
     </div>
