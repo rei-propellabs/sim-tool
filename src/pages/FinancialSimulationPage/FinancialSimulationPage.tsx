@@ -125,12 +125,12 @@ export function FinancialSimulationPage() {
       {/* <MonthlySummarySection
         data={1}
         scenario={demoScenarios[activeScenarioIdx].title} /> */}
-      {/* <ComparisonSection
+      <ComparisonSection
         cashFlowData={Object.values(parsedData).map(d => d.cashFlow!.monthly!)}
-        keyAssumptions={Object.values(scenarioData)}
-        financialOutputData={Object.values(financialOutput_mock)}
-        operationalOutputData={Object.values(operationalOutput_mock)}
-      /> */}
+        keyAssumptions={scenarioData ? scenarioData.map(s => s.parameters) : []}
+        financialOutputData={scenarioData ? scenarioData.map(s => s.financial) : []}
+        operationalOutputData={scenarioData ? scenarioData.map(s => s.operational) : []}
+      />
     </div>
 
   )

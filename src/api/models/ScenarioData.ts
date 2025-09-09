@@ -1,7 +1,5 @@
-// ScenarioData.ts
-// This file contains TypeScript interfaces for the API response structure.
+export const NumHolesLabels = ["35-49", "50-59", "60-69", "70-79", "80-90"];
 
-// ...existing code...
 export interface ScenarioData {
 	id: string;
 	name: string;

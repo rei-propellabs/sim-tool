@@ -1,16 +1,15 @@
 import { Download } from "images/Dynamic/Download";
 import finSimStyles from '../FinancialSimulationPage.module.css';
 import ComparisonTable from "./ComparisonTable/ComparisonTable";
-import { FinancialOutputData, OperationalOutputData } from "api/models/OutputData";
 import { CashFlowRow } from "models/CashFlow";
-import { MiningScenarioData } from "api/models/MiningScenarioData";
+import { FinancialData, OperationalData, ParametersData } from "api/models/ScenarioData";
 
 
-interface ComparisonSectionProps {
+export interface ComparisonSectionProps {
   cashFlowData: CashFlowRow[][];
-  keyAssumptions: MiningScenarioData[];
-  financialOutputData: FinancialOutputData[]
-  operationalOutputData: OperationalOutputData[]
+  keyAssumptions: ParametersData[];
+  financialOutputData: FinancialData[]
+  operationalOutputData: OperationalData[]
 }
 
 const ComparisonSection: React.FC<ComparisonSectionProps> = (props) => {
@@ -24,10 +23,7 @@ const ComparisonSection: React.FC<ComparisonSectionProps> = (props) => {
         </div>
       </div>
       <ComparisonTable
-        cashFlowData={props.cashFlowData}
-        keyAssumptions={props.keyAssumptions}
-        financialOutputData={props.financialOutputData}
-        operationalOutputData={props.operationalOutputData}
+        {...props}
       />
     </div>
   )

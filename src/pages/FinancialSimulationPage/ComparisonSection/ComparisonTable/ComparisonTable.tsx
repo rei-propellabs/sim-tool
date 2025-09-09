@@ -6,15 +6,10 @@ import AngleIndicator from "./AngleIndicator"
 import { Area, ComposedChart, Line, ResponsiveContainer } from "recharts"
 import { MiningScenarioData } from "api/models/MiningScenarioData"
 import { CashFlowRow } from "models/CashFlow"
+import { ComparisonSectionProps } from "../ComparisonSection"
+import { NumHolesLabels, OperationalData, ParametersData } from "api/models/ScenarioData"
 
-interface ComparisonTableProps {
-  cashFlowData: CashFlowRow[][];
-  keyAssumptions: MiningScenarioData[]
-  financialOutputData: FinancialOutputData[]
-  operationalOutputData: OperationalOutputData[]
-}
-
-const ComparisonTable = (props: ComparisonTableProps) => {
+const ComparisonTable = (props: ComparisonSectionProps) => {
   const { cashFlowData, keyAssumptions, financialOutputData, operationalOutputData } = props
   const [showMore, setShowMore] = useState(false)
 
@@ -87,7 +82,7 @@ const ComparisonTable = (props: ComparisonTableProps) => {
           <div className={styles.barContainer}>
             <div className={styles.bar} style={{ width: `${widths[2] * 100}%` }}></div>
           </div>
-          <span className={styles.barValue}>{average}m</span>
+          <span className={styles.barValue}>{Math.round(average)}m</span>
         </div>
       </div>
     )
@@ -113,7 +108,7 @@ const ComparisonTable = (props: ComparisonTableProps) => {
         <div className={styles.inclinationColumn}>
           <span className={styles.inclinationLabel}>AVG</span>
           <AngleIndicator angle={average} radius={radiusPx} />
-          <span className={styles.inclinationValue}>{average}°</span>
+          <span className={styles.inclinationValue}>{Math.round(average)}°</span>
         </div>
       </div>
     )
@@ -149,7 +144,7 @@ const ComparisonTable = (props: ComparisonTableProps) => {
 
   const keyAssumptionRow = (label: string, key: string, unit: string) => {
     // const values = [2, 2.5, 3]
-    const values = keyAssumptions.map((item) => item[key as keyof MiningScenarioData] as number);
+    const values = keyAssumptions.map((item) => item[key as keyof ParametersData] as number);
     const relativeDifferences = values.map((value, idx) =>
       idx === 0 ? 0 : Number(((value - values[0]) / values[0] * 100).toFixed(2))
     );
@@ -209,7 +204,7 @@ const ComparisonTable = (props: ComparisonTableProps) => {
   }
 
   const operationalRow = (label: string, key: string, unit: string) => {
-    const values = operationalOutputData.map((item) => item[key as keyof OperationalOutputData]);
+    const values = operationalOutputData.map((item) => item[key as keyof OperationalData]);
     const sameValues = values.every((val, _, arr) => val === arr[0]);
     if (sameValues && !showMore) {
       return null
@@ -222,13 +217,16 @@ const ComparisonTable = (props: ComparisonTableProps) => {
     )));
   }
 
-  const chartDataRow = (label: string, dataKey: keyof OperationalOutputData, Component: React.ComponentType<any>) => {
-    return renderDataRow(label, operationalOutputData.map((scenario) => {
-      const value = scenario[dataKey];
-      return typeof value === "object" && value !== null
-        ? <Component data={value} />
-        : null;
-    }));
+  // Refactored: chartDataRow now takes a mapping function to extract/shape the data for the chart
+  const chartDataRow = (
+    label: string,
+    Component: React.ComponentType<any>,
+    dataMapper: (scenario: OperationalData) => any
+  ) => {
+    return renderDataRow(
+      label,
+      operationalOutputData.map((scenario) => <Component data={dataMapper(scenario)} />)
+    );
   }
 
   const renderDataRow = (label: string, cellContents: React.ReactNode[], backgroundColors?: string[]) => {
@@ -265,16 +263,16 @@ const ComparisonTable = (props: ComparisonTableProps) => {
   const keyAssumptionSection = () => {
     const keyAssumptionRows = [
       keyAssumptionRow("Cutter Head Size", "cutterHeadSize", "m"),
-      keyAssumptionRow("Baseline Mining Cost/Tonne", "baselineMiningCost", "$"),
-      keyAssumptionRow("Processing Cost per Tonne", "processingCost", "$"),
-      keyAssumptionRow("Waste Cost per Tonne", "wasteCost", "$"),
+      keyAssumptionRow("Baseline Mining Cost/Tonne", "baselineMiningCostPerTonne", "$"),
+      keyAssumptionRow("Processing Cost per Tonne", "processingCostPerTonne", "$"),
+      keyAssumptionRow("Waste Cost per Tonne", "wasteCostPerTonne", "$"),
       keyAssumptionRow("Commodity Price", "commodityPrice", "$/oz"),
       keyAssumptionRow("Mill Recovery", "millRecovery", "%"),
       keyAssumptionRow("Number of Drills", "numberOfDrills", ""),
       keyAssumptionRow("Rate of Penetration", "rateOfPenetration", "m / hr"),
       keyAssumptionRow("Availability", "availability", "%"),
-      keyAssumptionRow("Maximum Hole Length", "maxHoleLength", "m"),
-      keyAssumptionRow("Minimum Hole Inclination", "minHoleInclination", "°"),
+      keyAssumptionRow("Maximum Hole Length", "maximumHoleLength", "m"),
+      keyAssumptionRow("Minimum Hole Inclination", "minimumHoleInclination", "°"),
     ];
     const visibleRows = keyAssumptionRows.filter(Boolean);
 
@@ -318,10 +316,37 @@ const ComparisonTable = (props: ComparisonTableProps) => {
       operationalRow("Extraction Holes", "extractionHoles", ""),
       operationalRow("Total Length", "totalLength", "m"),
       operationalRow("Ore Mass", "oreMass", " tonnes"),
-      operationalRow("Grade", "gradeGramPerTonne", " g/ tonnes"),
-      chartDataRow("Hole Length", "holeLength", HorizontalBarChart),
-      chartDataRow("Hole Inclination", "holeInclination", InclinationIndicator),
-      chartDataRow("Quantity of Hole Inclinations", "numHoles", QuantityBarChart)
+      operationalRow("Grade", "grade", " g/ tonnes"),
+      chartDataRow(
+        "Hole Length",
+        HorizontalBarChart,
+        (scenario: OperationalData) => ({
+          min: scenario.holeLengthMin,
+          max: scenario.holeLengthMax,
+          average: scenario.holeLengthAvg,
+        })
+      ),
+      chartDataRow(
+        "Hole Inclination",
+        InclinationIndicator,
+        (scenario: OperationalData) => ({
+          min: scenario.holeInclinationMin,
+          max: scenario.holeInclinationMax,
+          average: scenario.holeInclinationAvg,
+        })
+      ),
+      chartDataRow(
+        "Quantity of Hole Inclinations",
+        QuantityBarChart,
+        (scenario: OperationalData) =>
+          NumHolesLabels.reduce((acc, label, idx) => {
+            acc[label] = scenario.quantityOfHolesPerInclination[idx] || 0;
+            return acc;
+          }, {} as Record<string, number>)
+      ),
+      // You can similarly update the next two rows if their data structure changed
+      // chartDataRow("Hole Inclination", InclinationIndicator, ...),
+      // chartDataRow("Quantity of Hole Inclinations", QuantityBarChart, ...)
     ];
     return (
       <>
