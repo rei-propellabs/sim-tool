@@ -28,7 +28,7 @@ const useGetScenarios = (token: string | null, orgId: string) => {
         
         let responseText = await response.text();
         const parsed = JSON.parse(responseText);
-        setData([parsed.rows[0], parsed.rows[0], parsed.rows[0]]); // todo
+        setData([parsed.rows[5], parsed.rows[6], parsed.rows[7]]); // todo
         
       } catch (e: any) {
         console.error("Error fetching manifest", e)

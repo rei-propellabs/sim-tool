@@ -10,11 +10,7 @@ export interface ScenarioData {
 	simulation: number;
 	run: number;
 	path: string;
-	cashflow: {
-		yearly: CashflowEntry[];
-		quarterly: CashflowEntry[];
-		monthly: CashflowEntry[];
-	};
+	cashflow: CashflowSet;
 	collar: CollarEntry[];
 	financial: FinancialData;
 	operational: OperationalData;
@@ -30,6 +26,12 @@ export interface ScenarioData {
 	updatedAt: string;
 }
 
+export interface CashflowSet {
+  yearly: CashflowEntry[];
+  quarterly: CashflowEntry[];
+  monthly: CashflowEntry[];
+}
+
 export interface CashflowEntry {
 	goldCost: number;
 	wasteCost: number;
@@ -42,6 +44,7 @@ export interface CashflowEntry {
 	beneficiationCost: number;
 	totalProcessingCost: number;
 	beneficiationRevenue: number;
+  cumulativeNetCash: number;
 }
 
 export interface CollarEntry {

@@ -1,7 +1,12 @@
+import { CashflowEntry } from "api/models/ScenarioData";
 import { CashFlowData } from "./CashFlow";
 
 export interface FinancialSimulationData {
   title: string,
-  cashFlow?: CashFlowData;
+  cashFlow?: {
+    yearly: CashflowEntry[];
+    quarterly: CashflowEntry[];
+    monthly: CashflowEntry[];
+  }
 
 }

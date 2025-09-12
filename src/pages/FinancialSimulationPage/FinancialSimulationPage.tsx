@@ -11,6 +11,7 @@ import { financialOutput_mock } from "api/mock/FinancialOutputMock"
 import { scenarioData_mock } from "api/mock/MiningScenarioDataMock"
 import useGetScenarios from "api/hooks/useGetScenarios"
 import { getToken } from "utils/TokenManager"
+import { CashflowEntry } from "api/models/ScenarioData"
 
 const demoScenarios = [
   {
@@ -38,69 +39,34 @@ export function FinancialSimulationPage() {
   const { isLoading: loadingScenarios, data: scenarioData } = useGetScenarios(token, orgId)
 
   useEffect(() => {
-    const handleXLSX = async (index: number) => {
-      try {
-        const response = await fetch(demoScenarios[index].fileName)
-        if (!response.ok) throw new Error("Failed to fetch file")
-        const arrayBuffer = await response.arrayBuffer()
-        const data = new Uint8Array(arrayBuffer)
-        const workbook = XLSX.read(data, { type: 'array' })
-
-        const headers = [
-          "Mining Cost",
-          "Total Processing Cost",
-          "Gross Revenue",
-          "Net Revenue",
-          "Period Beginning"
-        ]
-
-        let cumulativeNetCash = 0
-        const filterRows = (rows: any[]): CashFlowRow[] =>
-          rows.map(row => {
-            const trimmedRow: Record<string, any> = {}
-            Object.keys(row).forEach(k => {
-              trimmedRow[k.trim()] = row[k]
-            })
-            const result: any = {}
-            headers.forEach(h => {
-              result[h] = Number(trimmedRow[h]) || 0
-            })
-            cumulativeNetCash += result["Net Revenue"]
-            result["Cumulative Net Cash"] = cumulativeNetCash
-            return result
-          }) as CashFlowRow[]
-
-        const monthlyCashFlow = filterRows(XLSX.utils.sheet_to_json(workbook.Sheets[workbook.SheetNames[0]]))
-        const quarterlyCashFlow = filterRows(XLSX.utils.sheet_to_json(workbook.Sheets[workbook.SheetNames[1]]))
-        const annuallyCashFlow = filterRows(XLSX.utils.sheet_to_json(workbook.Sheets[workbook.SheetNames[2]]))
-        const cashFlow = {
-          monthly: monthlyCashFlow,
-          quarterly: quarterlyCashFlow,
-          annually: annuallyCashFlow
-        }
-
-        return {
+    if (!loadingScenarios && scenarioData) {
+      let parsedArr: FinancialSimulationData[] = [];
+      scenarioData.forEach((_, index: number) => {
+        let cumulativeNetCash = 0;
+        scenarioData[index].cashflow.yearly.forEach((row: CashflowEntry) => {
+          cumulativeNetCash += row.netRevenue;
+          row.cumulativeNetCash = cumulativeNetCash;
+        });
+        cumulativeNetCash = 0;
+        scenarioData[index].cashflow.quarterly.forEach((row: CashflowEntry) => {
+          cumulativeNetCash += row.netRevenue;
+          row.cumulativeNetCash = cumulativeNetCash;
+        });
+        cumulativeNetCash = 0;
+        scenarioData[index].cashflow.monthly.forEach((row: CashflowEntry) => {
+          cumulativeNetCash += row.netRevenue;
+          row.cumulativeNetCash = cumulativeNetCash;
+        });
+        parsedArr.push({
           title: demoScenarios[index].title,
-          cashFlow: cashFlow
-        }
-      } catch (error) {
-        console.error(error)
-        setLoading(false)
-        return null
-      }
+          cashFlow: scenarioData[index].cashflow,
+        });
+      });
+      setParsedData(parsedArr);
+      setLoading(false);
     }
+  }, [loadingScenarios, scenarioData]);
 
-    Promise.all([handleXLSX(0), handleXLSX(1), handleXLSX(2)]).then(results => {
-      setParsedData(results.filter(Boolean) as FinancialSimulationData[]) // filter out nulls
-      setLoading(false)
-    })
-  }, [])
-
-  useEffect(() => {
-    if (!loadingScenarios) {
-      console.log("Loaded scenarios", scenarioData)
-    }
-  }, [loadingScenarios])
   // useEffect(() => {
   //   if (!loadingScenarios) {
   //     // Perform actions when scenarios are loaded
@@ -117,20 +83,20 @@ export function FinancialSimulationPage() {
         setActiveScenarioIdx={setActiveScenarioIdx}
         scenarioData={scenarioData ? scenarioData[activeScenarioIdx] : undefined}
       />
-      {/* <NPVSection
+      <NPVSection
         cashFlowData={parsedData[activeScenarioIdx].cashFlow}
         scenario={demoScenarios[activeScenarioIdx].title}
-        discountRate={0.05}
-      /> */}
+        discountRate={scenarioData ? scenarioData[activeScenarioIdx].evaluationParameters.discRate : 0}
+      />
       {/* <MonthlySummarySection
         data={1}
         scenario={demoScenarios[activeScenarioIdx].title} /> */}
-      <ComparisonSection
+      {/* <ComparisonSection
         cashFlowData={Object.values(parsedData).map(d => d.cashFlow!.monthly!)}
         keyAssumptions={scenarioData ? scenarioData.map(s => s.parameters) : []}
         financialOutputData={scenarioData ? scenarioData.map(s => s.financial) : []}
         operationalOutputData={scenarioData ? scenarioData.map(s => s.operational) : []}
-      />
+      /> */}
     </div>
 
   )

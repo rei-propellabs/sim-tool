@@ -1,3 +1,4 @@
+import { CashflowEntry, CashflowSet } from "api/models/ScenarioData";
 import { CashFlowData, CashFlowRow } from "models/CashFlow"
 import * as XLSX from 'xlsx'
 
@@ -61,15 +62,15 @@ export function getYAxisTicksAndDomain(chartData: ChartData[]) {
   return { ticks, domain: [domainMin, domainMax] }
 }
 
-export function cashFlowToChartData(cashFlowData: CashFlowData): ChartData[] {
-  let data: CashFlowRow[] = cashFlowData.monthly
+export function cashFlowToChartData(cashFlowData: CashflowSet): ChartData[] {
+  let data: CashflowEntry[] = cashFlowData.monthly
   let label = "monthly"
 
   // Step 1: Choose the right data granularity
-  for (let key of ["monthly", "quarterly", "annually"] as const) {
+  for (let key of ["monthly", "quarterly", "yearly"] as const) {
     const arr = cashFlowData[key]
     if (arr.length > 20 && isPrime(arr.length)) {
-      if (key === "annually") {
+      if (key === "yearly") {
         data = arr
         label = key
         break
@@ -90,7 +91,7 @@ export function cashFlowToChartData(cashFlowData: CashFlowData): ChartData[] {
   }
 
   // Step 2: Group if needed
-  let grouped: CashFlowRow[] = []
+  let grouped: CashflowEntry[] = []
   if (data.length > 20) {
     const divisor = findDivisor(data.length, 20)
     const groupSize = divisor
@@ -100,11 +101,11 @@ export function cashFlowToChartData(cashFlowData: CashFlowData): ChartData[] {
       const first = group[0]
       grouped.push({
         ...first,
-        "Mining Cost": group.reduce((sum, row) => sum + (row["Mining Cost"] ?? 0), 0),
-        "Total Processing Cost": group.reduce((sum, row) => sum + (row["Total Processing Cost"] ?? 0), 0),
-        "Gross Revenue": group.reduce((sum, row) => sum + (row["Gross Revenue"] ?? 0), 0),
-        "Net Revenue": group.reduce((sum, row) => sum + (row["Net Revenue"] ?? 0), 0),
-        "Period Beginning": first["Period Beginning"],
+        miningCost: group.reduce((sum, row) => sum + (row.miningCost ?? 0), 0),
+        totalProcessingCost: group.reduce((sum, row) => sum + (row.totalProcessingCost ?? 0), 0),
+        grossRevenue: group.reduce((sum, row) => sum + (row.grossRevenue ?? 0), 0),
+        netRevenue: group.reduce((sum, row) => sum + (row.netRevenue ?? 0), 0),
+        periodBeginning: first.periodBeginning,
       })
     }
   } else {
@@ -115,19 +116,19 @@ export function cashFlowToChartData(cashFlowData: CashFlowData): ChartData[] {
   let cumulative = 0
   const chartData: ChartData[] = grouped.map(row => {
     // Convert Excel date (number) to JS Date
-    const date = typeof row["Period Beginning"] === "number"
+    const date = typeof row.periodBeginning === "number"
       ? (() => {
-          const parsed = (XLSX as any).SSF.parse_date_code(row["Period Beginning"])
+          const parsed = (XLSX as any).SSF.parse_date_code(row.periodBeginning)
           return parsed
             ? new Date(Date.UTC(parsed.y, parsed.m - 1, parsed.d))
             : new Date(0)
         })()
-      : new Date(row["Period Beginning"])
+      : new Date(row.periodBeginning ?? 0)
 
-    const revenue = row["Gross Revenue"] ?? 0
-    const miningCost = -Math.abs(row["Mining Cost"] ?? 0)
-    const processingCost = -Math.abs(row["Total Processing Cost"] ?? 0)
-    cumulative += row["Net Revenue"] ?? 0
+    const revenue = row.grossRevenue ?? 0
+    const miningCost = -Math.abs(row.miningCost ?? 0)
+    const processingCost = -Math.abs(row.totalProcessingCost ?? 0)
+    cumulative += row.netRevenue ?? 0
 
     return {
       month: formatMonth(date),
@@ -141,11 +142,11 @@ export function cashFlowToChartData(cashFlowData: CashFlowData): ChartData[] {
   return chartData
 }
 
-export function getTotalValues(cashFlowData: CashFlowData) {
+export function getTotalValues(cashFlowData: CashflowSet) {
   const data = cashFlowData.monthly
-  const totalGrossRevenue = data.reduce((sum, row) => sum + (row["Gross Revenue"] ?? 0), 0)
-  const totalMiningCost = data.reduce((sum, row) => sum + (row["Mining Cost"] ?? 0), 0)
-  const totalProcessingCost = data.reduce((sum, row) => sum + (row["Total Processing Cost"] ?? 0), 0)
+  const totalGrossRevenue = data.reduce((sum, row) => sum + (row.grossRevenue ?? 0), 0)
+  const totalMiningCost = data.reduce((sum, row) => sum + (row.miningCost ?? 0), 0)
+  const totalProcessingCost = data.reduce((sum, row) => sum + (row.totalProcessingCost ?? 0), 0)
   return {
     totalGrossRevenue,
     totalMiningCost,

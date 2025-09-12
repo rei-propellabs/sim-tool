@@ -6,10 +6,11 @@ import NPVChart from "./NPVChart/NPVChart";
 import { CashFlowData } from "models/CashFlow";
 import { useEffect, useState } from "react";
 import { cashFlowToChartData, getTotalValues } from "./NPVHelper";
+import { CashflowEntry, CashflowSet } from "api/models/ScenarioData";
 
 export interface NPVSectionProps {
   scenario: string;
-  cashFlowData?: CashFlowData;
+  cashFlowData?: CashflowSet;
   discountRate: number;
 
 }
@@ -30,7 +31,7 @@ export function NPVSection({ scenario, cashFlowData, discountRate }: NPVSectionP
 
   const chartData = cashFlowToChartData(cashFlowData)
   const totalValue = getTotalValues(cashFlowData)
-  const npv = chartData[chartData.length - 1].cumulativeNetCash / ((1 + discountRate) ** (cashFlowData.annually.length))
+  const npv = chartData[chartData.length - 1].cumulativeNetCash / ((1 + discountRate / 100) ** (cashFlowData.yearly.length))
 
   return (
     <div className={finSimStyles.sectionContainer}>

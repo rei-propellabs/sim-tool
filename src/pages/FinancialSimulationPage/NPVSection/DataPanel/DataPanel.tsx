@@ -84,7 +84,7 @@ export default function DataPanel({
                 <span className="dim">$</span>
                 {formatNumberWithAbbreviation(totalNetCashFlow, 1)}
                 {
-                  !isHovered && <span className="dim"> @ {discountRate * 100}%</span>
+                  !isHovered && <span className="dim"> @ {discountRate}%</span>
                 }
               </div>
             </div>
