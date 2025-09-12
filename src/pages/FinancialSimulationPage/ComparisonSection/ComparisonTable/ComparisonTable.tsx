@@ -1,11 +1,9 @@
 import { useState } from "react"
 import styles from "./ComparisonTable.module.css"
-import { FinancialOutputData, OperationalOutputData } from "api/models/OutputData"
+import { FinancialOutputData } from "api/models/OutputData"
 import { getMetricBgClasses, getValuesRelativeToMax } from "./ComparisonTableHelper"
 import AngleIndicator from "./AngleIndicator"
 import { Area, ComposedChart, Line, ResponsiveContainer } from "recharts"
-import { MiningScenarioData } from "api/models/MiningScenarioData"
-import { CashFlowRow } from "models/CashFlow"
 import { ComparisonSectionProps } from "../ComparisonSection"
 import { NumHolesLabels, OperationalData, ParametersData } from "api/models/ScenarioData"
 
@@ -143,8 +141,8 @@ const ComparisonTable = (props: ComparisonSectionProps) => {
   }
 
   const keyAssumptionRow = (label: string, key: string, unit: string) => {
-    // const values = [2, 2.5, 3]
     const values = keyAssumptions.map((item) => item[key as keyof ParametersData] as number);
+
     const relativeDifferences = values.map((value, idx) =>
       idx === 0 ? 0 : Number(((value - values[0]) / values[0] * 100).toFixed(2))
     );
@@ -167,20 +165,25 @@ const ComparisonTable = (props: ComparisonSectionProps) => {
     return (
       renderDataRow(label, keyAssumptions.map((scenario, index) => (
         <div className={styles.assumptionValue}>
-          {relativeDifferences[index] === 0 ?
-            <div className={styles.diaDifference}>
-              <div className={styles.noData} />
-            </div>
-            :
-            <div className={styles.diaDifference}>
-              {relativeDifferences[index] > 0 ? "+" : ""}
-              {relativeDifferences[index]}%
-              <span className={styles.diaDifferenceIcon}>
-                {relativeDifferences[index] > 0 ? "▲" : "▼"}
-              </span>
-            </div>
+
+          {
+            values[index] === undefined ? <span>-</span> :
+              relativeDifferences[index] === 0 ?
+                <div className={styles.diaDifference}>
+                  <div className={styles.noData} />
+                </div>
+                :
+                <>
+                  <div className={styles.diaDifference}>
+                    {relativeDifferences[index] > 0 ? "+" : ""}
+                    {relativeDifferences[index]}%
+                    <span className={styles.diaDifferenceIcon}>
+                      {relativeDifferences[index] > 0 ? "▲" : "▼"}
+                    </span>
+                  </div>
+                  <span>{formatValue(values[index])}</span>
+                </>
           }
-          <span>{formatValue(values[index])}</span>
         </div>
       )))
     )
@@ -211,7 +214,7 @@ const ComparisonTable = (props: ComparisonSectionProps) => {
     }
 
     return renderDataRow(label, values.map((value, id) => (
-      <div  key={id} className={styles.textCell}>
+      <div key={id} className={styles.textCell}>
         {typeof value === "number" ? `${value}${unit}` : ""}
       </div>
     )));
@@ -344,9 +347,6 @@ const ComparisonTable = (props: ComparisonSectionProps) => {
             return acc;
           }, {} as Record<string, number>)
       ),
-      // You can similarly update the next two rows if their data structure changed
-      // chartDataRow("Hole Inclination", InclinationIndicator, ...),
-      // chartDataRow("Quantity of Hole Inclinations", QuantityBarChart, ...)
     ];
     return (
       <>
@@ -371,7 +371,7 @@ const ComparisonTable = (props: ComparisonSectionProps) => {
         <div className={styles.subheader}>TIME HORIZON</div>
         {cashFlowData.map((scenario, index) => (
           <div key={index} className={styles.cell}>
-            <LineChart data={scenario.map(d => d["Cumulative Net Cash"])} />
+            <LineChart data={scenario.map(d => d.cumulativeNetCash)} />
           </div>
         ))}
       </div>

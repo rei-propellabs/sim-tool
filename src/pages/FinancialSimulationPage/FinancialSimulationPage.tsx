@@ -91,12 +91,12 @@ export function FinancialSimulationPage() {
       {/* <MonthlySummarySection
         data={1}
         scenario={demoScenarios[activeScenarioIdx].title} /> */}
-      {/* <ComparisonSection
-        cashFlowData={Object.values(parsedData).map(d => d.cashFlow!.monthly!)}
+      <ComparisonSection
+        cashFlowData={scenarioData ? scenarioData.map(d => d.cashflow!.monthly!) : []}
         keyAssumptions={scenarioData ? scenarioData.map(s => s.parameters) : []}
         financialOutputData={scenarioData ? scenarioData.map(s => s.financial) : []}
         operationalOutputData={scenarioData ? scenarioData.map(s => s.operational) : []}
-      /> */}
+      />
     </div>
 
   )
