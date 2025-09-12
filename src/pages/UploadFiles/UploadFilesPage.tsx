@@ -398,7 +398,7 @@ export const UploadFilesPage = () => {
                 deleteFile(fileId)
                 setBlockModel({ status: "required", type: FileType.BLOCK_MODEL })
               }}
-              allowedExtensions={["zip", "rar"]}
+              allowedExtensions={["zip", "rar", "dm", "csv"]}
               maxSizeMB={1000}
               required
             />
@@ -536,6 +536,8 @@ export const UploadFilesPage = () => {
                 {/* <span className={styles.requirement}>Max 5GB</span> */}
                 <span className={styles.requirement}>.dxf</span>
                 <span className={styles.requirement}>.csv</span>
+                <span className={styles.requirement}>.stl</span>
+                <span className={styles.requirement}>.dwg</span>
               </div>
               <FileStatusTag status={topographicModel?.status} />
 
@@ -561,7 +563,7 @@ export const UploadFilesPage = () => {
                 setTopographicModel({ status: "required", type: FileType.TOPOGRAPHIC })
               }}
               required
-              allowedExtensions={["zip", "rar"]}
+              allowedExtensions={["zip", "rar", "dxf", "stl", "dwg", "csv"]}
               maxSizeMB={1000}
             />
             <div className="row">
