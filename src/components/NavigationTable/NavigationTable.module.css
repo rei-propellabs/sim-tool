@@ -12,7 +12,10 @@
   padding: 20px;
   box-sizing: border-box;
 }
-
+tbody .tr:hover {
+  background-color: var(--table-row-hover);
+  cursor: pointer;
+}
 .th, .td {
   color: var(--default-text);
   padding: 8px 12px;

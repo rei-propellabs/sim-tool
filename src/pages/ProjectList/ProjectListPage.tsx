@@ -108,13 +108,14 @@ export const ProjectListPage = () => {
     { key: 'name', header: 'Projects' },
     { key: 'updatedAt', header: 'Last update' },
     { key: 'lastUploadAt', header: 'Last upload' },
-    { key: 'projectStatus', header: 'Project status',
+    {
+      key: 'projectStatus', header: 'Project status',
       render: (item) => (
         <StatusTag
           text={item.projectStatus}
           color={item.projectStatusColor} />
       )
-     },
+    },
     {
       key: 'actions',
       header: 'Actions',
@@ -195,17 +196,17 @@ export const ProjectListPage = () => {
               <img src={Edit} />
               Edit details
             </button>
-              <button
-                className={`buttonNoBg ${navTableStyles.option} ${navTableStyles.editOption}`}
-                onClick={(e) => {
-                  e.preventDefault();
-                  closeMenu();
-                  navigateToViewFiles(projects[rowIndex].id);
-                }}
-              >
-                <AttachFile size={20} color="var(--default-text)" />
-                View files
-              </button>
+            <button
+              className={`buttonNoBg ${navTableStyles.option} ${navTableStyles.editOption}`}
+              onClick={(e) => {
+                e.preventDefault();
+                closeMenu();
+                navigateToViewFiles(projects[rowIndex].id);
+              }}
+            >
+              <AttachFile size={20} color="var(--default-text)" />
+              View files
+            </button>
             <button
               className={`buttonNoBg ${navTableStyles.option} ${navTableStyles.deleteOption}`}
               onClick={(e) => {
