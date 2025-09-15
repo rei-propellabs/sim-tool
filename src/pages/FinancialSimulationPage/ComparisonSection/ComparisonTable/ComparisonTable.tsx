@@ -181,9 +181,11 @@ const ComparisonTable = (props: ComparisonSectionProps) => {
                       {relativeDifferences[index] > 0 ? "▲" : "▼"}
                     </span>
                   </div>
-                  <span>{formatValue(values[index])}</span>
                 </>
+                  
+
           }
+          <span>{formatValue(values[index])}</span>
         </div>
       )))
     )

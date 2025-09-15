@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react"
+import { useSearchParams } from "react-router-dom"
 import styles from "./FinancialSimulationPage.module.css"
 import { NPVSection } from "./NPVSection/NPVSection"
 import { OverviewSection } from "./OverviewSection/OverviewSection"
@@ -35,7 +36,10 @@ export function FinancialSimulationPage() {
   const [parsedData, setParsedData] = useState<FinancialSimulationData[]>([])
   // const scenarioData = scenarioData_mock
   const token = getToken("uploadAdmin")
-  const orgId = "33264945-70c1-4725-8b01-17503d578783"
+
+  // Get orgId from URL parameter, fallback to default if not present
+  const [searchParams] = useSearchParams();
+  const orgId = searchParams.get("orgId") || "33264945-70c1-4725-8b01-17503d578783";
   const { isLoading: loadingScenarios, data: scenarioData } = useGetScenarios(token, orgId)
 
   useEffect(() => {
@@ -93,7 +97,11 @@ export function FinancialSimulationPage() {
         scenario={demoScenarios[activeScenarioIdx].title} /> */}
       <ComparisonSection
         cashFlowData={scenarioData ? scenarioData.map(d => d.cashflow!.monthly!) : []}
-        keyAssumptions={scenarioData ? scenarioData.map(s => s.parameters) : []}
+        keyAssumptions={
+          scenarioData
+            ? scenarioData.map(s => ({ ...s.parameters, ...s.evaluationParameters }))
+            : []
+        }
         financialOutputData={scenarioData ? scenarioData.map(s => s.financial) : []}
         operationalOutputData={scenarioData ? scenarioData.map(s => s.operational) : []}
       />

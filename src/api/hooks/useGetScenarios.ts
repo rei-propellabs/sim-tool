@@ -7,7 +7,7 @@ const useGetScenarios = (token: string | null, orgId: string) => {
 
   const [isLoading, setIsLoading] = useState(true);
   const [data, setData] = useState<ScenarioData[]>();
-  const useMock = true
+  const useMock = false
 
   useEffect(() => {
     const fetchData = async () => {
@@ -33,7 +33,7 @@ const useGetScenarios = (token: string | null, orgId: string) => {
         }
 
         const parsed = JSON.parse(responseText);
-        setData([parsed.rows[4], parsed.rows[6], parsed.rows[7]]);
+        setData([parsed.rows[0], parsed.rows[1], parsed.rows[1]]);
 
       } catch (e: any) {
         console.error("Error fetching manifest", e)
