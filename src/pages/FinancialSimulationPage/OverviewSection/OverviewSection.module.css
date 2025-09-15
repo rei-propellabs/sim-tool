@@ -25,15 +25,14 @@
   position: relative;
 }
 .outputTab {
-  width: 16vw;
+  width: 260px;
 }
 .outputGridRight {
   margin-top: 2vh;
-  display: grid;
-  grid-template-columns: repeat(2, 1fr);
+  display: flex;
+  flex-direction: column;
   gap: 0.8vh;
-  max-width: 16vw;
-  max-height: 40vh;
+  width: 260px;
   z-index: 1;
   position: relative;
 }

@@ -17,6 +17,7 @@ import planView2 from "images/planView2.png"
 import planView3 from "images/planView3.png"
 import ScrollableImage from "./ScrollableImage/ScrollableImage"
 import { ParametersData, ScenarioData } from "api/models/ScenarioData"
+import GroupedInfoCard from "components/GroupedInfoCard/GroupedInfoCard"
 
 interface OverviewSectionProps {
   activeScenarioIdx: number,
@@ -35,13 +36,11 @@ export const OverviewSection: React.FC<OverviewSectionProps> = (props) => {
   const [scrollPosition, setScrollPosition] = useState(0.5);
 
   const scenarios = ["SCENARIO 1", "SCENARIO 2", "SCENARIO 3"]
-  const outputs = ["financial", "operational"]
+  const outputs = ["financial (USD)", "operational"]
   const orebodyView = ["3D animation", "plan view"]
 
   // const currentData = scenarioData[activeScenarioIdx]
   const currentData = scenarioData // ? scenarioData : scenarioData_mock[0]
-  const currentFinancialData = financialData[activeScenarioIdx]
-  const currentOperationalData = operationalData[activeScenarioIdx]
   const planViews = [planView, planView2, planView3]
 
   const displayValue = (value: number | string | undefined, prefix?: string, suffix?: string) => {
@@ -98,12 +97,82 @@ export const OverviewSection: React.FC<OverviewSectionProps> = (props) => {
 
     return (
       <div className={styles.outputGridRight}>
-        <MetricCardOneRow key="revenue" value={`${displayValue(formatNumberWithAbbreviation(metric.revenue, 1), "$")}`} label="Revenue" />
-        <MetricCardOneRow key="netCashFlow" value={`${displayValue(formatNumberWithAbbreviation(metric.netCashFlow, 1), "$")}`} label="Net Cash Flow" />
-        <MetricCardOneRow key="capex" value={`${displayValue(formatNumberWithAbbreviation(metric.capex, 1), "$")}`} label="Capex" />
-        <MetricCardOneRow key="miningCost" value={`${displayValue(formatNumberWithAbbreviation(metric.miningCost, 1), "$")}`} label="Mining Cost" />
+        <GroupedInfoCard key="revenue"
+          rows={[
+            {
+              leftLabel: "Revenue",
+              leftValue: `${displayValue(formatNumberWithAbbreviation(metric.revenue, 1), "$")}`,
+              rightLabel: "/tonne",
+              rightValue: `${displayValue(formatNumberWithAbbreviation(metric.revenueTonne, 1), "$")}`
+            },
+          ]}
+        />
         <span />
-        <MetricCardComposite
+        <GroupedInfoCard key="capex"
+          rows={[
+            {
+              leftLabel: "Capex",
+              leftValue: `${displayValue(formatNumberWithAbbreviation(metric.capex, 1), "$")}`,
+            },
+          ]}
+        />
+
+        <GroupedInfoCard key="revenue"
+          rows={[
+            {
+              leftLabel: "Extraction Cost",
+              leftValue: `${displayValue(formatNumberWithAbbreviation(metric.extractionCost, 1), "$")}`,
+              rightLabel: "/tonne",
+              rightValue: `${displayValue(formatNumberWithAbbreviation(metric.extractionCostTonne, 1), "$")}`
+            },
+            {
+              leftLabel: "Imaging Cost",
+              leftValue: `${displayValue(formatNumberWithAbbreviation(metric.imagingCost, 1), "$")}`,
+              rightLabel: "/tonne",
+              rightValue: `${displayValue(formatNumberWithAbbreviation(metric.imagingCostTonne, 1), "$")}`
+            },
+            {
+              leftLabel: "Closure Cost",
+              leftValue: `${displayValue(formatNumberWithAbbreviation(metric.closureCost, 1), "$")}`,
+              rightLabel: "/tonne",
+              rightValue: `${displayValue(formatNumberWithAbbreviation(metric.closureCostTonne, 1), "$")}`
+            },
+          ]}
+        />
+
+        <GroupedInfoCard key="totalProcessingCost"
+          rows={[
+            {
+              leftLabel: "Total Processing Cost",
+              leftValue: `${displayValue(formatNumberWithAbbreviation(metric.totalProcessingCost, 1), "$")}`,
+              rightLabel: "/tonne",
+              rightValue: `${displayValue(formatNumberWithAbbreviation(metric.totalProcessingCostTonne, 1), "$")}`
+            },
+          ]}
+        />
+
+        <GroupedInfoCard key="totalProjectCost"
+          rows={[
+            {
+              leftLabel: "Total Project Cost",
+              leftValue: `${displayValue(formatNumberWithAbbreviation(metric.allInCost, 1), "$")}`,
+              dark: true,
+            },
+          ]}
+        />
+
+        <GroupedInfoCard key="netCashFlow"
+          rows={[
+            {
+              leftLabel: "Project Net Cash Flow",
+              leftValue: `${displayValue(formatNumberWithAbbreviation(metric.netCashFlow, 1), "$")}`,
+              rightLabel: "/tonne",
+              rightValue: `${displayValue(formatNumberWithAbbreviation(metric.netCashFlowTonne, 1), "$")}`,
+            },
+          ]}
+        />
+
+        {/* <MetricCardComposite
           dataLeft={{ key: "processingCostOre", value: `${displayValue(formatNumberWithAbbreviation(metric.processingCostOre, 1), "$")}`, label: "Processing Cost (Ore)" }}
           dataRight={{ key: "processingCostWaste", value: `${displayValue(formatNumberWithAbbreviation(metric.processingCostWaste, 1), "$")}`, label: "Processing Cost (Waste)" }}
           dataBottom={{ key: "totalProcessingCost", value: `${displayValue(formatNumberWithAbbreviation(metric.totalProcessingCost, 1), "$")}`, label: "Total Processing Cost" }}
@@ -115,14 +184,14 @@ export const OverviewSection: React.FC<OverviewSectionProps> = (props) => {
         <MetricCardTwoRows key="allInCostMeter" value={`${displayValue(formatNumberWithAbbreviation(metric.allInCostMeter, 1), "$")}`} label="All In Cost / Meter" dim />
         <MetricCardTwoRows key="revenueMeter" value={`${displayValue(formatNumberWithAbbreviation(metric.revenueMeter, 1), "$")}`} label="Revenue / Meter" dim />
 
-        <MetricCardTwoRows key="cashFlowMeter" value={`${displayValue(formatNumberWithAbbreviation(metric.cashFlowMeter, 1), "$")}`} label="Cash Flow / Meter" dim fullWidth />
+        <MetricCardTwoRows key="cashFlowMeter" value={`${displayValue(formatNumberWithAbbreviation(metric.cashFlowMeter, 1), "$")}`} label="Cash Flow / Meter" dim fullWidth /> */}
 
       </div>
     )
   }
 
   function OperationalOutputPanel() {
-     if (!currentData) {
+    if (!currentData) {
       return null
     }
 

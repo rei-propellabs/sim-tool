@@ -33,7 +33,7 @@ const useGetScenarios = (token: string | null, orgId: string) => {
         }
 
         const parsed = JSON.parse(responseText);
-        setData([parsed.rows[0], parsed.rows[1], parsed.rows[1]]);
+        setData([parsed.rows[6], parsed.rows[6], parsed.rows[6]]);
 
       } catch (e: any) {
         console.error("Error fetching manifest", e)

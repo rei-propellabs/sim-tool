@@ -1,0 +1,73 @@
+.groupedInfoCard {
+  display: flex;
+  flex-direction: column;
+  box-shadow: 0px 8px 16px 0px rgba(0, 0, 0, 0.12);
+}
+
+.cardRow {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0;
+  border: var(--metric-card-border);
+  background-color: var(--metric-card-background);
+  margin-bottom: -1px;
+}
+
+.dark {
+  background: var(--background);
+  border: var(--metric-card-border);
+
+}
+
+/* First row - rounded top corners */
+.cardRow:first-child {
+  border-top-left-radius: 8px;
+  border-top-right-radius: 8px;
+}
+
+/* Last row - rounded bottom corners */
+.cardRow:last-child {
+  border-bottom-left-radius: 8px;
+  border-bottom-right-radius: 8px;
+  margin-bottom: 0;
+  /* Remove negative margin for last item */
+}
+
+/* Single row - rounded all corners */
+.cardRow:only-child {
+  border-radius: 8px;
+}
+
+.rowLeft {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  padding: 8px;
+  flex: 2;
+}
+
+.rowRight {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  padding: 8px;
+  border-left: var(--metric-card-border);
+  border-left-width: 2px;
+  flex: 1;
+}
+
+.value {
+  font-size: 0.9rem;
+  font-weight: 700;
+  color: var(--default-text);
+  margin-bottom: 2px;
+}
+
+.label {
+  font-size: 0.8rem;
+  color: var(--default-text);
+  font-weight: 400;
+  display: flex;
+  align-items: center;
+}
