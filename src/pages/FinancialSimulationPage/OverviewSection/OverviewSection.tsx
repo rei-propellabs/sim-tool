@@ -131,7 +131,7 @@ export const OverviewSection: React.FC<OverviewSectionProps> = (props) => {
     const numHolesLabels = ["35-49", "50-59", "60-69", "70-79", "80-90"]
     return (
       <div className={styles.outputGridRight}>
-        <MetricCardOneRow key="grade" value={`${displayValue(metric.grade.toFixed(1), "", "g/t")}`} label="Grade" />
+        <MetricCardOneRow key="grade" value={`${displayValue(metric.grade?.toFixed(1), "", "g/t")}`} label="Grade" />
         <MetricCardOneRow key="lom" value={`${displayValue(metric.lom, "", "mo")}`} label="LOM" description="Life of Mine" />
         <span /><span />
         <MetricCardTwoRows key="extractionHoles" value={`${displayValue(localeNumber(metric.extractionHoles), "", "")}`} label="Extraction holes" dim />
