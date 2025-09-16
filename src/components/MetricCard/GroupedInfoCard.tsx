@@ -1,7 +1,5 @@
-// GroupedInfoCard.tsx
 import React, { useEffect, useRef } from 'react';
-import styles from './GroupedInfoCard.module.css';
-import cardBaseStyles from '../MetricCard/MetricCard.module.css';
+import styles from './MetricCard.module.css';
 
 interface GroupedInfoCardProps {
   rows: CardRowProps[];
@@ -33,7 +31,7 @@ const CardRow: React.FC<CardRowProps> = (props: CardRowProps) => {
   }, [leftValue, rightValue]);
 
   return (
-    <div className={styles.cardRow + (dark ? ` ${styles.dark}` : '') + (flash ? ` ${cardBaseStyles.flash}` : '')}>
+    <div className={styles.cardRow + (dark ? ` ${styles.dark}` : '') + (flash ? ` ${styles.flash}` : '')}>
       <div className={styles.rowLeft}>
         <div className={styles.value}>{leftValue}</div>
         <div className={styles.label}>{leftLabel}</div>

@@ -27,7 +27,6 @@ export const MetricCardBase = (props: MetricCardProps) => {
         left = padding;
         transform = "none";
       }
-      console.log("iconRect.top", iconRect.top, "tooltipRect.height", tooltipRect.height)
 
       setTooltipStyle({
         left: `${left}px`,
