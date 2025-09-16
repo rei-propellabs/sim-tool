@@ -3,7 +3,7 @@ import styles from "./MetricCard.module.css";
 import { MetricCardBase } from "./MetricCardBase";
 
 interface ResponsiveMetalCardProps {
-  values: { name: string, value: number }[];
+  values: { name: string, value: number | string }[];
   unitPrefix?: string;
   unitSuffix?: string;
   title: string;
@@ -27,7 +27,7 @@ export function ResponsiveMetalCard(props: ResponsiveMetalCardProps) {
   const maxDisplayLength = Math.max(...displayLengths, 0);
 
   // Heuristic: estimate min col width based on char count (assume 10px per char + padding)
-  const minColWidth = Math.max(50, maxDisplayLength * 10); // px
+  const minColWidth = Math.max(50, maxDisplayLength * 10);
 
   // Try to fit as many columns as possible, but max 5
   let columns = Math.min(values.length, 5);

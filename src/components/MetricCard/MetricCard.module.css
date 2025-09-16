@@ -33,7 +33,7 @@
 }
 
 
-.unitSuffix, .prefix {
+.sufix, .prefix {
   color: var(--darker-text);
 }
 

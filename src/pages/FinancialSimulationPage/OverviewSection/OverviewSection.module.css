@@ -31,7 +31,7 @@
   margin-top: 2vh;
   display: flex;
   flex-direction: column;
-  gap: 0.8vh;
+  gap: 0.2rem;
   width: 260px;
   z-index: 1;
   position: relative;
@@ -48,6 +48,6 @@
 .row {
   display: flex;
   flex-direction: row;
-  gap: 8px;
+  gap: 0.2rem;
   
 }
