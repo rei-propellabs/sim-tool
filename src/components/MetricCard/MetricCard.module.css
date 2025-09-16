@@ -1,3 +1,15 @@
+.metricGrid {
+  width: 100%;
+  display: grid;
+  gap: 8px;
+}
+
+.metricGridCell {
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  min-width: 0;
+}
 .metricCard,
 .metricCardOneRow,
 .metricCardThreeRows,
@@ -20,12 +32,9 @@
   grid-column: 1 / -1;
 }
 
-.metricValue {
-  font-size: clamp(12px, 2.2cqh, 2rem);
-  font-weight: 700;
-  color: var(--default-text);
-  margin-bottom: 8px;
-  line-height: 1.1;
+
+.unitSuffix, .prefix {
+  color: var(--darker-text);
 }
 
 .metricLabel {
@@ -143,6 +152,14 @@
 
 .dim {
   color: var(--darker-text) !important;
+}
+
+/** Three Rows */
+.labelRow {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  margin-bottom: 4px;
 }
 
 /* GroupedInfoCard */

@@ -5,4 +5,6 @@ interface MetricCardProps {
   fullWidth?: boolean
   dim?: boolean
   description?: string
+  unitSuffix?: string
+  unitPrefix?: string
 }

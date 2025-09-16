@@ -2,8 +2,6 @@ import { useState } from "react"
 import styles from "./OverviewSection.module.css"
 import { MetricCardTwoRows } from "components/MetricCard/MetricCardTwoRows"
 import { TabBar } from "components/TabBar/TabBar"
-import { financialOutput_mock } from "api/mock/FinancialOutputMock"
-import { operationalOutput_mock } from "api/mock/OperationOutputMock"
 import { MetricCardThreeRows } from "components/MetricCard/MetricCardThreeRows"
 import { formatNumberWithAbbreviation } from "utils/NumberFormatter"
 import STLPage from "../stl-viewer/stl-viewer-page"
@@ -13,6 +11,7 @@ import planView3 from "images/planView3.png"
 import ScrollableImage from "./ScrollableImage/ScrollableImage"
 import { ParametersData, ScenarioData } from "api/models/ScenarioData"
 import GroupedInfoCard from "components/MetricCard/GroupedInfoCard"
+import { ResponsiveMetalCard } from "components/MetricCard/ResponsiveMetalsCard"
 
 interface OverviewSectionProps {
   activeScenarioIdx: number,
@@ -21,10 +20,6 @@ interface OverviewSectionProps {
 }
 export const OverviewSection: React.FC<OverviewSectionProps> = (props) => {
   const { activeScenarioIdx, setActiveScenarioIdx, scenarioData } = props
-  // const scenarioData = scenarioData_mock
-  const financialData = financialOutput_mock
-  const operationalData = operationalOutput_mock
-
   const [activeOutputIdx, setActiveOutputIdx] = useState<number>(0)
   const [activeOrebodyView, setActiveOrebodyView] = useState<number>(0)
 
@@ -179,33 +174,94 @@ export const OverviewSection: React.FC<OverviewSectionProps> = (props) => {
 
     const metric = currentData.operational
 
+    const metals = metric.metals
+
+    const gradeAndLom = () => {
+      switch (metals.length) {
+        case 1:
+          return (
+            <view className={styles.row}>
+              <MetricCardTwoRows
+                key="grade"
+                value={`${displayValue(metals[0].grade)} `}
+                unitSuffix={metals[0].unit}
+                label="Grade" />
+              <MetricCardTwoRows
+                key="lom"
+                value={`${displayValue(metric.lom, "", "mo")}`}
+                label="LOM"
+                description="Life of Mine"
+                unitSuffix="" />
+            </view>
+          )
+        case 2:
+          return (
+            <view className={styles.row}>
+              {/* <MetricCardThreeRows
+                topLabels={metals.map(metal => metal.name)}
+                values={
+                  metals.map(metal => ({ key: `grade-${metal.name}`, value: `${localeNumber(metal.grade)}`, label: "", sufix: metal.unit }))
+                }
+                bottomLabel="Grade"
+              /> */}
+              <ResponsiveMetalCard
+                values={metals.map(metal => ({ name: metal.name, value: metal.grade }))}
+                title={"Grade"}
+              />
+              <MetricCardTwoRows
+                key="lom"
+                value={`${displayValue(metric.lom, "", "mo")}`}
+                label="LOM"
+                description="Life of Mine" />
+            </view>
+          )
+        case 3:
+        case 4:
+          return (
+            <>
+              <MetricCardThreeRows
+                topLabels={metals.map(metal => metal.name)}
+                values={
+                  metals.map(metal => ({
+                    key: `grade-${metal.name}`,
+                    value: `${formatNumberWithAbbreviation(metal.grade)}`,
+                    label: "",
+                    sufix: metal.unit
+                  }))
+                }
+                bottomLabel="Grade"
+              />
+              <MetricCardTwoRows
+                key="lom"
+                value={`${displayValue(metric.lom, "", "mo")}`}
+                label="LOM"
+                description="Life of Mine" />
+            </>
+          )
+      }
+
+    }
     const numHolesLabels = ["35-49", "50-59", "60-69", "70-79", "80-90"]
     return (
       <div className={styles.outputGridRight}>
-        <view className={styles.row}>
-          <MetricCardTwoRows key="grade" value={`${displayValue(metric.grade?.toFixed(1), "", "g/t")}`} label="Grade" />
-          <MetricCardTwoRows key="lom" value={`${displayValue(metric.lom, "", "mo")}`} label="LOM" description="Life of Mine" />
-        </view>
+        {gradeAndLom()}
         <span /><span />
+
         <view className={styles.row}>
           <MetricCardTwoRows key="extractionHoles" value={`${displayValue(localeNumber(metric.extractionHoles), "", "")}`} label="Extraction holes" dim />
           <MetricCardTwoRows key="totalLength" value={`${displayValue(localeNumber(metric.totalLength), "", "m")}`} label="Total Length" dim />
         </view>
-        <view className={styles.row}>
-          <MetricCardTwoRows key="wasteMass" value={`${displayValue(localeNumber(metric.wasteMass), "", "t")}`} label="Waste Mass" dim />
-          <MetricCardTwoRows key="oreMass" value={`${displayValue(localeNumber(metric.oreMass), "", "t")}`} label="Ore Mass" dim />
-        </view>
-        
+
         <MetricCardTwoRows key="totalCommodityVolume" value={`${displayValue(localeNumber(metric.totalCommodityVolume), "", "oz")}`} label="Total Commodity Volume" fullWidth dim />
-        <MetricCardThreeRows labels={["Hole Length"]}
+        <MetricCardThreeRows topLabels={["Hole Length"]}
           values={[
-            { key: "holeLengthMin", value: `${displayValue(localeNumber(metric.holeLengthMin), "", "m")}`, label: "MIN" },
-            { key: "holeLengthMax", value: `${displayValue(localeNumber(metric.holeLengthMax), "", "m")}`, label: "MAX" },
-            { key: "holeLengthAvg", value: `${displayValue(localeNumber(Math.round(metric.holeLengthAvg)), "", "m")}`, label: "AVG" },
+            { key: "holeLengthMin", value: `${displayValue(localeNumber(metric.holeLengthMin), "", "")}`, label: "MIN", unitSuffix: "m" },
+            { key: "holeLengthMax", value: `${displayValue(localeNumber(metric.holeLengthMax), "", "")}`, label: "MAX", unitSuffix: "m" },
+            { key: "holeLengthAvg", value: `${displayValue(localeNumber(Math.round(metric.holeLengthAvg)), "", "")}`, label: "AVG", unitSuffix: "m" },
           ]}
         />
 
-        <MetricCardThreeRows labels={["Hole Inclination"]}
+        <MetricCardThreeRows topLabels={["Hole Inclination"]}
           values={[
             { key: "holeInclinationMin", value: `${displayValue(metric.holeInclinationMin, "", "°")}`, label: "MIN" },
             { key: "holeInclinationMax", value: `${displayValue(metric.holeInclinationMax, "", "°")}`, label: "MAX" },
@@ -213,7 +269,7 @@ export const OverviewSection: React.FC<OverviewSectionProps> = (props) => {
           ]}
         />
 
-        <MetricCardThreeRows labels={["Quantity of Holes per Inclination"]}
+        <MetricCardThreeRows topLabels={["Quantity of Holes per Inclination"]}
           values={numHolesLabels.map((label, index) => {
             return { key: `numHoles${label}`, value: `${displayValue(localeNumber(metric.quantityOfHolesPerInclination[index]), "", "")}`, label: `${label}°` }
           })}

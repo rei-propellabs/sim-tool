@@ -27,9 +27,9 @@ export interface ScenarioData {
 }
 
 export interface CashflowSet {
-  yearly: CashflowEntry[];
-  quarterly: CashflowEntry[];
-  monthly: CashflowEntry[];
+	yearly: CashflowEntry[];
+	quarterly: CashflowEntry[];
+	monthly: CashflowEntry[];
 }
 
 export interface CashflowEntry {
@@ -44,7 +44,7 @@ export interface CashflowEntry {
 	beneficiationCost: number;
 	totalProcessingCost: number;
 	beneficiationRevenue: number;
-  cumulativeNetCash: number;
+	cumulativeNetCash: number;
 }
 
 export interface CollarEntry {
@@ -99,11 +99,7 @@ export interface FinancialData {
 
 export interface OperationalData {
 	lom: number;
-	grade: number;
-	oreMass: number;
-	goldCost: number;
-	goldMass: number;
-	wasteMass: number;
+	metals: OperationalMetal[];
 	totalLength: number;
 	goldCostTonne: number;
 	holeLengthAvg: number;
@@ -115,6 +111,36 @@ export interface OperationalData {
 	holeInclinationMin: number;
 	totalCommodityVolume: number;
 	quantityOfHolesPerInclination: number[];
+
+}
+
+export interface OperationalMetalFields {
+	per: string;
+	vol: string;
+	cost: string;
+	mass: string;
+	unit: string;
+	revenue: string;
+	recovery: string;
+	wastePer: string;
+	wasteUnit: string;
+}
+
+export interface OperationalMetal {
+	per: string;
+	cost: number;
+	mass: number;
+	name: string;
+	unit: string;
+	grade: number;
+	price: number;
+	fields: OperationalMetalFields;
+	recovery: number;
+	wastePer: number;
+	commodity: number;
+	costTonne: number;
+	wasteUnit: number;
+	wasteRecovery: number;
 }
 
 export interface ParametersData {

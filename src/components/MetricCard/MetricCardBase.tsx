@@ -3,7 +3,7 @@ import styles from "./MetricCard.module.css";
 import { Info } from "images/Dynamic/Info";
 
 export const MetricCardBase = (props: MetricCardProps) => {
-  const { value, label, description, dim } = props;
+  const { value, label, description, dim, unitPrefix: prefix, unitSuffix: sufix } = props;
   const [showTooltip, setShowTooltip] = useState(false);
   const [tooltipStyle, setTooltipStyle] = useState({});
   const iconRef = useRef<HTMLSpanElement>(null);
@@ -38,7 +38,11 @@ export const MetricCardBase = (props: MetricCardProps) => {
 
   return (
     <>
-      <div className={`${styles.metricValue} ${dim ? styles.dim : ""}`}>{value}</div>
+      <div className={`${styles.value} ${dim ? styles.dim : ""}`}>
+        {prefix && <span className={styles.prefix}>{prefix}</span>}
+        {value}
+        {sufix && <span className={styles.sufix}>{sufix}</span>}
+      </div>
       <div className={styles.metricLabel}>
         {label}
         {description && (
