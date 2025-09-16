@@ -3,11 +3,11 @@ import styles from "./MetricCard.module.css"
 import { MetricCardBase } from "./MetricCardBase"
 
 interface MetricCardThreeRowsProps {
-  label: string;
+  labels: string[];
   values: MetricCardProps[]
 }
 export function MetricCardThreeRows(props: MetricCardThreeRowsProps) {
-  const { values, label } = props
+  const { values, labels } = props
 
   const [flash, setFlash] = useState(false);
   const prevValues = useRef(values);
@@ -23,14 +23,18 @@ export function MetricCardThreeRows(props: MetricCardThreeRowsProps) {
 
   return (
     <div className={`${styles.metricCardThreeRows}  ${flash ? styles.flash : ""}`}>
-      <div className={styles.metricLabel}>{label}</div>
+      {labels.map((label, index) => (
+        <div className={styles.metricLabel} key={`label-${index}`}>
+          {label}
+        </div>
+      ))}
 
       <div className={styles.row}>
         {values.map((value, index) => {
 
           const { key, ...dataProps } = value
           return (
-            <div className={styles.metricCard} key={`${label}-${index}`}>
+            <div className={styles.metricCard} key={`${labels[index]}-${index}`}>
               <MetricCardBase {...dataProps} key={`metricCard-${key}-${index}`} dim />
             </div>
           )

@@ -44,3 +44,10 @@
   bottom: 1vw;
   z-index: 100;
 }
+
+.row {
+  display: flex;
+  flex-direction: row;
+  gap: 8px;
+  
+}

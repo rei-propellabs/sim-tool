@@ -39,7 +39,7 @@ const GroupedInfoCard: React.FC<GroupedInfoCardProps> = ({ rows }) => {
     <div className={styles.groupedInfoCard}>
       {rows.map((row, index) => (
         <CardRow
-          key={index}
+          key={row.leftLabel}
           {...row}
         />
       ))}

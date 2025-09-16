@@ -117,7 +117,7 @@ export const OverviewSection: React.FC<OverviewSectionProps> = (props) => {
           ]}
         />
 
-        <GroupedInfoCard key="revenue"
+        <GroupedInfoCard key="costBreakdown"
           rows={[
             {
               leftLabel: "Extraction Cost",
@@ -161,6 +161,8 @@ export const OverviewSection: React.FC<OverviewSectionProps> = (props) => {
           ]}
         />
 
+        <span />
+
         <GroupedInfoCard key="netCashFlow"
           rows={[
             {
@@ -171,21 +173,6 @@ export const OverviewSection: React.FC<OverviewSectionProps> = (props) => {
             },
           ]}
         />
-
-        {/* <MetricCardComposite
-          dataLeft={{ key: "processingCostOre", value: `${displayValue(formatNumberWithAbbreviation(metric.processingCostOre, 1), "$")}`, label: "Processing Cost (Ore)" }}
-          dataRight={{ key: "processingCostWaste", value: `${displayValue(formatNumberWithAbbreviation(metric.processingCostWaste, 1), "$")}`, label: "Processing Cost (Waste)" }}
-          dataBottom={{ key: "totalProcessingCost", value: `${displayValue(formatNumberWithAbbreviation(metric.totalProcessingCost, 1), "$")}`, label: "Total Processing Cost" }}
-        />
-
-        <MetricCardTwoRows key="allInCostTonne" value={`${displayValue(formatNumberWithAbbreviation(metric.allInCostTonne, 1), "$")}`} label="All In Cost / Tonne" dim />
-        <MetricCardTwoRows key="aisc" value={`${displayValue(formatNumberWithAbbreviation(metric.aisc, 1), "$")}`} label="AISC" description="All-In Sustaining Costs" dim />
-
-        <MetricCardTwoRows key="allInCostMeter" value={`${displayValue(formatNumberWithAbbreviation(metric.allInCostMeter, 1), "$")}`} label="All In Cost / Meter" dim />
-        <MetricCardTwoRows key="revenueMeter" value={`${displayValue(formatNumberWithAbbreviation(metric.revenueMeter, 1), "$")}`} label="Revenue / Meter" dim />
-
-        <MetricCardTwoRows key="cashFlowMeter" value={`${displayValue(formatNumberWithAbbreviation(metric.cashFlowMeter, 1), "$")}`} label="Cash Flow / Meter" dim fullWidth /> */}
-
       </div>
     )
   }
@@ -200,16 +187,22 @@ export const OverviewSection: React.FC<OverviewSectionProps> = (props) => {
     const numHolesLabels = ["35-49", "50-59", "60-69", "70-79", "80-90"]
     return (
       <div className={styles.outputGridRight}>
-        <MetricCardOneRow key="grade" value={`${displayValue(metric.grade?.toFixed(1), "", "g/t")}`} label="Grade" />
-        <MetricCardOneRow key="lom" value={`${displayValue(metric.lom, "", "mo")}`} label="LOM" description="Life of Mine" />
+        <view className={styles.row}>
+          <MetricCardTwoRows key="grade" value={`${displayValue(metric.grade?.toFixed(1), "", "g/t")}`} label="Grade" />
+          <MetricCardTwoRows key="lom" value={`${displayValue(metric.lom, "", "mo")}`} label="LOM" description="Life of Mine" />
+        </view>
         <span /><span />
-        <MetricCardTwoRows key="extractionHoles" value={`${displayValue(localeNumber(metric.extractionHoles), "", "")}`} label="Extraction holes" dim />
-        <MetricCardTwoRows key="totalLength" value={`${displayValue(localeNumber(metric.totalLength), "", "m")}`} label="Total Length" dim />
-        <MetricCardTwoRows key="wasteMass" value={`${displayValue(localeNumber(metric.wasteMass), "", "t")}`} label="Waste Mass" dim />
-        <MetricCardTwoRows key="oreMass" value={`${displayValue(localeNumber(metric.oreMass), "", "t")}`} label="Ore Mass" dim />
-
+        <view className={styles.row}>
+          <MetricCardTwoRows key="extractionHoles" value={`${displayValue(localeNumber(metric.extractionHoles), "", "")}`} label="Extraction holes" dim />
+          <MetricCardTwoRows key="totalLength" value={`${displayValue(localeNumber(metric.totalLength), "", "m")}`} label="Total Length" dim />
+        </view>
+        <view className={styles.row}>
+          <MetricCardTwoRows key="wasteMass" value={`${displayValue(localeNumber(metric.wasteMass), "", "t")}`} label="Waste Mass" dim />
+          <MetricCardTwoRows key="oreMass" value={`${displayValue(localeNumber(metric.oreMass), "", "t")}`} label="Ore Mass" dim />
+        </view>
+        
         <MetricCardTwoRows key="totalCommodityVolume" value={`${displayValue(localeNumber(metric.totalCommodityVolume), "", "oz")}`} label="Total Commodity Volume" fullWidth dim />
-        <MetricCardThreeRows label="Hole Length"
+        <MetricCardThreeRows labels={["Hole Length"]}
           values={[
             { key: "holeLengthMin", value: `${displayValue(localeNumber(metric.holeLengthMin), "", "m")}`, label: "MIN" },
             { key: "holeLengthMax", value: `${displayValue(localeNumber(metric.holeLengthMax), "", "m")}`, label: "MAX" },
@@ -217,7 +210,7 @@ export const OverviewSection: React.FC<OverviewSectionProps> = (props) => {
           ]}
         />
 
-        <MetricCardThreeRows label="Hole Inclination"
+        <MetricCardThreeRows labels={["Hole Inclination"]}
           values={[
             { key: "holeInclinationMin", value: `${displayValue(metric.holeInclinationMin, "", "°")}`, label: "MIN" },
             { key: "holeInclinationMax", value: `${displayValue(metric.holeInclinationMax, "", "°")}`, label: "MAX" },
@@ -225,7 +218,7 @@ export const OverviewSection: React.FC<OverviewSectionProps> = (props) => {
           ]}
         />
 
-        <MetricCardThreeRows label="Quantity of Holes per Inclination"
+        <MetricCardThreeRows labels={["Quantity of Holes per Inclination"]}
           values={numHolesLabels.map((label, index) => {
             return { key: `numHoles${label}`, value: `${displayValue(localeNumber(metric.quantityOfHolesPerInclination[index]), "", "")}`, label: `${label}°` }
           })}
