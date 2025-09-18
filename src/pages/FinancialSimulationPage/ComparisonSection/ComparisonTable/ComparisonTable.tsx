@@ -4,10 +4,16 @@ import { FinancialOutputData } from "api/models/OutputData"
 import { getMetricBgClasses, getValuesRelativeToMax } from "./ComparisonTableHelper"
 import AngleIndicator from "./AngleIndicator"
 import { Area, ComposedChart, Line, ResponsiveContainer } from "recharts"
-import { ComparisonSectionProps } from "../ComparisonSection"
-import { NumHolesLabels, OperationalData, ParametersData } from "api/models/ScenarioData"
+import { CashflowEntry, FinancialData, NumHolesLabels, OperationalData, ParametersData } from "api/models/ScenarioData"
 
-const ComparisonTable = (props: ComparisonSectionProps) => {
+export interface ComparisonTableProps {
+  cashFlowData: CashflowEntry[][];
+  keyAssumptions: ParametersData[];
+  financialOutputData: FinancialData[]
+  operationalOutputData: OperationalData[]
+}
+
+const ComparisonTable = (props: ComparisonTableProps) => {
   const { cashFlowData, keyAssumptions, financialOutputData, operationalOutputData } = props
   const [showMore, setShowMore] = useState(false)
 
@@ -125,7 +131,6 @@ const ComparisonTable = (props: ComparisonSectionProps) => {
 
             <div
               className={styles.quantityBarFillOuter}
-
             >
               <div className={styles.quantityBarFill}
                 style={{
@@ -182,7 +187,7 @@ const ComparisonTable = (props: ComparisonSectionProps) => {
                     </span>
                   </div>
                 </>
-                  
+
 
           }
           <span>{formatValue(values[index])}</span>
@@ -208,6 +213,31 @@ const ComparisonTable = (props: ComparisonSectionProps) => {
     )), colorCodes);
   }
 
+  const financialSubRow = (label: string, key: string, perKey: string, higherIsBetter: boolean, indentLabel = false) => {
+    const values = financialOutputData.map((item) => item[key as keyof FinancialOutputData]);
+    const perValues = financialOutputData.map((item) => item[key as keyof FinancialOutputData]);
+
+    const sameValues = values.every((val, _, arr) => val === arr[0]);
+    if (sameValues && !showMore) {
+      return null
+    }
+
+    const colorCodes = getMetricBgClasses(values, higherIsBetter);
+
+    return renderDataRow(label, values.map((value, index) => (
+      <>
+        <div key={index} className={styles.textCell}>
+          {formatCurrency(value)}
+        </div>
+        <span className={styles.divier}></span>
+        <div key={index} className={styles.textCell}>
+          {formatCurrency(perValues[index]) + "/tonne"}
+        </div>
+      </>
+
+    )), colorCodes, indentLabel);
+  }
+
   const operationalRow = (label: string, key: string, unit: string) => {
     const values = operationalOutputData.map((item) => item[key as keyof OperationalData]);
     const sameValues = values.every((val, _, arr) => val === arr[0]);
@@ -226,19 +256,22 @@ const ComparisonTable = (props: ComparisonSectionProps) => {
   const chartDataRow = (
     label: string,
     Component: React.ComponentType<any>,
-    dataMapper: (scenario: OperationalData) => any
+    dataMapper: (scenario: OperationalData) => any,
   ) => {
     return renderDataRow(
       label,
-      operationalOutputData.map((scenario) => <Component data={dataMapper(scenario)} />)
+      operationalOutputData.map((scenario) => <Component data={dataMapper(scenario)} />),
+      undefined
     );
   }
 
-  const renderDataRow = (label: string, cellContents: React.ReactNode[], backgroundColors?: string[]) => {
+  const renderDataRow = (label: string, cellContents: React.ReactNode[], backgroundColors?: string[], indentLabel = false) => {
     return (
       <div key={label} className={`${styles.row} ${styles.borderBottom}`}>
-        <div className={styles.rowLabel}>
-          <span className={styles.rowSubLabel}>{label}</span>
+        <div className={`${styles.rowLabel} ${indentLabel ? styles.indentLabel : ""}`}>
+          <span className={`${styles.rowSubLabel}`}>
+            {label}
+          </span>
         </div>
         {cellContents.map((content, index) => (
           <div
@@ -267,24 +300,31 @@ const ComparisonTable = (props: ComparisonSectionProps) => {
 
   const keyAssumptionSection = () => {
     const keyAssumptionRows = [
+      keyAssumptionRow("Commodity Price", "commodityPrice", "$"),
+      keyAssumptionRow("Number of Drills", "numberOfDrills", ""),
       keyAssumptionRow("Cutter Head Size", "cutterHeadSize", "m"),
-      keyAssumptionRow("Baseline Mining Cost/Tonne", "baselineMiningCostPerTonne", "$"),
+      keyAssumptionRow("Mill Recovery", "millRecovery", "%"),
       keyAssumptionRow("Processing Cost per Tonne", "processingCostPerTonne", "$"),
       keyAssumptionRow("Waste Cost per Tonne", "wasteCostPerTonne", "$"),
-      keyAssumptionRow("Commodity Price", "commodityPrice", "$/oz"),
-      keyAssumptionRow("Mill Recovery", "millRecovery", "%"),
-      keyAssumptionRow("Number of Drills", "numberOfDrills", ""),
+      keyAssumptionRow("Minimum Hole Inclination", "minimumHoleInclination", "°"),
+      keyAssumptionRow("Maximum Hole Length", "maximumHoleLength", "m"),
+
+    ];
+
+    const constantAssumptions = [
       keyAssumptionRow("Rate of Penetration", "rateOfPenetration", "m / hr"),
       keyAssumptionRow("Availability", "availability", "%"),
-      keyAssumptionRow("Maximum Hole Length", "maximumHoleLength", "m"),
-      keyAssumptionRow("Minimum Hole Inclination", "minimumHoleInclination", "°"),
-    ];
+      keyAssumptionRow("Discount Rate", "discountRate", "%"),
+    ]
     const visibleRows = keyAssumptionRows.filter(Boolean);
 
     return (
       <>
         {visibleRows.length > 0 && sectionTitleRow("KEY ASSUMPTIONS", true)}
         {visibleRows}
+
+        {visibleRows.length > 0 && sectionTitleRow("CONSTANT ASSUMPTIONS", false)}
+        {constantAssumptions}
       </>
     )
   }
@@ -292,17 +332,17 @@ const ComparisonTable = (props: ComparisonSectionProps) => {
   const financialSection = () => {
     const financialRows = [
       financialRow("Revenue", "revenue", true),
-      financialRow("Mining Cost", "miningCost", false),
-      financialRow("Processing Cost (Ore)", "processingCostOre", false),
-      financialRow("Processing Cost (Waste)", "processingCostWaste", false),
-      financialRow("Total Processing Cost", "totalProcessingCost", false),
       financialRow("CapEx", "capex", false),
+      financialRow("Total Mining Cost", "miningCost", false),
+      financialSubRow("Extraction Cost", "extractionCost", "extractionCostTonne", true),
+      financialSubRow("Imaging Cost", "imagingCost", "imagingCostTonne", false, true),
+      financialSubRow("Closure Cost", "closureCost", "closureCostTonne", false, true),
+
+      financialSubRow("Total Processing Cost", "totalProcessingCost", "totalProcessingCostTonne", false),
+      financialSubRow("Processing Cost (Ore)", "processingCostOre", "extractionCostTonne", false, true),
+      financialSubRow("Processing Cost (Waste)", "processingCostWaste", "imagingCostTonne", false, true),
+
       financialRow("Net Cash Flow", "netCashFlow", true),
-      financialRow("All In Cost / Tonne", "allInCostTonne", false),
-      financialRow("All In Sustaining Costs (AISC)", "aisc", false),
-      financialRow("All In Cost / Meter", "allInCostMeter", false),
-      financialRow("Revenue / Meter", "revenueMeter", true),
-      financialRow("Cash Flow / Meter", "cashFlowMeter", true),
     ];
 
     const visibleRows = financialRows.filter(Boolean);
@@ -317,11 +357,11 @@ const ComparisonTable = (props: ComparisonSectionProps) => {
 
   const operationalSection = () => {
     const operationalRows = [
-      operationalRow("Life of Mine (LOM)", "LOMMoth", " months"),
+      operationalRow("Life of Mine (LOM)", "lom", " months"),
       operationalRow("Extraction Holes", "extractionHoles", ""),
       operationalRow("Total Length", "totalLength", "m"),
       operationalRow("Ore Mass", "oreMass", " tonnes"),
-      operationalRow("Grade", "grade", " g/ tonnes"),
+      operationalRow("Waste Mass", "wasteMass", " tonnes"),
       chartDataRow(
         "Hole Length",
         HorizontalBarChart,

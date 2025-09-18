@@ -1,16 +1,25 @@
 import finSimStyles from '../FinancialSimulationPage.module.css';
 import ComparisonTable from "./ComparisonTable/ComparisonTable";
-import { CashflowEntry, FinancialData, OperationalData, ParametersData } from "api/models/ScenarioData";
+import { ScenarioData } from "api/models/ScenarioData";
 
 
 export interface ComparisonSectionProps {
-  cashFlowData: CashflowEntry[][];
-  keyAssumptions: ParametersData[];
-  financialOutputData: FinancialData[]
-  operationalOutputData: OperationalData[]
+  // cashFlowData: CashflowEntry[][];
+  scenarioData: ScenarioData[];
 }
 
 const ComparisonSection: React.FC<ComparisonSectionProps> = (props) => {
+  const { scenarioData } = props
+
+  const cashFlowData = scenarioData ? scenarioData.map(d => d.cashflow!.monthly!) : []
+  const keyAssumptions =
+    scenarioData
+      ? scenarioData.map(s => ({ ...s.parameters, ...s.evaluationParameters }))
+      : []
+
+  const financialOutputData = scenarioData ? scenarioData.map(s => s.financial) : []
+  const operationalOutputData = scenarioData ? scenarioData.map(s => s.operational) : []
+
   return (
     <div className={finSimStyles.sectionContainer}>
 
@@ -21,7 +30,10 @@ const ComparisonSection: React.FC<ComparisonSectionProps> = (props) => {
         </div>
       </div>
       <ComparisonTable
-        {...props}
+        cashFlowData={cashFlowData}
+        keyAssumptions={keyAssumptions}
+        financialOutputData={financialOutputData}
+        operationalOutputData={operationalOutputData}
       />
     </div>
   )

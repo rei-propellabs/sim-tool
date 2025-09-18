@@ -86,13 +86,23 @@
   font-weight: 500;
 }
 
+.indentLabel {
+  padding-left: 2rem;
+}
+
 .cell {
-  padding: 8px;
   color: var(--default-text);
   border-right: 1px solid var(--table-border-transparent);
   display: flex;
   align-items: center;
   justify-content: center;
+  flex-grow: 1;
+}
+
+.divier { 
+  width: 1px;
+  height: 100%;
+  background-color: var(--table-border-transparent);
 }
 
 .textCell {
@@ -153,7 +163,7 @@
 /** BAR CHART STYLES */
 .horizontalBarChart {
   width: 100%;
-  padding: 8px 16px;
+  padding: 16px 16px;
   gap: 2px;
   display: flex;
   flex-direction: column;
@@ -195,7 +205,7 @@
   width: 100%;
   display: flex;
   flex-direction: row;
-  padding-top: 12px;
+  padding: 8px;
 }
 
 .inclinationColumn {
@@ -235,7 +245,8 @@
 .quantityChart {
   display: flex;
   align-items: end;
-  gap: 8px;
+  gap: 0.5rem;
+  padding: 1rem;
 }
 
 .quantityBar {
