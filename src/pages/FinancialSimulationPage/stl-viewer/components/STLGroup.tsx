@@ -42,6 +42,7 @@ function STLGroup({ stls, tooltips, objects }: {
                 if (viewerConfig.rotateZ != undefined)
                     groupRef.current.rotation.z = viewerConfig.rotateZ;
                 setRotated(true);
+
             }
 
             const box = new Box3().setFromObject(groupRef.current);

@@ -170,27 +170,28 @@ const ComparisonTable = (props: ComparisonTableProps) => {
     return (
       renderDataRow(label, keyAssumptions.map((scenario, index) => (
         <div className={styles.assumptionValue}>
-
           {
-            values[index] === undefined ? <span>-</span> :
+            values[index] === undefined ||
               relativeDifferences[index] === 0 ?
+              <div className={styles.diaDifference}>
+                <div className={styles.noData} />
+              </div>
+              :
+              <>
                 <div className={styles.diaDifference}>
-                  <div className={styles.noData} />
+                  {relativeDifferences[index] > 0 ? "+" : ""}
+                  {relativeDifferences[index]}%
+                  <span className={styles.diaDifferenceIcon}>
+                    {relativeDifferences[index] > 0 ? "▲" : "▼"}
+                  </span>
                 </div>
-                :
-                <>
-                  <div className={styles.diaDifference}>
-                    {relativeDifferences[index] > 0 ? "+" : ""}
-                    {relativeDifferences[index]}%
-                    <span className={styles.diaDifferenceIcon}>
-                      {relativeDifferences[index] > 0 ? "▲" : "▼"}
-                    </span>
-                  </div>
-                </>
-
+              </>
+          }
+          {
+            values[index] === undefined ? <span>999</span> :
+              <span>{formatValue(values[index])}</span>
 
           }
-          <span>{formatValue(values[index])}</span>
         </div>
       )))
     )
@@ -215,7 +216,7 @@ const ComparisonTable = (props: ComparisonTableProps) => {
 
   const financialSubRow = (label: string, key: string, perKey: string, higherIsBetter: boolean, indentLabel = false) => {
     const values = financialOutputData.map((item) => item[key as keyof FinancialOutputData]);
-    const perValues = financialOutputData.map((item) => item[key as keyof FinancialOutputData]);
+    const perValues = financialOutputData.map((item) => item[perKey as keyof FinancialOutputData]);
 
     const sameValues = values.every((val, _, arr) => val === arr[0]);
     if (sameValues && !showMore) {
@@ -247,7 +248,7 @@ const ComparisonTable = (props: ComparisonTableProps) => {
 
     return renderDataRow(label, values.map((value, id) => (
       <div key={id} className={styles.textCell}>
-        {typeof value === "number" ? `${value}${unit}` : ""}
+        {typeof value === "number" ? `${value}${unit}` : `999${unit}`}
       </div>
     )));
   }
@@ -334,13 +335,13 @@ const ComparisonTable = (props: ComparisonTableProps) => {
       financialRow("Revenue", "revenue", true),
       financialRow("CapEx", "capex", false),
       financialRow("Total Mining Cost", "miningCost", false),
-      financialSubRow("Extraction Cost", "extractionCost", "extractionCostTonne", true),
+      financialSubRow("Extraction Cost", "extractionCost", "extractionCostTonne", false, false),
       financialSubRow("Imaging Cost", "imagingCost", "imagingCostTonne", false, true),
       financialSubRow("Closure Cost", "closureCost", "closureCostTonne", false, true),
 
       financialSubRow("Total Processing Cost", "totalProcessingCost", "totalProcessingCostTonne", false),
-      financialSubRow("Processing Cost (Ore)", "processingCostOre", "extractionCostTonne", false, true),
-      financialSubRow("Processing Cost (Waste)", "processingCostWaste", "imagingCostTonne", false, true),
+      financialSubRow("Processing Cost (Ore)", "totalProcessingCost", "totalProcessingCostTonne", false, true),
+      financialSubRow("Processing Cost (Waste)", "totalProcessingCost", "totalProcessingCostTonne", false, true),
 
       financialRow("Net Cash Flow", "netCashFlow", true),
     ];

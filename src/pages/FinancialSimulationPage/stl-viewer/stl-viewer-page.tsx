@@ -97,26 +97,26 @@ export default function STLPage() {
             },
             {
                 url: "/Monster_Lake/scenario_1_render/scenario_1_drillholes_Waste.stl",
-                color: '#4e9333',
+                color: '#ffd500',
                 wireframe: false,
                 opacity: camMode==='free'?0.35:0.8
             },
             {
                 url: "/Monster_Lake/scenario_1_render/tacuma_Au_3.stl",
-                color: '#1db6c4',
+                color: '#ffd500',
                 wireframe: false,
                 opacity: 0.85
             },
 
             {
                 url: "/Monster_Lake/scenario_1_render/tacuma_Au_6.stl",
-                color: '#c1a6ff',
+                color: '#ffd500',
                 wireframe: false,
                 opacity: 0.85
             },
             {
                 url: "/Monster_Lake/scenario_1_render/tacuma_Au_9.stl",
-                color: '#e06c87',
+                color: '#ffd500',
                 wireframe: false,
                 opacity: 0.85
             },
@@ -135,8 +135,9 @@ export default function STLPage() {
         cameraMode: camMode,
         showToolTipInPlanOnly: true,
         setRotation: {
-            rotateZ: Math.PI / 2,
             rotateX: -Math.PI / 2,
+            rotateY: 0,
+            rotateZ: Math.PI / 2,
         }
     }
 

@@ -13,6 +13,7 @@ import { scenarioData_mock } from "api/mock/MiningScenarioDataMock"
 import useGetScenarios from "api/hooks/useGetScenarios"
 import { getToken } from "utils/TokenManager"
 import { CashflowEntry } from "api/models/ScenarioData"
+import MonthlySummarySection from "./MonthlySummarySection/MonthlySummarySection"
 
 const demoScenarios = [
   {
@@ -92,9 +93,9 @@ export function FinancialSimulationPage() {
         scenario={demoScenarios[activeScenarioIdx].title}
         discountRate={scenarioData ? scenarioData[activeScenarioIdx].evaluationParameters.discRate : 0}
       />
-      {/* <MonthlySummarySection
+      <MonthlySummarySection
         data={1}
-        scenario={demoScenarios[activeScenarioIdx].title} /> */}
+        scenario={demoScenarios[activeScenarioIdx].title} />
       <ComparisonSection
         scenarioData={scenarioData ? scenarioData : []}
         // cashFlowData={scenarioData ? scenarioData.map(d => d.cashflow!.monthly!) : []}

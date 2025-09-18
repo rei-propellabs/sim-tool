@@ -175,7 +175,6 @@ export default function STLCanvas({
     }, [cameraMode]);
 
     useEffect(() => {
-
     }, [viewerConfig]);
 
     return (

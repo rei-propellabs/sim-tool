@@ -97,6 +97,7 @@
   align-items: center;
   justify-content: center;
   flex-grow: 1;
+  min-width: 8rem;
 }
 
 .divier { 
