@@ -16,11 +16,10 @@
 
 .metricsGridLeft {
   margin-top: 5vh;
-  display: grid;
-  grid-template-columns: repeat(2, 1fr);
-  gap: 0.8vh;
-  max-width: 16vw;
-  max-height: 40vh;
+  display: flex;
+  flex-direction: column;
+  gap: 0.2rem;
+  width: 260px;
   z-index: 1;
   position: relative;
 }

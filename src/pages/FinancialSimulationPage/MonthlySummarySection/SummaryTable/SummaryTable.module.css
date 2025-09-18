@@ -42,7 +42,7 @@
 }
 .dataRow:hover,
 .dataRow:hover .labelCell {
-  background: var(--table-row-hover);
+  background: var(--table-row-hover-solid);
 }
 
 .labelCell {

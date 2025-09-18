@@ -58,7 +58,7 @@ export const MetricCardBase = (props: MetricCardProps) => {
               className={styles.tooltipAbove}
               style={{
                 ...tooltipStyle,
-                visibility: showTooltip ? "visible" : "hidden" // hide until positioned
+                visibility: showTooltip ? "visible" : "hidden"
               }}
             >
               {description}

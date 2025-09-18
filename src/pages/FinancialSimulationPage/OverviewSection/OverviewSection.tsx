@@ -50,30 +50,66 @@ export const OverviewSection: React.FC<OverviewSectionProps> = (props) => {
       return null
     }
 
-    const metric = currentData.parameters
+    const metals = currentData!.operational.metals
+
+    function processingAndWasteCost() {
+      let needTwoRows = false
+
+      if (metals.length === 1) {
+        needTwoRows = false
+      } else if (metals.length === 2) {
+        const maxCharLength = Math.max(...metals.map(metal => Math.round(metal.costTonne ).toLocaleString().length + 1))
+        needTwoRows = maxCharLength > 7
+      } else {
+        needTwoRows = true
+      }
+
+      const cards = (
+        <>
+          <ResponsiveMetalCard
+            values={currentData!.operational.metals.map((metal) => ({ name: metal.name, value: metal.costTonne }))}
+            title={"Processing Cost per Tonne"}
+            unitPrefix="$"
+          />
+          <ResponsiveMetalCard
+            values={currentData!.processStreams.filter(ps => ps.name === "Waste").map((ps) => ({ name: ps.name, value: ps.cost }))}
+            title={"Waste Cost per Tonne"}
+            unitPrefix="$"
+          />
+        </>
+      )
+      if (needTwoRows) {
+        return cards
+      } else {
+        return <div className={styles.row}>{cards}</div>
+      }
+    }
+
     return (
       <div className={styles.metricsGridLeft}>
-        <MetricCardTwoRows key="baselineMiningCost" value={displayValue(metric.baselineMiningCostPerTonne, "$")} label="Baseline Mining Cost per Tonne" />
-
-        <MetricCardTwoRows key="processingCost" value={displayValue(metric.processingCostPerTonne, "$")} label="Processing Cost per Tonne" />
-
-        <MetricCardTwoRows key="wasteCost" value={displayValue(metric.wasteCostPerTonne, "$")} label="Waste Cost per Tonne" />
-
-        <MetricCardTwoRows key="commodityPrice" value={displayValue(metric.commodityPrice, "$", "/oz")} label="Commodity Price" />
-
-        <MetricCardTwoRows key="millRecovery" value={displayValue(metric.millRecovery, "", "%")} label="Mill Recovery" />
-
-        <MetricCardTwoRows key="numberOfDrills" value={displayValue(metric.numberOfDrills)} label="Number of Drills" />
-
-        <MetricCardTwoRows key="cutterHeadSize" value={displayValue(metric.cutterHeadSize, "", "m")} label="Cutter Head Size" />
-
-        <MetricCardTwoRows key="availability" value={displayValue(metric.availability, "", "%")} label="Availability" />
-
-        <MetricCardTwoRows key="maxHoleLength" value={displayValue(metric.maximumHoleLength, "", "m")} label="Maximum Hole Length" />
-
-        <MetricCardTwoRows key="minHoleInclination" value={displayValue(metric.minimumHoleInclination, "", "°")} label="Minimum Hole Inclination" />
-
-        <MetricCardTwoRows key="discountRate" value={displayValue(metric.discountRate, "", "%")} label="Discount Rate" fullWidth />
+        <ResponsiveMetalCard
+          values={currentData.metals.map(metal => ({ name: metal.name, value: Math.round(metal.price).toLocaleString() }))}
+          title={"Commodity Price"}
+          unitPrefix="$"
+          unitSuffix={`/` + (metals[0]?.per || "")}
+        />
+        <div className={styles.row}>
+          <ResponsiveMetalCard
+            values={[{ name: "", value: currentData.parameters.numberOfDrills }]}
+            title={"Number of Drills"}
+          />
+          <ResponsiveMetalCard
+            values={[{ name: "", value: currentData.parameters.cutterHeadSize }]}
+            title={"Cutter Head Size"}
+            unitSuffix="m"
+          />
+        </div>
+        <ResponsiveMetalCard
+          values={currentData.metals.map((metal) => ({ name: metal.name, value: Math.round(metal.recovery).toLocaleString() }))}
+          title={"Mill Recovery"}
+          unitSuffix="%"
+        />
+        {processingAndWasteCost()}
       </div>
     )
   }
@@ -174,7 +210,7 @@ export const OverviewSection: React.FC<OverviewSectionProps> = (props) => {
 
     const metric = currentData.operational
 
-    const metals = [metric.metals[0], metric.metals[0]]
+    const metals = metric.metals
 
 
     const gradeAndLom = () => {
@@ -219,7 +255,7 @@ export const OverviewSection: React.FC<OverviewSectionProps> = (props) => {
       if (metals.length === 1) {
         needTwoRows = false
       } else if (metals.length === 2) {
-        let maxCharLength = Math.max(...metals.map(metal => Math.round(metal.wastePer * metal.wasteUnit).toLocaleString().length + (metal.unit?.length || 0)))
+        let maxCharLength = Math.max(...metals.map(metal => Math.round(metal.wastePer).toLocaleString().length + (metal.unit?.length || 0)))
         maxCharLength = Math.max(maxCharLength, ...metals.map(metal => Math.round(metal.mass).toLocaleString().length + (metal.unit?.length || 0)))
 
         needTwoRows = maxCharLength > 7
@@ -230,7 +266,7 @@ export const OverviewSection: React.FC<OverviewSectionProps> = (props) => {
       const content = (
         <>
           <ResponsiveMetalCard
-            values={metals.map((metal) => ({ name: metal.name, value: Math.round(metal.wastePer * metal.wasteUnit).toLocaleString() }))} // todo confirm this is correct
+            values={metals.map((metal) => ({ name: metal.name, value: Math.round(metal.wastePer).toLocaleString() }))} // todo confirm this is correct
             unitSuffix={metals[0].per}
             title={"Waste Mass"}
           />

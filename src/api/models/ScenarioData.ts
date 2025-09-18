@@ -187,6 +187,9 @@ export interface MetalEntry {
 	unit: string;
 	price: number;
 	fields: MetalFields;
+	cost: number;
+	recovery: number;
+	wasteRecovery: number;
 }
 
 export interface MetalFields {
