@@ -7,12 +7,12 @@ import {
     useRef,
     useState
 } from "react";
-import {Canvas, useFrame, useThree} from "@react-three/fiber";
-import {OrbitControls} from "@react-three/drei";
-import {Box3, Vector3} from "three";
+import { Canvas, useFrame, useThree } from "@react-three/fiber";
+import { OrbitControls } from "@react-three/drei";
+import { Box3, Vector3 } from "three";
 import * as THREE from "three";
 import Helpers from "../components/Helpers";
-import {STLErrorFallback, STLGroupErrorBoundary} from "../components/STLGroupErrorBoundary";
+import { STLErrorFallback, STLGroupErrorBoundary } from "../components/STLGroupErrorBoundary";
 import STLGroupLoaderSuspense from "../components/STLLoaderSuspense";
 import STLLoaderGroup from "../components/STLGroup";
 
@@ -37,6 +37,11 @@ export interface STLCanvasProps {
     /**Style the containing div of the 3D canvas. Note that by default it has some predefined tailwind styles applied,
      * including `absolute inset-0 bg-slate-800` **/
     className?: string,
+    /**If true, play animation*/
+    autoRotate?: boolean,
+    /**If true, rotate to show the surface */
+    showSurface?: boolean,
+    setShowSurface?: (value: boolean) => void,
     environmentMapIntensity: number,
     cameraMode: CameraMode,
     tooltips: TooltipInterface[],
@@ -113,16 +118,18 @@ export const ViewerContext = createContext<{
 }>()
 
 export default function STLCanvas({
-                                      objects,
-                                      debugMode,
-                                      resetButton,
-                                      className,
-                                      environmentMapIntensity,
-                                      tooltips,
-                                      cameraMode,
-                                      showToolTipInPlanOnly,
-                                      setRotation,
-                                  }: STLCanvasProps) {
+    objects,
+    debugMode,
+    resetButton,
+    className,
+    environmentMapIntensity,
+    tooltips,
+    cameraMode,
+    showToolTipInPlanOnly,
+    autoRotate,
+    
+    setRotation,
+}: STLCanvasProps) {
     const orbitRef = useRef(null);
 
     const defaultOrthographic = new THREE.OrthographicCamera(window.innerWidth / -2, window.innerWidth / 2, window.innerHeight / 2, window.innerHeight / -2, 0.1, 10000)
@@ -170,7 +177,7 @@ export default function STLCanvas({
     }, [resetButton]);
 
     useEffect(() => {
-        setViewerConfig({...viewerConfig, mode: cameraMode});
+        setViewerConfig({ ...viewerConfig, mode: cameraMode });
 
     }, [cameraMode]);
 
@@ -180,17 +187,18 @@ export default function STLCanvas({
     return (
         <DebugContext.Provider value={debugMode}>
             <OrbitContext.Provider value={orbitRef}>
-                <ViewerContext.Provider value={{config: viewerConfig, dispatch: setViewerConfig}}>
+                <ViewerContext.Provider value={{ config: viewerConfig, dispatch: setViewerConfig }}>
                     <div className={`absolute inset-0 bg-slate-950 ${className} `}>
                         <Canvas camera={cameraMode === 'plan' ? defaultOrthographic : defaultPerspective}>
-                            <CameraController/>
+                            <CameraController />
                             <OrbitControls enableRotate={cameraMode != 'plan'}
-                                           zoomSpeed={2} ref={orbitRef}/>
+                                autoRotate={autoRotate}
+                                zoomSpeed={2} ref={orbitRef} />
                             {/* {debugMode && <Helpers/>} */}
-                            <STLGroupErrorBoundary fallback={<STLErrorFallback/>}>
-                                <Suspense fallback={<STLGroupLoaderSuspense/>}>
+                            <STLGroupErrorBoundary fallback={<STLErrorFallback />}>
+                                <Suspense fallback={<STLGroupLoaderSuspense />}>
                                     <STLLoaderGroup tooltips={tooltips} envIntensity={environmentMapIntensity}
-                                                    objects={objects}/>
+                                        objects={objects} />
                                 </Suspense>
                             </STLGroupErrorBoundary>
                         </Canvas>
@@ -203,8 +211,8 @@ export default function STLCanvas({
 
 
 function CameraController() {
-    const {camera} = useThree();
-    const {config: viewerConfig} = useContext(ViewerContext);
+    const { camera } = useThree();
+    const { config: viewerConfig } = useContext(ViewerContext);
     const orbitContext = useContext(OrbitContext);
 
 
@@ -213,7 +221,7 @@ function CameraController() {
             return;
         }
 
-        const {mode, perspective, orthographic, boundingBox} = viewerConfig;
+        const { mode, perspective, orthographic, boundingBox } = viewerConfig;
         const center = new Vector3();
         boundingBox.getCenter(center);
 

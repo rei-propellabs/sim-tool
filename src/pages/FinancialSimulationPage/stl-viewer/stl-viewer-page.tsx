@@ -1,8 +1,13 @@
-import STLCanvas, {type CameraMode, type TooltipInterface} from "./components/STLCanvas";
-import {type RefObject, Suspense, useRef, useState} from "react";
+import STLCanvas, { type CameraMode, type TooltipInterface } from "./components/STLCanvas";
+import { type RefObject, Suspense, useRef, useState } from "react";
 
-import type {STLCanvasProps} from "./components/STLCanvas";
-import {CollarData} from "./tableConvert.com_h97une";
+import type { STLCanvasProps } from "./components/STLCanvas";
+import { CollarData } from "./tableConvert.com_h97une";
+import styles from "./stl-viewer-page.module.css";
+import play from "images/play.svg";
+import pause from "images/pause.svg";
+import { CheckboxLabel } from "components/CheckboxLabel/CheckboxLabel";
+import { TabBar } from "components/TabBar/TabBar";
 
 /**
  * Colors used to decorate the tooltips based off of `Au g/t`
@@ -15,55 +20,59 @@ export const ToolTipColors = {
     border: '#E5F3EB',
     levels: {
         1:
-            {
-                color: '#29BBAC',
-                border:
-                    '#155C554D'
-            }
+        {
+            color: '#29BBAC',
+            border:
+                '#155C554D'
+        }
         ,
         2:
-            {
-                color: '#58CD8D',
-                border:
-                    '#37B97466'
-            }
+        {
+            color: '#58CD8D',
+            border:
+                '#37B97466'
+        }
         ,
         3:
-            {
-                color: '#ECC92A',
-                border:
-                    '#9D820B99'
-            }
+        {
+            color: '#ECC92A',
+            border:
+                '#9D820B99'
+        }
         ,
         4:
-            {
-                color: '#F2A61D',
-                border:
-                    '#BE7C09CC'
-            }
+        {
+            color: '#F2A61D',
+            border:
+                '#BE7C09CC'
+        }
         ,
         5:
-            {
-                color: '#FE592A',
-                border:
-                    '#D94C24'
-            }
+        {
+            color: '#FE592A',
+            border:
+                '#D94C24'
+        }
     }
 }
 
 export const TooltipIcons = {
-    delete : '/icons/Delete.svg',
-    arrows_vertical : '/icons/ArrowsVertical.svg',
-    currency_dollar : '/icons/CurrencyDollar.svg',
-    close : '/icons/close.svg',
+    delete: '/icons/Delete.svg',
+    arrows_vertical: '/icons/ArrowsVertical.svg',
+    currency_dollar: '/icons/CurrencyDollar.svg',
+    close: '/icons/close.svg',
 }
 
 export default function STLPage() {
     const buttonRef = useRef<RefObject<HTMLButtonElement>>(null);
+    const [autoRotate, setAutoRotate] = useState(false);
+    const [showSurface, setShowSurface] = useState(false);
+    const orebodyView = ["3D animation", "plan view"]
+    const [activeOrebodyView, setActiveOrebodyView] = useState<number>(0)
 
     const toolTipCoordinates = CollarData.map((item) => {
         return {
-            position: {x: item.collar_render_x, y: item.collar_render_y, z: item.collar_render_z},
+            position: { x: item.collar_render_x, y: item.collar_render_y, z: item.collar_render_z },
             serial: item.serial,
             Gold_vol: item.Gold_Vol,
             Gold_Mass: item.Gold_Mass,
@@ -79,27 +88,27 @@ export default function STLPage() {
         } as TooltipInterface;
     })
 
-    const [camMode,setCamMode] = useState<CameraMode>('free');
+    const [camMode, setCamMode] = useState<CameraMode>('free');
 
     const flipMode = () => {
         if (camMode === 'free') {
             setCamMode('plan');
-        }else setCamMode('free');
+        } else setCamMode('free');
     }
 
     const stlCanvasProps: STLCanvasProps = {
         objects: [
             {
                 url: "/Monster_Lake/scenario_1_render/scenario_1_drillholes_Gold.stl",
-                color: '#ffd500',
+                color: '#ddff00',
                 wireframe: false,
-                opacity: camMode==='free'?0.35:0.8
+                opacity: camMode === 'free' ? 0.35 : 0.8
             },
             {
                 url: "/Monster_Lake/scenario_1_render/scenario_1_drillholes_Waste.stl",
-                color: '#ffd500',
+                color: '#ddff00',
                 wireframe: false,
-                opacity: camMode==='free'?0.35:0.8
+                opacity: camMode === 'free' ? 0.35 : 0.8
             },
             {
                 url: "/Monster_Lake/scenario_1_render/tacuma_Au_3.stl",
@@ -130,6 +139,9 @@ export default function STLPage() {
         debugMode: import.meta.env.MODE === 'development',
         resetButton: buttonRef,
         className: '',
+        autoRotate: autoRotate,
+        showSurface: showSurface,
+        setShowSurface: setShowSurface,
         environmentMapIntensity: 0.33,
         tooltips: toolTipCoordinates,
         cameraMode: camMode,
@@ -148,7 +160,25 @@ export default function STLPage() {
                     Loading
                 </div>
             }>
-                <STLCanvas {...stlCanvasProps}  />
+
+                <STLCanvas {...stlCanvasProps} />
+                <div className={styles.controls}>
+
+                    <button className={styles.playPause} onClick={() => setAutoRotate(!autoRotate)}>
+                        <img src={autoRotate ? pause : play} />
+                    </button>
+                    <CheckboxLabel
+                        text="AUTOROTATE"
+                        checked={autoRotate}
+                        onValueChange={setAutoRotate}
+                    />
+                    <CheckboxLabel
+                        text="SHOW SURFACE"
+                        checked={showSurface}
+                        onValueChange={setShowSurface}
+                    />
+                </div>
+
                 <div className={'absolute top-1/2 z-10 left-4 flex flex-col gap-2'}>
                     {/*// @ts-ignore*/}
                     {/* <button ref={buttonRef}
@@ -160,6 +190,16 @@ export default function STLPage() {
                         Current Mode : {camMode}
                     </button> */}
 
+                </div>
+
+                <div className={styles.orebodyViewTab}>
+                    <TabBar
+                        texts={orebodyView}
+                        activeIdx={activeOrebodyView}
+                        onActiveIdxChange={(value) => {
+                            setActiveOrebodyView(value)
+                            setCamMode(value === 0 ? 'free' : 'plan')
+                        }} />
                 </div>
             </Suspense>
 

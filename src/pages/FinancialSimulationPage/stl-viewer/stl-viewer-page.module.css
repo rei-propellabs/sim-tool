@@ -1,0 +1,64 @@
+.container {
+  position: relative;
+  border: 2px solid var(--blue-500);
+  height: 100vh;
+  overflow: hidden;
+}
+
+.resetButton {
+  position: absolute;
+  bottom: 20px;
+  right: 20px;
+  background-color: var(--blue-500);
+  color: var(--tab-active);
+  border: none;
+  padding: 10px 20px;
+  border-radius: 5px;
+  cursor: pointer;
+  z-index: 100;
+}
+
+.loading {
+  display: flex;
+  flex-direction: row;
+  height: 100%;
+  width: 100%;
+  align-items: center;
+  justify-content: center;
+  color: var(--darker-text);
+  font-size: 1rem;
+}
+
+.controls {
+  position: absolute;
+  bottom: 1vh;
+  display: flex;
+  gap: 12px;
+  justify-self: center;
+  align-items: center;
+  align-self: center;
+  background: var(--dark-background-200);
+  border-radius: 30px;
+  border: var(--box-border);
+  padding-left: 4px;
+  height: 2rem;
+}
+.playPause {
+  border-radius: 30px;
+  background: var(--tab-active);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  height: 1.7rem;
+  width: 2.3rem;
+  padding: 0.5rem;
+}
+
+.orebodyViewTab {
+  width: fit-content;
+  position: absolute;
+  left: 1vw;
+  bottom: 1vw;
+  z-index: 100;
+}

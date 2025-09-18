@@ -363,12 +363,12 @@ export const OverviewSection: React.FC<OverviewSectionProps> = (props) => {
       </div>
 
       {/* Orebody view toggle */}
-      <div className={styles.orebodyViewTab}>
+      {/* <div className={styles.orebodyViewTab}>
         <TabBar
           texts={orebodyView}
           activeIdx={activeOrebodyView}
           onActiveIdxChange={setActiveOrebodyView} />
-      </div>
+      </div> */}
 
       {/* Output Panel */}
       <div>
