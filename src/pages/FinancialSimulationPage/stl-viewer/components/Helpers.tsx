@@ -4,7 +4,7 @@ import {useControls} from "leva";
 export default function Helpers() {
 
     const {gridSize, showGrid, ...gridConfig} = useControls({
-        showGrid: true,
+        showGrid: false,
         gridSize: [10, 10],
         cellSize: {value: 1, min: 0, max: 10, step: 0.1},
         cellThickness: {value: 0.5, min: 0, max: 5, step: 0.1},
@@ -31,8 +31,8 @@ export default function Helpers() {
                 <GizmoViewport  axisColors={['red', 'green', 'blue']} labelColor="white"/>
             </GizmoHelper>
             <mesh position={[0,0,0]} castShadow receiveShadow>
-                <sphereGeometry args={[0.25, 64, 32 ]}/>
-                <meshPhysicalMaterial opacity={0.75} transparent emissive={'#ffffff'} fog iridescence={0.8} roughness={0.2} ior={2.0} metalness={0.8} />
+                <sphereGeometry args={[5, 64, 32 ]}/>
+                <meshPhysicalMaterial  transparent color={'#00ff00'} fog metalness={1}  roughness={1}   />
             </mesh>
         </>
     )
