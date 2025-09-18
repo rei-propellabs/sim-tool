@@ -14,7 +14,7 @@ import {
 import STLMesh from "../components/STLMesh";
 import ToolTip from "../components/tooltip";
 import { STLLoader } from "three-stdlib";
-import "../style.css"
+// import "style.css"
 
 function STLGroup({ stls, tooltips, objects }: {
     stls: THREE.BufferGeometry<THREE.NormalBufferAttributes, THREE.BufferGeometryEventMap>[],

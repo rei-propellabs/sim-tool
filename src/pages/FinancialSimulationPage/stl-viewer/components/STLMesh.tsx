@@ -1,6 +1,5 @@
 import { useRef} from "react";
 import { BufferGeometry} from "three";
-import "../style.css"
 
 interface STLMeshProps {
     stl: BufferGeometry,

@@ -141,7 +141,7 @@ export default function STLPage() {
     }
 
     return (
-        <div className={'relative border-2  h-svh overflow-clip border-blue-500 '}>
+        <div className={'relative border-2  h-svh overflow-clip'}>
             <Suspense fallback={
                 <div className={'flex flex-row h-full w-full items-center justify-center font-mono text-5xl'}>
                     Loading
@@ -150,14 +150,14 @@ export default function STLPage() {
                 <STLCanvas {...stlCanvasProps}  />
                 <div className={'absolute top-1/2 z-10 left-4 flex flex-col gap-2'}>
                     {/*// @ts-ignore*/}
-                    <button ref={buttonRef}
+                    {/* <button ref={buttonRef}
                             className={'px-3 py-2 font-mono bg-blue-200 hover:bg-blue-300'}>
                         RESET
                     </button>
                     <button onClick={flipMode}
                             className={'px-3 py-2 font-mono bg-blue-200 hover:bg-blue-300'}>
                         Current Mode : {camMode}
-                    </button>
+                    </button> */}
 
                 </div>
             </Suspense>

@@ -5,7 +5,7 @@ import {type TooltipInterface, ViewerContext} from "../STLCanvas";
 import {BBAnchor, Billboard, Html} from "@react-three/drei";
 import * as THREE from "three";
 import {ToolTipColors, TooltipIcons} from "../../stl-viewer-page";
-import "../../style.css"
+// import "style.css"
 
 export interface ToolTipContext {
     position: { x: number; y: number; z: number };

@@ -15,7 +15,7 @@ import Helpers from "../components/Helpers";
 import {STLErrorFallback, STLGroupErrorBoundary} from "../components/STLGroupErrorBoundary";
 import STLGroupLoaderSuspense from "../components/STLLoaderSuspense";
 import STLLoaderGroup from "../components/STLGroup";
-import "../style.css"
+
 
 export interface STLObjectProp {
     /**Object storage URL**/
@@ -187,7 +187,7 @@ export default function STLCanvas({
                             <CameraController/>
                             <OrbitControls enableRotate={cameraMode != 'plan'}
                                            zoomSpeed={2} ref={orbitRef}/>
-                            {debugMode && <Helpers/>}
+                            {/* {debugMode && <Helpers/>} */}
                             <STLGroupErrorBoundary fallback={<STLErrorFallback/>}>
                                 <Suspense fallback={<STLGroupLoaderSuspense/>}>
                                     <STLLoaderGroup tooltips={tooltips} envIntensity={environmentMapIntensity}

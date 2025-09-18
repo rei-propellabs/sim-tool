@@ -1,5 +1,5 @@
 import {Html} from "@react-three/drei";
-import "../style.css"
+// import "style.css"
 
 export default function STLLoaderSuspense(){
         return(
