@@ -15,7 +15,7 @@ import Helpers from "../components/Helpers";
 import { STLErrorFallback, STLGroupErrorBoundary } from "../components/STLGroupErrorBoundary";
 import STLGroupLoaderSuspense from "../components/STLLoaderSuspense";
 import STLLoaderGroup from "../components/STLGroup";
-
+import { OrbitControls as ThreeOrbitControls } from "three-stdlib";
 
 export interface STLObjectProp {
     /**Object storage URL**/
@@ -127,10 +127,10 @@ export default function STLCanvas({
     cameraMode,
     showToolTipInPlanOnly,
     autoRotate,
-    
+
     setRotation,
 }: STLCanvasProps) {
-    const orbitRef = useRef(null);
+    const orbitRef = useRef<ThreeOrbitControls | null>(null);
 
     const defaultOrthographic = new THREE.OrthographicCamera(window.innerWidth / -2, window.innerWidth / 2, window.innerHeight / 2, window.innerHeight / -2, 0.1, 10000)
     defaultOrthographic.zoom = 10
@@ -152,6 +152,30 @@ export default function STLCanvas({
         rotateY: setRotation?.rotateY,
         rotateZ: setRotation?.rotateZ,
     });
+
+    useEffect(() => {
+        // Hold Control to enable scrolling
+        const handleKeyDown = (e: KeyboardEvent) => {
+            if (e.key === "Control" && orbitRef.current) {
+                orbitRef.current.enableZoom = true;
+            }
+        };
+        const handleKeyUp = (e: KeyboardEvent) => {
+            if (e.key === "Control" && orbitRef.current) {
+                orbitRef.current.enableZoom = false;
+            }
+        };
+        window.addEventListener("keydown", handleKeyDown);
+        window.addEventListener("keyup", handleKeyUp);
+        // Disable zoom by default
+        if (orbitRef.current) {
+            orbitRef.current.enableZoom = false;
+        }
+        return () => {
+            window.removeEventListener("keydown", handleKeyDown);
+            window.removeEventListener("keyup", handleKeyUp);
+        };
+    }, []);
 
     // Add this useEffect to detect button clicks and reset OrbitControls
     useEffect(() => {
@@ -193,7 +217,8 @@ export default function STLCanvas({
                             <CameraController />
                             <OrbitControls enableRotate={cameraMode != 'plan'}
                                 autoRotate={autoRotate}
-                                zoomSpeed={2} ref={orbitRef} />
+                                zoomSpeed={2} ref={orbitRef}
+                                enableZoom={false} />
                             {/* {debugMode && <Helpers/>} */}
                             <STLGroupErrorBoundary fallback={<STLErrorFallback />}>
                                 <Suspense fallback={<STLGroupLoaderSuspense />}>
