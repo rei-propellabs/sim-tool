@@ -84,13 +84,14 @@ const ScrollableImage: React.FC<ScrollableImageProps> = ({
     }
   };
 
-  useEffect(() => {
-    const container = containerRef.current;
-    if (!container) return;
 
-    container.addEventListener('wheel', handleWheel, { passive: false });
-    return () => container.removeEventListener('wheel', handleWheel);
-  }, [imageLoaded, maxScrollX]);
+  // useEffect(() => {
+  //   const container = containerRef.current;
+  //   if (!container) return;
+
+  //   container.addEventListener('wheel', handleWheel, { passive: false });
+  //   return () => container.removeEventListener('wheel', handleWheel);
+  // }, [imageLoaded, maxScrollX]);
 
   // Handle drag scroll (normalized)
   const handleMouseDown = (e: React.MouseEvent) => {
@@ -114,8 +115,68 @@ const ScrollableImage: React.FC<ScrollableImageProps> = ({
   const handleMouseLeave = () => setIsDragging(false);
 
   // Calculate scroll indicator properties
-  const scrollableRatio = maxScrollX > 0 ? containerWidth / imageWidth : 1;
+  const scrollableRatio = maxScrollX > 0 ? containerWidth / scaledImageWidth : 1;
   const scrollProgress = normScroll;
+  // For thumb drag: get track and thumb width in px
+  // Get actual track width from DOM for pixel-perfect clamping
+  const [trackWidth, setTrackWidth] = useState(192); // default 12rem
+  const thumbWidth = trackWidth * scrollableRatio;
+  // Thumb left position in px
+  const thumbLeft = scrollProgress * (trackWidth - thumbWidth);
+
+  const trackRef = useRef<HTMLDivElement>(null);
+  // Update trackWidth on mount and resize
+  useEffect(() => {
+    if (!trackRef.current) return;
+    const updateWidth = () => {
+      if (trackRef.current) setTrackWidth(trackRef.current.offsetWidth);
+    };
+    updateWidth();
+    window.addEventListener('resize', updateWidth);
+    return () => window.removeEventListener('resize', updateWidth);
+  }, [imageLoaded]);
+
+  // --- Scrollbar thumb drag logic ---
+  const [isThumbDragging, setIsThumbDragging] = useState(false);
+  const thumbDragStartX = useRef(0);
+  const thumbStartScrollNorm = useRef(0);
+
+  const handleThumbMouseDown = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    setIsThumbDragging(true);
+    thumbDragStartX.current = e.clientX;
+    thumbStartScrollNorm.current = normScroll;
+    document.body.style.userSelect = 'none';
+  };
+
+  const handleThumbMouseMove = (e: MouseEvent) => {
+    if (!isThumbDragging) return;
+    // Calculate drag delta in px
+    const dx = e.clientX - thumbDragStartX.current;
+    // Thumb can move from 0 to (trackWidth - thumbWidth)
+    const startLeft = thumbStartScrollNorm.current * (trackWidth - thumbWidth);
+    let newLeft = startLeft + dx;
+    newLeft = Math.max(0, Math.min(newLeft, trackWidth - thumbWidth));
+    // Convert thumb position to normalized scroll
+    const newNorm = (trackWidth - thumbWidth) > 0 ? newLeft / (trackWidth - thumbWidth) : 0;
+    if (onScrollPositionChange) onScrollPositionChange(newNorm);
+  };
+
+  const handleThumbMouseUp = () => {
+    setIsThumbDragging(false);
+    document.body.style.userSelect = '';
+  };
+
+  useEffect(() => {
+    if (!isThumbDragging) return;
+    window.addEventListener('mousemove', handleThumbMouseMove);
+    window.addEventListener('mouseup', handleThumbMouseUp);
+    return () => {
+      window.removeEventListener('mousemove', handleThumbMouseMove);
+      window.removeEventListener('mouseup', handleThumbMouseUp);
+      document.body.style.userSelect = '';
+    };
+  }, [isThumbDragging]);
 
   return (
     <div className={styles.container}>
@@ -148,13 +209,22 @@ const ScrollableImage: React.FC<ScrollableImageProps> = ({
 
       {imageLoaded && maxScrollX > 0 && (
         <div className={styles.scrollIndicator}>
-          <div className={styles.scrollTrack}>
+          <div
+            className={styles.scrollTrack}
+            ref={trackRef}
+            style={{ position: 'relative', width: '100%' }}
+          >
             <div
               className={styles.scrollThumb}
               style={{
-                width: `${scrollableRatio * 100}%`,
-                transform: `translateX(${scrollProgress * (100 / scrollableRatio - 100)}%)`
+                width: `${thumbWidth}px`,
+                left: `${thumbLeft}px`,
+                position: 'absolute',
+                cursor: isThumbDragging ? 'grabbing' : 'grab',
+                boxSizing: 'border-box',
+                maxWidth: '100%',
               }}
+              onMouseDown={handleThumbMouseDown}
             />
           </div>
         </div>
