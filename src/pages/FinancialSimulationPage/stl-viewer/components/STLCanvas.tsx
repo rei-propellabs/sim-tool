@@ -219,7 +219,7 @@ export default function STLCanvas({
                                 autoRotate={autoRotate}
                                 zoomSpeed={2} ref={orbitRef}
                                 enableZoom={false} />
-                            {/* {debugMode && <Helpers/>} */}
+                            {debugMode && <Helpers/>}
                             <STLGroupErrorBoundary fallback={<STLErrorFallback />}>
                                 <Suspense fallback={<STLGroupLoaderSuspense />}>
                                     <STLLoaderGroup tooltips={tooltips} envIntensity={environmentMapIntensity}

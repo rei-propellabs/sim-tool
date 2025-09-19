@@ -136,7 +136,7 @@ export default function STLPage() {
             //     opacity: 1
             // }
         ],
-        debugMode: import.meta.env.MODE === 'development',
+        debugMode: false, //import.meta.env.MODE === 'development',
         resetButton: buttonRef,
         className: '',
         autoRotate: autoRotate,
