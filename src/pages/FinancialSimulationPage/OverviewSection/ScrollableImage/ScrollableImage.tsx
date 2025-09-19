@@ -29,8 +29,13 @@ const ScrollableImage: React.FC<ScrollableImageProps> = ({
   const dragStartScrollNorm = useRef(0);
 
   // Calculate scroll bounds
-  const maxScrollX = Math.max(0, imageWidth - containerWidth);
+  // Always fill height, so width is scaled proportionally
+  const scaledImageWidth = imageRef.current && containerRef.current
+    ? imageRef.current.naturalWidth * (containerRef.current.offsetHeight / imageRef.current.naturalHeight)
+    : imageWidth;
+  const maxScrollX = Math.max(0, scaledImageWidth - containerWidth);
   // Clamp normalized scroll position between 0 and 1
+  // Clamp so that the right edge of the image never goes past the right edge of the container
   const normScroll = Math.max(0, Math.min(scrollPosition ?? 0, 1));
   // Convert normalized scroll to pixel offset
   const pixelScroll = maxScrollX * normScroll;
@@ -39,10 +44,8 @@ const ScrollableImage: React.FC<ScrollableImageProps> = ({
   const handleImageLoad = () => {
     if (imageRef.current && containerRef.current) {
       const containerRect = containerRef.current.getBoundingClientRect();
-      const imageRect = imageRef.current.getBoundingClientRect();
-
       setContainerWidth(containerRect.width);
-      setImageWidth(imageRect.width);
+      setImageWidth(imageRef.current.naturalWidth);
       setImageLoaded(true);
     }
   };
@@ -73,10 +76,11 @@ const ScrollableImage: React.FC<ScrollableImageProps> = ({
     const delta = e.deltaY || e.deltaX;
     const scrollSensitivity = 5;
     // Convert delta to normalized units
-    const newNorm = normScroll + (delta * scrollSensitivity / 100);
-    const clampedNorm = Math.max(0, Math.min(newNorm, 1));
+    let newNorm = normScroll + (delta * scrollSensitivity / 100);
+    // Clamp so that the right edge of the image never goes past the right edge of the container
+    newNorm = Math.max(0, Math.min(newNorm, 1));
     if (onScrollPositionChange) {
-      onScrollPositionChange(clampedNorm);
+      onScrollPositionChange(newNorm);
     }
   };
 
@@ -100,9 +104,10 @@ const ScrollableImage: React.FC<ScrollableImageProps> = ({
     const dx = e.clientX - dragStartX.current;
     // Convert dx to normalized units
     const normDelta = maxScrollX > 0 ? dx / maxScrollX : 0;
-    const newNorm = dragStartScrollNorm.current - normDelta;
-    const clampedNorm = Math.max(0, Math.min(newNorm, 1));
-    if (onScrollPositionChange) onScrollPositionChange(clampedNorm);
+    let newNorm = dragStartScrollNorm.current - normDelta;
+    // Clamp so that the right edge of the image never goes past the right edge of the container
+    newNorm = Math.max(0, Math.min(newNorm, 1));
+    if (onScrollPositionChange) onScrollPositionChange(newNorm);
   };
 
   const handleMouseUp = () => setIsDragging(false);
@@ -130,9 +135,14 @@ const ScrollableImage: React.FC<ScrollableImageProps> = ({
           alt="Scrollable content"
           className={styles.image}
           style={{
+            height: '100%',
+            width: 'auto',
+            minWidth: 0,
+            maxWidth: 'none',
             transform: `translateX(-${pixelScroll}px)`
           }}
           onLoad={handleImageLoad}
+          draggable={false}
         />
       </div>
 

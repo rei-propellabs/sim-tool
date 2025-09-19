@@ -192,7 +192,7 @@ export default function STLPage() {
 
                 </div>
 
-                <div className={styles.orebodyViewTab}>
+                {/* <div className={styles.orebodyViewTab}>
                     <TabBar
                         texts={orebodyView}
                         activeIdx={activeOrebodyView}
@@ -200,7 +200,7 @@ export default function STLPage() {
                             setActiveOrebodyView(value)
                             setCamMode(value === 0 ? 'free' : 'plan')
                         }} />
-                </div>
+                </div> */}
             </Suspense>
 
         </div>

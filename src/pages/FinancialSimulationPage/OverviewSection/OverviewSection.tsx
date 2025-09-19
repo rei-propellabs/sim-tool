@@ -31,7 +31,7 @@ export const OverviewSection: React.FC<OverviewSectionProps> = (props) => {
 
   // const currentData = scenarioData[activeScenarioIdx]
   const currentData = scenarioData // ? scenarioData : scenarioData_mock[0]
-  const planViews = [planView, planView2, planView3]
+  const planViews = [planView, planView, planView]
 
   const displayValue = (value: number | string | undefined, prefix?: string, suffix?: string) => {
     if (value === undefined || value === null || Number.isNaN(value)) return "-";
@@ -338,7 +338,7 @@ export const OverviewSection: React.FC<OverviewSectionProps> = (props) => {
   return (
     <div className={styles.summary}>
 
-      <div className="absolute-fill behind">
+      <div className="absolute-fill">
         {
           activeOrebodyView === 0 ?
             <STLPage /> :
@@ -363,12 +363,12 @@ export const OverviewSection: React.FC<OverviewSectionProps> = (props) => {
       </div>
 
       {/* Orebody view toggle */}
-      {/* <div className={styles.orebodyViewTab}>
+      <div className={styles.orebodyViewTab}>
         <TabBar
           texts={orebodyView}
           activeIdx={activeOrebodyView}
           onActiveIdxChange={setActiveOrebodyView} />
-      </div> */}
+      </div>
 
       {/* Output Panel */}
       <div>
