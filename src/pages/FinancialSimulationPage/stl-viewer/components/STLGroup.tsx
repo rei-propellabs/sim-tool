@@ -57,10 +57,10 @@ function STLGroup({ stls, tooltips, objects }: {
                 center: center,
                 maxDimension: maxDimension
             })
-            const cameraDistance = maxDimension + 25;
+            const cameraDistance = maxDimension + 10;
 
 
-            const pDirection = new Vector3(0.5, 0.5, 0.5);
+            const pDirection = new Vector3(0, 0, 1);
             const newPCameraPosition = center.clone().add(pDirection.multiplyScalar(cameraDistance));
             const newOCameraPosition = new Vector3(0, size.y + 10, 0);
             if (debugMode) {

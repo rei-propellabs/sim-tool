@@ -31,7 +31,7 @@ export interface STLObjectProp {
 export interface STLCanvasProps {
     objects: STLObjectProp[],
     /**Enable this if you want to display grid, light helpers, gizmos, etc.**/
-    debugMode: boolean,
+    debugMode: boolean
     /**Passing this ref is optional. For usage, see the containing file - stl-viewer-page.tsx**/
     resetButton?: RefObject<RefObject<HTMLButtonElement> | null> | RefObject<HTMLButtonElement | null> | null,
     /**Style the containing div of the 3D canvas. Note that by default it has some predefined tailwind styles applied,
@@ -135,7 +135,7 @@ export default function STLCanvas({
     const defaultOrthographic = new THREE.OrthographicCamera(window.innerWidth / -2, window.innerWidth / 2, window.innerHeight / 2, window.innerHeight / -2, 0.1, 10000)
     defaultOrthographic.zoom = 10
 
-    const defaultPerspective = new THREE.PerspectiveCamera(15, window.innerWidth / window.innerHeight, 1, 10000)
+    const defaultPerspective = new THREE.PerspectiveCamera(12, window.innerWidth / window.innerHeight, 1, 10000)
     defaultPerspective.position.set(100, 100, 100)
 
     const [viewerConfig, setViewerConfig] = useState<ViewerConfig>({
@@ -218,8 +218,8 @@ export default function STLCanvas({
                             <OrbitControls enableRotate={cameraMode != 'plan'}
                                 autoRotate={autoRotate}
                                 zoomSpeed={2} ref={orbitRef}
-                                enableZoom={false} />
-                            {debugMode && <Helpers/>}
+                                autoRotateSpeed={0.3} enableZoom={false} />
+                            {debugMode && <Helpers />}
                             <STLGroupErrorBoundary fallback={<STLErrorFallback />}>
                                 <Suspense fallback={<STLGroupLoaderSuspense />}>
                                     <STLLoaderGroup tooltips={tooltips} envIntensity={environmentMapIntensity}
@@ -240,8 +240,14 @@ function CameraController() {
     const { config: viewerConfig } = useContext(ViewerContext);
     const orbitContext = useContext(OrbitContext);
 
-
     useEffect(() => {
+        console.log('[CameraController effect] triggered', {
+            camera,
+            boundingBox: viewerConfig.boundingBox,
+            mode: viewerConfig.mode,
+            perspectiveReset: viewerConfig.perspective.resetPosition,
+            orthographicReset: viewerConfig.orthographic.resetPosition
+        });
         if (!viewerConfig.boundingBox || !viewerConfig.groupRef?.current) {
             return;
         }
@@ -251,19 +257,16 @@ function CameraController() {
         boundingBox.getCenter(center);
 
         if (mode === 'free' && perspective.resetPosition) {
-            console.info(`setting perspective: ${JSON.stringify(perspective.resetPosition)}`);
-
-            // Simply apply the pre-calculated position
+            console.info(`[CameraController] setting perspective: ${JSON.stringify(perspective.resetPosition)}`);
             camera.position.copy(perspective.resetPosition);
             camera.lookAt(center);
         } else if (mode === 'plan' && orthographic.resetPosition) {
-            // Simply apply the pre-calculated position
-            console.info(`setting orthographic: ${JSON.stringify(orthographic.resetPosition)}`);
+            console.info(`[CameraController] setting orthographic: ${JSON.stringify(orthographic.resetPosition)}`);
             camera.position.copy(orthographic.resetPosition);
             camera.lookAt(center);
         }
-        orbitContext.current.saveState()
-        console.info(`OrbitControls position0 : ${JSON.stringify(orbitContext.current.position0)}`)
+        orbitContext.current.saveState();
+        console.info(`[CameraController] OrbitControls position0 : ${JSON.stringify(orbitContext.current.position0)}`);
 
     }, [camera, viewerConfig.boundingBox, viewerConfig.mode, viewerConfig.perspective.resetPosition, viewerConfig.orthographic.resetPosition]);
 

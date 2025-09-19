@@ -147,9 +147,9 @@ export default function STLPage() {
         cameraMode: camMode,
         showToolTipInPlanOnly: true,
         setRotation: {
-            rotateX: -Math.PI / 2,
+            rotateX:  - Math.PI / 2,
             rotateY: 0,
-            rotateZ: Math.PI / 2,
+            rotateZ: 0,
         }
     }
 
@@ -170,7 +170,9 @@ export default function STLPage() {
                     <CheckboxLabel
                         text="AUTOROTATE"
                         checked={autoRotate}
-                        onValueChange={setAutoRotate}
+                        onValueChange={() => {
+                            setAutoRotate(!autoRotate)
+                        }}
                     />
                     <CheckboxLabel
                         text="SHOW SURFACE"
