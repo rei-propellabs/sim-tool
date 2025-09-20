@@ -64,14 +64,9 @@ const router: RouteObject[] = [
             ]
           }
         ]
-      },
-      {
-        path: "*",
-        element: <Navigate to="/admin" />,
-      },
+      }
     ],
   },
-  { index: true, element: <Navigate to="/admin" /> },
 ];
 
 export default createBrowserRouter(router);

@@ -8,9 +8,13 @@ body {
     sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  background-color: var(--background); /* Replace with your desired color */
+  background-color: var(--background);
+  /* Replace with your desired color */
   overscroll-behavior: none;
+  font-size: 1rem;
+
 }
+
 * {
   font-family: inherit;
 }
@@ -27,6 +31,7 @@ img {
   -webkit-user-select: none;
   user-select: none;
 }
+
 input {
   background: var(--input-background);
   border: var(--box-border);
@@ -48,6 +53,8 @@ button {
   border-radius: 8px;
   cursor: pointer;
   font-weight: 600;
+  font-size: 1rem;
+
 }
 
 button:disabled {
@@ -56,16 +63,22 @@ button:disabled {
 }
 
 
-h1,h2,h3,h4,h5,h6 {
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
   margin-block-start: 0px;
   margin-block-end: 0px;
   margin-inline-start: 0px;
   margin-inline-end: 0px;
   color: var(--default-text)
 }
+
 .row {
   display: flex;
-  flex-direction: row;  
+  flex-direction: row;
 }
 
 .buttonNoBg {
@@ -83,6 +96,7 @@ h1,h2,h3,h4,h5,h6 {
   border-radius: 8px;
   color: var(--accent);
 }
+
 .touched {
   opacity: 0.5;
 }
@@ -98,10 +112,10 @@ button:focus {
 
 :root {
   --station-panel-height-dynamic: calc(100vh - var(--header) - var(--paging-height) - 25px);
-  
+
   --panel-content-height: calc(var(--station-panel-height-dynamic) - var(--station-title-height) - var(--station-metrics-height) - 25px);
   --panel-content-width: calc(840 / 1313 * var(--panel-content-height));
-  --radargram-width-dynamic: calc(640 / 1313 * var(--panel-content-height) );
+  --radargram-width-dynamic: calc(640 / 1313 * var(--panel-content-height));
   --ata-width: calc(200 / 840 * var(--panel-content-width));
 
   --station-panel-narrow: calc(var(--radargram-width-dynamic) + var(--ata-width-narrow));
@@ -125,34 +139,34 @@ button:focus {
 
 /** STL Viewer **/
 @theme {
-    --font-sans: "Inter", ui-sans-serif, system-ui, sans-serif,
+  --font-sans: "Inter", ui-sans-serif, system-ui, sans-serif,
     "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
 
-    --font-manrope: "Manrope Variable", ui-sans-serif, system-ui, sans-serif;
+  --font-manrope: "Manrope Variable", ui-sans-serif, system-ui, sans-serif;
 
-    /* ToolTip Level Colors */
-    --color-tooltip-1: #29BBAC;
-    --color-tooltip-1-border: #155C554D;
-    --color-tooltip-2: #58CD8D;
-    --color-tooltip-2-border: #37B97466;
-    --color-tooltip-3: #ECC92A;
-    --color-tooltip-3-border: #9D820B99;
-    --color-tooltip-4: #F2A61D;
-    --color-tooltip-4-border: #BE7C09CC;
-    --color-tooltip-5: #FE592A;
-    --color-tooltip-5-border: #D94C24;
-    --color-tooltip-text: #E5F3EB99;
-    --color-tooltip-bg: #1A1E1B;
-    --color-tooltip-border: #E5F3EB14;
+  /* ToolTip Level Colors */
+  --color-tooltip-1: #29BBAC;
+  --color-tooltip-1-border: #155C554D;
+  --color-tooltip-2: #58CD8D;
+  --color-tooltip-2-border: #37B97466;
+  --color-tooltip-3: #ECC92A;
+  --color-tooltip-3-border: #9D820B99;
+  --color-tooltip-4: #F2A61D;
+  --color-tooltip-4-border: #BE7C09CC;
+  --color-tooltip-5: #FE592A;
+  --color-tooltip-5-border: #D94C24;
+  --color-tooltip-text: #E5F3EB99;
+  --color-tooltip-bg: #1A1E1B;
+  --color-tooltip-border: #E5F3EB14;
 
 
 }
 
 html,
 body {
-    @apply dark:bg-gray-950;
+  @apply dark:bg-gray-950;
 
-    @media (prefers-color-scheme: dark) {
-        color-scheme: dark;
-    }
+  @media (prefers-color-scheme: dark) {
+    color-scheme: dark;
+  }
 }
