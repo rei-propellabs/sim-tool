@@ -27,6 +27,17 @@ export const NavigationTable = <T extends object>(props: TableViewProps<T>) => {
   const popupMenuRef = React.useRef<HTMLDivElement>(null);
   const ignoreNextRowClick = React.useRef(false);
 
+  // Generate grid template columns based on expand/shrink configuration
+  const gridTemplateColumns = React.useMemo(() => {
+    return columns.map((_, index) => {
+      if (expandIndexes?.includes(index)) {
+        return '1fr'; // Expand columns get equal fractions
+      } else {
+        return 'auto'; // Shrink columns get auto sizing
+      }
+    }).join(' ');
+  }, [columns, expandIndexes]);
+
   React.useEffect(() => {
     if (!showMenu) return;
 
@@ -48,7 +59,10 @@ export const NavigationTable = <T extends object>(props: TableViewProps<T>) => {
   const header = () => {
     return (
       columns.map((col, i) => (
-        <th key={`header-${i}`} className={styles.th}>
+        <th key={`header-${i}`}
+          className={`${styles.th} ${expandIndexes?.includes(i) ? styles.expand : styles.shrink}`}
+
+        >
           {col.key === "menu" ? null : col.header}
         </th>
       ))
@@ -99,15 +113,10 @@ export const NavigationTable = <T extends object>(props: TableViewProps<T>) => {
     return (
       <tr className={styles.tr}>
         {columns.map((col, colIndex) => (
-          <td key={colIndex} 
+          <td key={colIndex}
             className={`${styles.td} ${expandIndexes?.includes(colIndex) ? styles.expand : styles.shrink}`}
             style={textStyle(col.key, renderCell(col, item, colIndex))}>
-            <div
-              className={styles.tdContent}
-              style={expandIndexes?.includes(colIndex)
-                ? { display: 'flex', flex: 1 }
-                : { display: 'flex', flex: '0 1 auto' }}
-            >
+            <div className={styles.tdContent}>
               {renderCell(col, item, colIndex)}
             </div>
           </td>
@@ -120,8 +129,12 @@ export const NavigationTable = <T extends object>(props: TableViewProps<T>) => {
     <div className={styles.flexTableWrapper}>
       <table
         className={styles.table}
-        style={{ width: "100%", textAlign: "left" }}>
-        <thead className={styles.thread}>
+        style={{ 
+          width: "100%", 
+          textAlign: "left",
+          gridTemplateColumns: gridTemplateColumns
+        }}>
+        <thead className={styles.thead}>
           <tr className={styles.tr}>
             {header()}
           </tr>

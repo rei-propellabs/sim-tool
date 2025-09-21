@@ -11,7 +11,21 @@
   border-spacing: 0;
   padding: 20px;
   box-sizing: border-box;
+  display: grid;
 }
+
+.tr {
+  display: contents;
+}
+
+.thead {
+  display: contents;
+}
+
+.tbody {
+  display: contents;
+}
+
 tbody .tr:hover {
   background-color: var(--table-row-hover);
   cursor: pointer;
@@ -22,6 +36,8 @@ tbody .tr:hover {
   font-weight: normal;
   font-size: 0.8rem;
   border-bottom: 1px solid var(--dark-background-300);
+  display: grid;
+  align-items: center;
 }
 
 .th {
@@ -32,15 +48,9 @@ tbody .tr:hover {
   font-weight: 400;
 }
 
-.td.expand {
-  width: auto;
-  flex: 1 1 0;
-  min-width: 0;
-}
-.td.shrink {
-  width: 1px;
+.th.shrink, .td.shrink {
   white-space: nowrap;
-  flex: 0 1 auto;
+  padding: 8px 4px;
 }
 .status {
   padding: 1px 8px;

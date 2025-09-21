@@ -126,7 +126,7 @@ export const SiteTable = () => {
       <table
         className={styles.table}
         style={{ width: "100%", textAlign: "left" }}>
-        <thead className={styles.thread}>
+        <thead className={styles.thead}>
           <tr className={styles.tr}>
             {header()}
 
