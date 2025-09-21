@@ -4,6 +4,7 @@ import path from 'path'
 import tailwindcss from '@tailwindcss/vite'
 
 export default defineConfig(({ mode }) => ({
+  base: '/demo/',
   plugins: [ react(), tailwindcss()],
   server: {
     port: 3000,

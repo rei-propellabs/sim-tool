@@ -40,7 +40,7 @@ export function FinancialSimulationPage() {
 
   // Get orgId from URL parameter, fallback to default if not present
   const [searchParams] = useSearchParams();
-  const orgId = searchParams.get("orgId") || "33264945-70c1-4725-8b01-17503d578783";
+  const orgId = searchParams.get("orgId") || "88e2e8e5-e9c4-40bd-94e4-856d963bb8ed";
   const { isLoading: loadingScenarios, data: scenarioData } = useGetScenarios(token, orgId)
 
   useEffect(() => {

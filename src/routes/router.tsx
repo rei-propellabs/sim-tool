@@ -19,59 +19,49 @@ import { FinancialSimulationPage } from "pages/FinancialSimulationPage/Financial
 
 const router: RouteObject[] = [
   {
-    path: "*",
-    element: (
-      <ProtectedRoute>
-        <Outlet />
-      </ProtectedRoute>
-    ),
+    path: "auth",
     children: [
+      { path: "magic", element: <MagicLink /> },
+    ],
+  },
+  {
+    path: "upload",
+    children: [
+      { path: "auth", element: <ClientLoginPage /> },
       {
-        path: "auth",
+        element: <ClientProtectedRoute />,
         children: [
-          { path: "magic", element: <MagicLink /> }
+          { index: true, path: "project", element: <UploadProjectListPage /> },
+          { path: "files", element: <UploadFilesPage /> },
         ],
       },
+    ],
+  },
+  {
+    path: "admin",
+    children: [
+      { path: "auth", element: <AdminLoginPage /> },
       {
-        path: "upload",
+        element: <AdminProtectedRoute />,
         children: [
-          { path: "auth", element: <ClientLoginPage /> },
-          {
-            element: <ClientProtectedRoute />,
-            children: [
-              {  index: true, path: "project", element: <UploadProjectListPage /> },
-              { path: "files", element: <UploadFilesPage /> },
-            ],
-          }
-        ]
-      },
-      {
-        path: "admin",
-        children: [
-          { path: "auth", element: <AdminLoginPage /> },
-          {
-            element: <AdminProtectedRoute />,
-            children: [
-              { index: true, element: <CompanyListPage /> },
-              { path: "s", element: <SiteListPage /> },
-              { path: "c", element: <CompanyDetailsPage /> },
-              { path: "c/form", element: <EditCompanyPage /> },
-              { path: "s/form", element: <EditSitePage /> },
-              { path: "p", element: <ProjectListPage /> },
-              { path: "p/form", element: <EditProjectPage /> },
-              { path: "upload", element: <UploadFilesAdminPage /> },
-              { path: "scenarios", element: <FinancialSimulationPage /> },
-            ]
-          }
-        ]
-      },
-      {
-        path: "*",
-        element: <Navigate to="/admin" />,
+          { index: true, element: <CompanyListPage /> },
+          { path: "s", element: <SiteListPage /> },
+          { path: "c", element: <CompanyDetailsPage /> },
+          { path: "c/form", element: <EditCompanyPage /> },
+          { path: "s/form", element: <EditSitePage /> },
+          { path: "p", element: <ProjectListPage /> },
+          { path: "p/form", element: <EditProjectPage /> },
+          { path: "upload", element: <UploadFilesAdminPage /> },
+          { path: "scenarios", element: <FinancialSimulationPage /> },
+        ],
       },
     ],
   },
   { index: true, element: <Navigate to="/admin" /> },
+
+  { path: "*", element: <Navigate to="/admin" /> },
 ];
 
-export default createBrowserRouter(router);
+export default createBrowserRouter(router, {
+  basename: "/demo",
+});

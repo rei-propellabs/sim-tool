@@ -32,11 +32,11 @@
 .controls {
   position: absolute;
   bottom: 1vh;
+  left: 50%;
+  transform: translateX(-50%);
   display: flex;
   gap: 12px;
-  justify-self: center;
   align-items: center;
-  align-self: center;
   background: var(--dark-background-200);
   border-radius: 30px;
   border: var(--box-border);
