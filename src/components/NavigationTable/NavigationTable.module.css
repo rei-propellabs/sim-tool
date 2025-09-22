@@ -30,6 +30,10 @@ tbody .tr:hover {
   background-color: var(--table-row-hover);
   cursor: pointer;
 }
+.td:hover, .td:focus-within {
+  background-color: var(--table-row-hover);
+}
+
 .th, .td {
   color: var(--default-text);
   padding: 8px 12px;
@@ -38,6 +42,11 @@ tbody .tr:hover {
   border-bottom: 1px solid var(--dark-background-300);
   display: grid;
   align-items: center;
+}
+
+.rowHover {
+  background-color: var(--table-row-hover) !important;
+  cursor: pointer;
 }
 
 .th {

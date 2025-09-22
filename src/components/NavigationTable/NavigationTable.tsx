@@ -18,6 +18,7 @@ export type TableViewProps<T> = {
   expandIndexes?: number[];
 };
 
+
 export const NavigationTable = <T extends object>(props: TableViewProps<T>) => {
   const { columns, data, onRowClick, renderMenuButton, renderMenu, expandIndexes } = props;
   const [showMenu, setShowMenu] = React.useState(false);
@@ -26,6 +27,7 @@ export const NavigationTable = <T extends object>(props: TableViewProps<T>) => {
   const [menuButtonRef, setMenuButtonRef] = React.useState<React.RefObject<HTMLButtonElement> | null>(null);
   const popupMenuRef = React.useRef<HTMLDivElement>(null);
   const ignoreNextRowClick = React.useRef(false);
+  const [hoveredRow, setHoveredRow] = React.useState<number | null>(null);
 
   // Generate grid template columns based on expand/shrink configuration
   const gridTemplateColumns = React.useMemo(() => {
@@ -113,9 +115,16 @@ export const NavigationTable = <T extends object>(props: TableViewProps<T>) => {
     return (
       <tr className={styles.tr}>
         {columns.map((col, colIndex) => (
-          <td key={colIndex}
-            className={`${styles.td} ${expandIndexes?.includes(colIndex) ? styles.expand : styles.shrink}`}
-            style={textStyle(col.key, renderCell(col, item, colIndex))}>
+          <td
+            key={colIndex}
+            className={
+              `${styles.td} ${expandIndexes?.includes(colIndex) ? styles.expand : styles.shrink}` +
+              (hoveredRow === rowIndex ? ` ${styles.rowHover}` : "")
+            }
+            style={textStyle(col.key, renderCell(col, item, colIndex))}
+            onMouseEnter={() => setHoveredRow(rowIndex)}
+            onMouseLeave={() => setHoveredRow(null)}
+          >
             <div className={styles.tdContent}>
               {renderCell(col, item, colIndex)}
             </div>
