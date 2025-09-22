@@ -131,6 +131,8 @@ export default function STLCanvas({
     setRotation,
 }: STLCanvasProps) {
     const orbitRef = useRef<ThreeOrbitControls | null>(null);
+    const canvasRef = useRef<HTMLCanvasElement>(null);
+
 
     const defaultOrthographic = new THREE.OrthographicCamera(window.innerWidth / -2, window.innerWidth / 2, window.innerHeight / 2, window.innerHeight / -2, 0.1, 10000)
     defaultOrthographic.zoom = 10
@@ -199,6 +201,37 @@ export default function STLCanvas({
             };
         }
     }, [resetButton]);
+
+    // Add custom zoom control with modifier key requirement
+    useEffect(() => {
+        const canvasElement = canvasRef.current;
+        if (!canvasElement) return;
+
+        const handleWheel = (event: WheelEvent) => {
+            // Check if Ctrl (Windows/Linux) or Cmd (Mac) is pressed
+            const isModifierPressed = event.ctrlKey || event.metaKey;
+
+            if (!isModifierPressed) {
+                // Only stop propagation to prevent 3D zoom, but allow page scroll
+                event.stopPropagation();
+                // Don't call preventDefault() - this allows page scroll to continue
+                return;
+            }
+
+            // When modifier is pressed, allow 3D zoom and prevent page scroll
+            event.preventDefault();
+        };
+
+        // Use capture phase to intercept before OrbitControls gets the event
+        canvasElement.addEventListener('wheel', handleWheel, {
+            passive: false,
+            capture: true
+        });
+
+        return () => {
+            canvasElement.removeEventListener('wheel', handleWheel, { capture: true });
+        };
+    }, []);
 
     useEffect(() => {
         setViewerConfig({ ...viewerConfig, mode: cameraMode });
