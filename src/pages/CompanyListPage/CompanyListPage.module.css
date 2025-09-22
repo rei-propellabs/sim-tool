@@ -38,6 +38,9 @@
   justify-content: center;
   display: flex;
   gap: 4px;
+  text-wrap-mode: nowrap;
+  white-space: nowrap;
+
 }
 .actionRequiredText {
   color: var(--warning200);
