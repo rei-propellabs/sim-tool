@@ -1,8 +1,8 @@
-import { useContext, useEffect, useRef, useState } from "react";
+import {useContext, useEffect, useRef, useState} from "react";
 import * as THREE from "three";
-import { Box3, Vector3 } from "three";
-import { useLoader } from "@react-three/fiber";
-import { Environment } from "@react-three/drei";
+import {Box3, Vector3} from "three";
+import {useLoader} from "@react-three/fiber";
+import {Environment} from "@react-three/drei";
 import {
     DebugContext,
     OrbitContext,
@@ -13,10 +13,10 @@ import {
 } from "../components/STLCanvas";
 import STLMesh from "../components/STLMesh";
 import ToolTip from "../components/tooltip";
-import { STLLoader } from "three-stdlib";
+import {STLLoader} from "three-stdlib";
 import "../style.css"
 
-function STLGroup({ stls, tooltips, objects }: {
+function STLGroup({stls, tooltips, objects}: {
     stls: THREE.BufferGeometry<THREE.NormalBufferAttributes, THREE.BufferGeometryEventMap>[],
     tooltips: TooltipInterface[]
     objects: STLObjectProp[],
@@ -30,7 +30,7 @@ function STLGroup({ stls, tooltips, objects }: {
     });
     const [rotated, setRotated] = useState(false);
     const debugMode = useContext(DebugContext);
-    const { config: viewerConfig, dispatch: setConfig } = useContext(ViewerContext);
+    const {config: viewerConfig, dispatch: setConfig} = useContext(ViewerContext);
 
     useEffect(() => {
         if (groupRef.current) {
@@ -97,8 +97,8 @@ function STLGroup({ stls, tooltips, objects }: {
             {/* Debug bounding box visualization - positioned at origin since group is centered */}
             {debugMode && boundingBox && (
                 <mesh position={[0, 0, 0]}>
-                    <boxGeometry args={[boundingBox.size.x, boundingBox.size.y, boundingBox.size.z]} />
-                    <meshBasicMaterial wireframe color="red" opacity={0.5} transparent />
+                    <boxGeometry args={[boundingBox.size.x, boundingBox.size.y, boundingBox.size.z]}/>
+                    <meshBasicMaterial wireframe color="red" opacity={0.5} transparent/>
                 </mesh>
             )}
 
@@ -108,15 +108,16 @@ function STLGroup({ stls, tooltips, objects }: {
 
                 {
                     stls.map((stl, index) => {
-                        console.info(`Rendering STL URL[${index}]`)
-                        return (
-                            <STLMesh key={index}
-                                color={objects[index].color}
-                                opacity={objects[index].opacity}
-                                wireframe={objects[index].wireframe}
-                                stl={stl} />
-                        )
-                    }
+                            console.info(`Rendering STL URL[${index}]`)
+                            return (
+                                <STLMesh key={index}
+                                         renderOrder={index}
+                                         color={objects[index].color}
+                                         opacity={objects[index].opacity}
+                                         wireframe={objects[index].wireframe}
+                                         stl={stl}/>
+                            )
+                        }
                     )
                 }
                 {
@@ -129,7 +130,7 @@ function STLGroup({ stls, tooltips, objects }: {
     )
 }
 
-export default function STLLoaderGroup({ objects, tooltips, envIntensity }: {
+export default function STLLoaderGroup({objects, tooltips, envIntensity}: {
     objects: STLObjectProp[],
     tooltips: TooltipInterface[],
     envIntensity: number
@@ -140,8 +141,8 @@ export default function STLLoaderGroup({ objects, tooltips, envIntensity }: {
 
     return (
         <>
-            <Environment files="/hdr/kiara_1_dawn_1k.hdr" />
-            <STLGroup stls={stls} tooltips={tooltips} objects={objects} />;
+            <Environment files="/hdr/kiara_1_dawn_1k.hdr"/>
+            <STLGroup stls={stls} tooltips={tooltips} objects={objects}/>;
 
         </>
     )

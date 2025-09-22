@@ -213,7 +213,7 @@ export default function STLCanvas({
             <OrbitContext.Provider value={orbitRef}>
                 <ViewerContext.Provider value={{config: viewerConfig, dispatch: setViewerConfig}}>
                     <div className={`absolute inset-0 bg-slate-950 ${className} `}>
-                        <Canvas ref={canvasRef} camera={cameraMode === 'plan' ? defaultOrthographic : defaultPerspective}>
+                        <Canvas gl={{logarithmicDepthBuffer: true}} ref={canvasRef} camera={cameraMode === 'plan' ? defaultOrthographic : defaultPerspective}>
                             <CameraController/>
                             <OrbitControls enableRotate={cameraMode != 'plan'}
                                            enableZoom={true}
