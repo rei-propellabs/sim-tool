@@ -9,9 +9,7 @@ const AdminProtectedRoute = () => {
   const token = getToken("uploadAdmin");
   const { isLoading, user } = useAuthCheck(token)
 
-  if (isLoading) {
-    return null;
-  }
+    if (isLoading) return <div>Loading...</div>;
 
   if (!token || !user || !user.organization?.isAdmin) {
     clearToken("uploadAdmin");
