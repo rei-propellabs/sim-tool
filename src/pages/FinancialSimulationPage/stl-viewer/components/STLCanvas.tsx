@@ -16,6 +16,7 @@ import { STLErrorFallback, STLGroupErrorBoundary } from "../components/STLGroupE
 import STLGroupLoaderSuspense from "../components/STLLoaderSuspense";
 import STLLoaderGroup from "../components/STLGroup";
 import { OrbitControls as ThreeOrbitControls } from "three-stdlib";
+import styles from "./STLCanvas.module.css";
 
 export interface STLObjectProp {
     /**Object storage URL**/
@@ -131,6 +132,8 @@ export default function STLCanvas({
     setRotation,
 }: STLCanvasProps) {
     const orbitRef = useRef<ThreeOrbitControls | null>(null);
+    const canvasRef = useRef<HTMLCanvasElement>(null);
+
 
     const defaultOrthographic = new THREE.OrthographicCamera(window.innerWidth / -2, window.innerWidth / 2, window.innerHeight / 2, window.innerHeight / -2, 0.1, 10000)
     defaultOrthographic.zoom = 10
@@ -200,6 +203,37 @@ export default function STLCanvas({
         }
     }, [resetButton]);
 
+    // Add custom zoom control with modifier key requirement
+    useEffect(() => {
+        const canvasElement = canvasRef.current;
+        if (!canvasElement) return;
+
+        const handleWheel = (event: WheelEvent) => {
+            // Check if Ctrl (Windows/Linux) or Cmd (Mac) is pressed
+            const isModifierPressed = event.ctrlKey || event.metaKey;
+
+            if (!isModifierPressed) {
+                // Only stop propagation to prevent 3D zoom, but allow page scroll
+                event.stopPropagation();
+                // Don't call preventDefault() - this allows page scroll to continue
+                return;
+            }
+
+            // When modifier is pressed, allow 3D zoom and prevent page scroll
+            event.preventDefault();
+        };
+
+        // Use capture phase to intercept before OrbitControls gets the event
+        canvasElement.addEventListener('wheel', handleWheel, {
+            passive: false,
+            capture: true
+        });
+
+        return () => {
+            canvasElement.removeEventListener('wheel', handleWheel, { capture: true });
+        };
+    }, []);
+
     useEffect(() => {
         setViewerConfig({ ...viewerConfig, mode: cameraMode });
 
@@ -212,8 +246,9 @@ export default function STLCanvas({
         <DebugContext.Provider value={debugMode}>
             <OrbitContext.Provider value={orbitRef}>
                 <ViewerContext.Provider value={{ config: viewerConfig, dispatch: setViewerConfig }}>
-                    <div className={`absolute inset-0 bg-slate-950 ${className} `}>
-                        <Canvas camera={cameraMode === 'plan' ? defaultOrthographic : defaultPerspective}>
+                    <div className={`absolute inset-0 ${styles.stlCanvas} ${className} `}>
+                        <Canvas camera={cameraMode === 'plan' ? defaultOrthographic : defaultPerspective}
+                        >
                             <CameraController />
                             <OrbitControls enableRotate={cameraMode != 'plan'}
                                 autoRotate={autoRotate}

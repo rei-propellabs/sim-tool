@@ -5,16 +5,17 @@ interface STLMeshProps {
     stl: BufferGeometry,
     color?: string,
     wireframe?: boolean,
-    opacity?: number
+    opacity?: number,
+    renderOrder?: number
 }
 
 
 export default function STLMesh({
-                                    stl, color = '#626262', wireframe = false, opacity = 1,
+                                    stl, color = '#626262', wireframe = false, opacity = 1,renderOrder=0
                                 }: STLMeshProps) {
     const meshRef = useRef(null)
     return (
-        <mesh ref={meshRef} castShadow>
+        <mesh renderOrder={renderOrder} ref={meshRef} castShadow>
             <primitive
                 object={stl}/>
             <meshPhysicalMaterial side={2} transparent opacity={opacity} wireframe={wireframe} shadowSide={2}

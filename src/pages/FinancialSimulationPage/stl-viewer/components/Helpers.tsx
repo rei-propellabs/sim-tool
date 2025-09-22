@@ -20,20 +20,24 @@ export default function Helpers() {
 
 
     return (
-        showGrid &&
+
         <>
-            <Grid position={[0, 0, 0]} args={gridSize} {...gridConfig} />
-            <GizmoHelper
-                alignment="bottom-left" // widget alignment within scene
-                margin={[80, 80]} // widget margins (X, Y)
-            >
-                {/*<GizmoViewcube  color={'#4965fc'} hoverColor={'#03ffe0'} strokeColor={'#010598'} textColor={'#1b0050'}/>*/}
-                <GizmoViewport  axisColors={['red', 'green', 'blue']} labelColor="white"/>
-            </GizmoHelper>
-            <mesh position={[0,0,0]} castShadow receiveShadow>
-                <sphereGeometry args={[5, 64, 32 ]}/>
-                <meshPhysicalMaterial  transparent color={'#00ff00'} fog metalness={1}  roughness={1}   />
-            </mesh>
+            {showGrid &&
+                <>
+                    <Grid position={[0, 0, 0]} args={gridSize} {...gridConfig} />
+                    <GizmoHelper
+                        alignment="bottom-left" // widget alignment within scene
+                        margin={[80, 80]} // widget margins (X, Y)
+                    >
+                        {/*<GizmoViewcube  color={'#4965fc'} hoverColor={'#03ffe0'} strokeColor={'#010598'} textColor={'#1b0050'}/>*/}
+                        <GizmoViewport  axisColors={['red', 'green', 'blue']} labelColor="white"/>
+                    </GizmoHelper>
+                    <mesh position={[0,0,0]} castShadow receiveShadow>
+                        <sphereGeometry args={[5, 64, 32 ]}/>
+                        <meshPhysicalMaterial  transparent color={'#00ff00'} fog metalness={1}  roughness={1}   />
+                    </mesh>
+                </>
+            }
         </>
     )
 }
