@@ -154,7 +154,7 @@ export default function STLPage() {
     }
 
     return (
-        <div className={'relative border-2  h-svh overflow-clip'}>
+        <div className={'relative h-svh overflow-clip'}>
             <Suspense fallback={
                 <div className={'flex flex-row h-full w-full items-center justify-center font-mono text-5xl'}>
                     Loading

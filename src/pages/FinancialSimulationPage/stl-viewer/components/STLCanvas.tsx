@@ -16,6 +16,7 @@ import { STLErrorFallback, STLGroupErrorBoundary } from "../components/STLGroupE
 import STLGroupLoaderSuspense from "../components/STLLoaderSuspense";
 import STLLoaderGroup from "../components/STLGroup";
 import { OrbitControls as ThreeOrbitControls } from "three-stdlib";
+import styles from "./STLCanvas.module.css";
 
 export interface STLObjectProp {
     /**Object storage URL**/
@@ -245,8 +246,9 @@ export default function STLCanvas({
         <DebugContext.Provider value={debugMode}>
             <OrbitContext.Provider value={orbitRef}>
                 <ViewerContext.Provider value={{ config: viewerConfig, dispatch: setViewerConfig }}>
-                    <div className={`absolute inset-0 bg-slate-950 ${className} `}>
-                        <Canvas camera={cameraMode === 'plan' ? defaultOrthographic : defaultPerspective}>
+                    <div className={`absolute inset-0 ${styles.stlCanvas} ${className} `}>
+                        <Canvas camera={cameraMode === 'plan' ? defaultOrthographic : defaultPerspective}
+                        >
                             <CameraController />
                             <OrbitControls enableRotate={cameraMode != 'plan'}
                                 autoRotate={autoRotate}
