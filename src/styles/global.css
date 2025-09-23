@@ -68,6 +68,8 @@
     align-items: center;
     gap: 4px;
     font-weight: 600;
+    cursor: pointer;
+    white-space: nowrap;
 }
 .border-button {
     background-color: transparent;
