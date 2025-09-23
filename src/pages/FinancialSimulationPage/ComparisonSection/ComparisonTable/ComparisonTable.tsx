@@ -335,7 +335,7 @@ const ComparisonTable = (props: ComparisonTableProps) => {
       financialRow("Revenue", "revenue", true),
       financialRow("CapEx", "capex", false),
       financialRow("Total Mining Cost", "miningCost", false),
-      financialSubRow("Extraction Cost", "extractionCost", "extractionCostTonne", false, false),
+      financialSubRow("Extraction Cost", "extractionCost", "extractionCostTonne", false, true),
       financialSubRow("Imaging Cost", "imagingCost", "imagingCostTonne", false, true),
       financialSubRow("Closure Cost", "closureCost", "closureCostTonne", false, true),
 
