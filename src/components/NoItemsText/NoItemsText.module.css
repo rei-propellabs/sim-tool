@@ -1,0 +1,33 @@
+
+.noItemsContainer {
+  width: 100%;
+  justify-self: center;
+  align-items: center;
+  gap: 6px;
+  display: flex;
+  flex-direction: column;
+  margin-top: 25%;
+}
+
+.title {
+  font-size: 1.2rem;
+  color: var(--default-text);
+  font-weight: 700;
+}
+.subtitle {
+  font-size: 0.9rem;
+  color: var(--darker-text);
+  font-weight: 600;
+  margin-bottom: 48px;
+}
+
+.actionButton {
+  height: fit-content;
+  padding: 8px 8px;
+  font-weight: 600;
+  font-size: 0.9rem;
+  align-items: center;
+  justify-content: center;
+  display: flex;
+  gap: 4px;
+}

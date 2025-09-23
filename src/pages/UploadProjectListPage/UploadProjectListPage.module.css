@@ -87,31 +87,11 @@
   margin-top: 48px;
 }
 
-.h1 {
-  font-size: 1.2rem;
-  color: var(--default-text);
-  font-weight: 700;
-}
-.b1 {
-  font-size: 0.9rem;
-  color: var(--darker-text);
-  font-weight: 600;
-  margin-bottom: 48px;
-}
 .b2 {
   font-size: 0.8rem;
   color: var(--darker-text);
 }
-.newUploadBtn {
-  height: fit-content;
-  padding: 8px 8px;
-  font-weight: 600;
-  font-size: 0.9rem;
-  align-items: center;
-  justify-content: center;
-  display: flex;
-  gap: 4px;
-}
+
 .loadingContainer {
   display: flex;
   flex-direction: column;

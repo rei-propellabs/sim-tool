@@ -12,7 +12,8 @@ import { FilesTabContent } from "./FilesTabContent";
 import { EditCompanyPage } from "pages/EditCompanyPage/EditCompanyPage";
 import useGetOrganizationById from "api/hooks/useGetOrganizationById";
 import { getToken } from "utils/TokenManager";
-import { usePageTitle } from "hooks/usePageTitle";
+import { Presentation } from "images/Dynamic/Presentation";
+import { ScenariosTabContent } from "./ScenariosTabContent";
 
 export const CompanyDetailsPage = () => {
 
@@ -44,7 +45,8 @@ export const CompanyDetailsPage = () => {
   const header = () => {
     const tabDefs = [
       { label: "Details", icon: Edit },
-      { label: "Files", icon: AttachFile }
+      { label: "Client Files", icon: AttachFile },
+      { label: "Scenarios", icon: Presentation }
     ];
     return (
       <NavigationHeader
@@ -62,7 +64,7 @@ export const CompanyDetailsPage = () => {
     )
   }
 
-  const tabContents = [<EditCompanyPage />, <FilesTabContent />]
+  const tabContents = [<EditCompanyPage />, <FilesTabContent />, <ScenariosTabContent />];
 
   return (
     <div className={styles.pageContainer}>

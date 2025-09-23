@@ -17,6 +17,7 @@ import navTableStyles from "components/NavigationTable/NavigationTable.module.cs
 import Add from "images/Dynamic/Add";
 import usePostClientUpload from "api/hooks/usePostClientUpload";
 import { StatusTag } from "components/StatusTag/StatusTag";
+import { NoItemsText } from "components/NoItemsText/NoItemsText";
 
 export const UploadProjectListPage = () => {
   const NUM_ROWS = 10;
@@ -121,12 +122,12 @@ export const UploadProjectListPage = () => {
   const noUploadText = () => {
     if (clientUploads.length === 0) {
       return (
-        <div className={styles.noUploadText}>
-          <div className={styles.h1}>No uploads yet</div>
-          <div className={styles.b1}>Start a new upload to</div>
-          <button onClick={newUploadOnClick}>Start an Upload</button>
-        </div>
-
+        <NoItemsText
+          title="No uploads yet"
+          subtitle="Start a new upload to"
+          actionButtonText="Start an Upload"
+          onActionButtonClick={newUploadOnClick}
+        />
       )
     } else {
       return null;

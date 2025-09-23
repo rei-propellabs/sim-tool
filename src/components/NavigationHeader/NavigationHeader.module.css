@@ -110,11 +110,13 @@
   display: flex;
   gap: 4px;
   font-size: 0.8rem;
+  white-space: nowrap;
 }
 .activeTab {
   color: var(--default-text);
   font-weight: 600;
   border-bottom: 2px solid var(--accent);
+  white-space: nowrap;
 }
 .actionButtonsContainer {
   margin-bottom: 8px;
