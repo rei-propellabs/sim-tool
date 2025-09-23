@@ -7,6 +7,7 @@ export type ColumnConfig<T> = {
   key: string;
   header: string;
   render?: (item: T, index: number) => React.ReactNode;
+  headerIcon?: () => React.ReactNode;
 };
 
 export type TableViewProps<T> = {
@@ -65,6 +66,7 @@ export const NavigationTable = <T extends object>(props: TableViewProps<T>) => {
           className={`${styles.th} ${expandIndexes?.includes(i) ? styles.expand : styles.shrink}`}
 
         >
+          {col.headerIcon ? col.headerIcon() : null}
           {col.key === "menu" ? null : col.header}
         </th>
       ))

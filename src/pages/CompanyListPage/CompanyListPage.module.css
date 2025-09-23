@@ -11,6 +11,11 @@
   color: var(--default-text);
   font-weight: bold;
 }
+.cell {
+  display: flex;
+  flex-direction: row;
+  gap: 0.4rem;
+}
 
 .headerSub {
   color: var(--white-transparent);

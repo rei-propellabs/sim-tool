@@ -18,6 +18,7 @@ import Add from "images/Dynamic/Add";
 import navTableStyles from "components/NavigationTable/NavigationTable.module.css";
 import { AttachFile } from "images/Dynamic/AttachFile";
 import useDeleteOrganization from "api/hooks/useDeleteOrganization";
+import Company from "images/Company.svg";
 
 export const CompanyListPage = () => {
 
@@ -77,10 +78,21 @@ export const CompanyListPage = () => {
     )
   }
   const orgColumns: ColumnConfig<OrganizationTableRow>[] = [
-    { key: 'name', header: 'Company' },
-    { key: 'updatedAt', header: 'Last update' },
+    {
+      key: 'name', header: 'Company',
+      headerIcon: () => <img src={Company} />,
+      render: (company) => {
+        return (
+          <span className={styles.cell}>
+            <img src={Company} />
+            {company.name}
+          </span>
+        )
+      }
+    },
     // { key: 'lastUploadAt', header: 'Last upload' },
-    { key: 'projectStatus', header: 'Project status', 
+    {
+      key: 'projectStatus', header: 'Project status',
       render: (company) => {
         if (company.uploadCount > 0) {
           return (
@@ -101,6 +113,7 @@ export const CompanyListPage = () => {
         }
       }
     },
+    { key: 'updatedAt', header: 'Last Activity (DD/MM/YY)' },
     {
       key: 'actions',
       header: 'Actions',
@@ -108,11 +121,14 @@ export const CompanyListPage = () => {
         if (org.uploadCount === 0) return null;
         return (
           <button
-            className={"border-button"}
+            className={"primary-button"}
             onClick={(e) => {
-            e.stopPropagation();
-            navigate(`/admin/c?t=1&orgId=${org.id}`)
-          }}>
+              e.stopPropagation();
+              navigate(`/admin/c?t=1&orgId=${org.id}`)
+            }}>
+            <AttachFile size={16}
+              color="var(--primary-button-text)"
+            />
             View files
           </button>
         );
@@ -153,7 +169,7 @@ export const CompanyListPage = () => {
       {header()}
 
       <NavigationTable
-        expandIndexes={[0,1,2,3]}
+        expandIndexes={[0, 1, 2, 3]}
         columns={orgColumns}
         data={orgTableData}
         onRowClick={(index) => {
@@ -201,20 +217,20 @@ export const CompanyListPage = () => {
             </button> */}
             {
               // This is a company for admin, do not allow deletion
-              organizations[rowIndex].id !== "4c64b641-6155-452c-99fa-566309b6fef3" &&
+              organizations[rowIndex].id !== "33264945-70c1-4725-8b01-17503d578783" &&
               <button
-              className={`buttonNoBg ${navTableStyles.option} ${navTableStyles.deleteOption}`}
-              onClick={(e) => {
-                e.preventDefault();
-                closeMenu();
-                onDeleteClick(organizations[rowIndex].id);
-              }}
-            >
-              <img src={Delete} />
-              Delete company
-            </button>
+                className={`buttonNoBg ${navTableStyles.option} ${navTableStyles.deleteOption}`}
+                onClick={(e) => {
+                  e.preventDefault();
+                  closeMenu();
+                  onDeleteClick(organizations[rowIndex].id);
+                }}
+              >
+                <img src={Delete} />
+                Delete company
+              </button>
             }
-            
+
           </div>
         )}
       />
