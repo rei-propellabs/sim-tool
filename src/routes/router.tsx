@@ -16,6 +16,7 @@ import { UploadFilesAdminPage } from "pages/UploadFiles/UploadFilesAdminPage";
 import AdminProtectedRoute from "./AdminProtectedRoute";
 import ClientProtectedRoute from "./ClientProtectedRoute";
 import { FinancialSimulationPage } from "pages/FinancialSimulationPage/FinancialSimulationPage";
+import { PresentationEditorPage } from "pages/PresentationEditorPage/PresentationEditorPage";
 
 const router: RouteObject[] = [
   {
@@ -61,6 +62,7 @@ const router: RouteObject[] = [
               { path: "p/form", element: <EditProjectPage /> },
               { path: "upload", element: <UploadFilesAdminPage /> },
               { path: "scenarios", element: <FinancialSimulationPage /> },
+              { path: "presentation", element: <PresentationEditorPage /> },
             ]
           }
         ]

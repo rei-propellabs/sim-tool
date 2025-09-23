@@ -17,10 +17,11 @@ export const ScenariosTabContent = () => {
     action: string;
   }
   const NUM_ROWS = 10;
+  const navigate = useNavigate();
 
   const query = new URLSearchParams(useLocation().search);
   const [isLoading, setIsLoading] = useState<boolean>(false);
-  const [numRows, setNumRows] = useState<number>(1);
+  const [numRows, setNumRows] = useState<number>(0);
   const [orgTableData, setOrgTableData] = useState<PresentationTableRow[]>([]);
 
   useEffect(() => {
@@ -69,6 +70,7 @@ export const ScenariosTabContent = () => {
             className={"primary-button"}
             onClick={(e) => {
               e.stopPropagation();
+              navigate(`/admin/scenarios?orgId=${query.get("orgId")}`);
             }}>
             <Presentation size={16} />
             Launch Presentation
@@ -92,25 +94,26 @@ export const ScenariosTabContent = () => {
 
           // navigate(`/admin/c?t=${organizations[index].uploadCount === 0 ? 0 : 1}&orgId=${organizations[index].id}`);
         }}
-      renderMenu={(rowIndex, closeMenu) => (
-        <div>
-          <button
-            className={`buttonNoBg 
+        renderMenu={(rowIndex, closeMenu) => (
+          <div>
+            <button
+              className={`buttonNoBg 
               ${navTableStyles.option} ${navTableStyles.editOption}`
-            }
-            onClick={(e) => {
-              e.preventDefault();
-              // navigate(`/admin/c?orgId=${organizations[rowIndex].id}`);
-            }}
-          >
-            <Edit size={16}/>
-            Edit
-          </button>
-        </div>
-      )}
+              }
+              onClick={(e) => {
+                e.preventDefault();
+                // navigate(`/admin/c?orgId=${organizations[rowIndex].id}`);
+              }}
+            >
+              <Edit size={16} />
+              Edit
+            </button>
+          </div>
+        )}
       />
     )
   }
+
 
   return (
     <div className={styles.pageContainer}>
@@ -120,7 +123,7 @@ export const ScenariosTabContent = () => {
             title="No Presentations yet"
             subtitle="Create a Presentation to select the desired scenarios"
             actionButtonText="Create a Presentation"
-            onActionButtonClick={() => { }}
+            onActionButtonClick={() => { navigate(`/admin/presentation`) }}
           />
         ) :
           table()
