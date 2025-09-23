@@ -1,7 +1,7 @@
 import useAuthCheck from "api/hooks/useAuthCheck";
 import { usePageTitle } from "hooks/usePageTitle";
 import { Navigate, Outlet } from "react-router-dom";
-import { clearToken, getToken } from "utils/TokenManager";
+import { clearClientToken, getToken } from "utils/TokenManager";
 
 const ClientProtectedRoute = () => {
   usePageTitle("Novamera Upload Centre");
@@ -14,7 +14,7 @@ const ClientProtectedRoute = () => {
   }
 
   if (!token || !user) {
-    clearToken("uploadClient")
+    clearClientToken(token)
     return <Navigate to="/upload/auth" replace />;
   }
   return <Outlet />;
