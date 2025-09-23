@@ -13,6 +13,9 @@
 }
 .headerText {
   padding-bottom: 20px;
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
 }
 
 .headerLeft {
@@ -43,6 +46,7 @@
   display: flex;
   align-items: flex-end;
   justify-content: space-between;
+  flex-direction: row;
 }
 
 .heading {
@@ -75,7 +79,6 @@
  color: var(--default-text);
  font-size: 1.2rem;
  font-weight: 400;
- padding-left: 10px;
  height: 26px;;
 }
 .darkText {

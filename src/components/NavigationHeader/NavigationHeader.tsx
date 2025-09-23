@@ -8,7 +8,7 @@ import { useNavigate } from "react-router-dom";
 export interface NavigationHeaderProps {
   heading: string;
   tabs?: Array<{ label: string; icon: React.ReactNode }>;
-  tabIndex?: number; 
+  tabIndex?: number;
   setTabIndex?: (index: number) => void;
   backText?: string;
   onBackClick?: () => void;
@@ -17,6 +17,7 @@ export interface NavigationHeaderProps {
   headingSecondary?: string;
   subheading?: string;
   subheadingSecondary?: string;
+  headerIcon?: ReactElement;
 }
 
 export const NavigationHeader = (props: NavigationHeaderProps) => {
@@ -72,30 +73,36 @@ export const NavigationHeader = (props: NavigationHeaderProps) => {
         </div>
 
         <div className={styles.headingContainer}>
-          <div className={styles.headerText}>{props.heading}
+
+          <div className={styles.headerText}>
+            {props.headerIcon}
+
+            {props.heading}
+
             <span className={styles.darkText}>
-            {props.headingSecondary}
-          </span></div>
+              {props.headingSecondary}
+            </span>
+          </div>
           {
             <div className={styles.siteInfo}>
-
               {props.companyInfo &&
                 mockProjectInfo.map((info, index) => (
                   <div className={styles.siteInfoSec} key={index}>
+
                     <div className={styles.siteInfoTitle}>{info.name}</div>
                     <div className={styles.siteInfoDetails}>{info.details}</div>
                   </div>))}
             </div>}
 
           {
-            props.actionButtons && 
+            props.actionButtons &&
             (
-              <div style={{marginBottom: 8}}>
+              <div style={{ marginBottom: 8 }}>
                 {props.actionButtons}
               </div>
             )
           }
-          { tabs() }
+          {tabs()}
         </div>
       </div>
 

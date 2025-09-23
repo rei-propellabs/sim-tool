@@ -14,6 +14,7 @@ import useGetOrganizationById from "api/hooks/useGetOrganizationById";
 import { getToken } from "utils/TokenManager";
 import { Presentation } from "images/Dynamic/Presentation";
 import { ScenariosTabContent } from "./ScenariosTabContent";
+import { Company } from "images/Dynamic/Company";
 
 export const CompanyDetailsPage = () => {
 
@@ -60,6 +61,7 @@ export const CompanyDetailsPage = () => {
         }))}
         tabIndex={tabIndex}
         setTabIndex={setTabIndex}
+        headerIcon={<Company color={"var(--default-text)"} size={28} />}
       />
     )
   }
