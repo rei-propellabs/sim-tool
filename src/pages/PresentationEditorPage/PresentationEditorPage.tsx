@@ -1,19 +1,16 @@
 import { TopBar } from "components/TopBar/TopBar";
-import React, { useEffect, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import styles from "./PresentationEditorPage.module.css"
 import { useLocation, useNavigate } from "react-router-dom";
 import { NavigationHeader } from "components/NavigationHeader/NavigationHeader";
 import { ProjectTableRow } from "types/ProjectTableRow";
-import useAuthCheck from "api/hooks/useAuthCheck";
-import useListClientUpload from "api/hooks/useListClientUpload";
 import { getToken } from "utils/TokenManager";
 import { PaginationParams } from "utils/Pagination";
 import { formatDateMMDDYY } from "utils/DateFormatter";
-import Add from "images/Dynamic/Add";
-import usePostClientUpload from "api/hooks/usePostClientUpload";
 import { Presentation } from "images/Dynamic/Presentation";
 import { ProjectBreadcrumbs } from "components/ProjectBreadcrumbs/ProjectBreadcrumbs";
 import { ColumnConfig, NavigationTable } from "components/NavigationTable/NavigationTable";
+import { Checkbox } from "components/Checkbox/Checkbox";
 
 
 interface PresentationEditorRow {
@@ -22,6 +19,8 @@ interface PresentationEditorRow {
   dateAdded: string;
   fileChecker: string;
   warning: boolean;
+  id: string;
+  checked: boolean;
 }
 
 export const PresentationEditorPage = () => {
@@ -29,7 +28,6 @@ export const PresentationEditorPage = () => {
   const navigate = useNavigate();
 
   const [title, setTitle] = useState<string>("");
-  const [projectTableData, setProjectTableData] = useState<ProjectTableRow[]>([]);
   const [pagination, setPagination] = useState<PaginationParams>({
     limit: NUM_ROWS,
     offset: 0,
@@ -37,53 +35,91 @@ export const PresentationEditorPage = () => {
     order: "createdAt",
   });
 
-  const [orgTableData, setOrgTableData] = useState<PresentationEditorRow[]>([]);
+  const [scenarioTableData, setScenarioTableData] = useState<PresentationEditorRow[]>([]);
 
   const token = getToken("uploadClient")
   const [isLoading, setIsLoading] = useState<boolean>(false);
 
+  const [checked, setChecked] = useState<string[]>([]);
+
   useEffect(() => {
     if (!isLoading) {
-      setOrgTableData(
+      setScenarioTableData(
         [
           {
             name: "Presentation 1",
             dateAdded: "04/04/2024",
             inventory: "Ron Carter",
             fileChecker: "No Issues",
-            warning: false
+            warning: false,
+            id: "0",
+            checked: false,
           },
           {
             name: "Presentation 2",
             dateAdded: "04/04/2024",
             inventory: "Ron Carter",
             fileChecker: "Missing files",
-            warning: true
+            warning: true,
+            id: "1",
+            checked: false,
           },
         ]
       );
     }
-  }, [isLoading]);
+  }, [isLoading, checked]);
+
+  const handleCheckboxChange = (name: string) => {
+    console.log(name);
+    setChecked((prev) =>
+      prev.includes(name) ? prev.filter((n) => n !== name) : [...prev, name]
+    );
+  };
+
+  const renderNameCell = useCallback(
+    (_row: PresentationEditorRow, rowIndex: number) => (
+      <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
+        <Checkbox
+          onChange={(value) => {
+            if (value) {
+              setChecked((prev) => [...prev, _row.name]);
+            } else {
+              setChecked((prev) => prev.filter((n) => n !== _row.name));
+            }
+          }}
+          disabled={_row.warning}
+          checked={checked.includes(_row.name)}
+        />
+
+        <span onClick={() => handleCheckboxChange(_row.name)} style={{ cursor: 'pointer' }}>
+          {_row.name}
+        </span>
+      </div>
+
+    ),
+    [checked, handleCheckboxChange]
+  );
 
   const orgColumns: ColumnConfig<PresentationEditorRow>[] = [
     {
-      key: 'name', header: 'Scenarios',
+      key: "name", header: "Scenarios",
+      render: renderNameCell
     },
     {
-      key: 'inventory', header: 'Inventory',
+      key: "inventory", header: "Inventory",
     },
     {
-      key: 'dateAdded', header: 'Date Added',
+      key: "dateAdded", header: "Date Added",
     },
     {
-      key: 'fileChecker', header: 'File Checker',
+      key: "fileChecker", header: "File Checker",
       render: (row) => (
         row.warning ?
-          <span style={{ color: 'var(--error)' }}>
+          <span style={{ color: "var(--error)" }}>
             Issues Found
           </span>
           :
-          <span style={{ color: 'var(--success)' }}>No Issues</span>
+          <span style={{ color: "var(--success)" }}>No Issues</span>
       )
     },
   ]
@@ -129,11 +165,9 @@ export const PresentationEditorPage = () => {
       <NavigationTable
         expandIndexes={[0, 1, 2, 3]}
         columns={orgColumns}
-        data={orgTableData}
+        data={scenarioTableData}
         onRowClick={(index) => {
-          // localStorage.setItem("company", JSON.stringify(organizations[index]));
-
-          // navigate(`/admin/c?t=${organizations[index].uploadCount === 0 ? 0 : 1}&orgId=${organizations[index].id}`);
+          handleCheckboxChange(scenarioTableData[index].name);
         }}
       />
     </div>

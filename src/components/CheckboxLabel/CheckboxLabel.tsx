@@ -13,6 +13,9 @@ export const CheckboxLabel = ({ text, onValueChange, checked }: CheckboxLabelPro
         <Checkbox
           size="small"
           checked={checked}
+          onClick={(event) => {
+            event.stopPropagation();
+          }}
           onChange={e => onValueChange(e.target.checked)}
           sx={{
             color: "var(--darker-text)", // unchecked color

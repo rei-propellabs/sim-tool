@@ -1,3 +1,12 @@
 .pageContainer {
-  
+
+}
+
+.customCheckbox {
+  /* appearance: none; */
+  cursor: pointer;
+}
+
+.customCheckbox:checked {
+  background: var(--accent);
 }

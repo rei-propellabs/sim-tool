@@ -30,7 +30,7 @@ tbody .tr:hover {
   background-color: var(--table-row-hover);
   cursor: pointer;
 }
-.td:hover, .td:focus-within {
+.td:hover {
   background-color: var(--table-row-hover);
 }
 

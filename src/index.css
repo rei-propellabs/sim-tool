@@ -105,6 +105,12 @@ button:focus {
   outline: none;
 }
 
+/* CheckboxComponent.css */
+input[type='checkbox'] {
+  accent-color: #68DDD2;
+  color: var(--darker-text);
+}
+
 
 *:focus {
   outline: none;
