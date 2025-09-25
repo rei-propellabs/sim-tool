@@ -33,8 +33,17 @@ const useGetScenarios = (token: string | null, orgId: string) => {
         }
 
         const parsed = JSON.parse(responseText);
-        setData([parsed.rows[0], parsed.rows[1], parsed.rows[2]]);
-
+        setData(Array.from({ length: 12 }, (_, i) => ({
+          ...parsed.rows[0],
+          name: `${parsed.rows[0].name} ${i + 1}`
+        })));
+        //  setData(Array.from({ length: 12 }, (_, i) => ({
+        //   inventory: "N/A",
+        //   hasAllFiles: true,
+        //   createdAt: "2024-04-04T00:00:00Z",
+        //   id: `scenario-id-${i + 1}`,
+        //   name: `test ${i + 1}`
+        // })));
       } catch (e: any) {
         console.error("Error fetching manifest", e)
       } finally {

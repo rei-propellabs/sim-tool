@@ -1,12 +1,112 @@
 .pageContainer {
-
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+  overflow: hidden;
 }
 
-.customCheckbox {
-  /* appearance: none; */
+.contentArea {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  overflow: hidden;
+  min-height: 0;
+}
+
+.scrollableTableContainer {
+  flex: 1;
+  overflow-y: auto;
+  padding: 1.5rem 0;
+}
+
+.stickyFooter {
+  background-color: var(--dark-background-200);
+  padding: 1rem;
+  justify-content: center;
+  box-shadow: 0 -2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.footerContent {
+  display: flex;
+  align-items: flex-start;
+  align-items: center;
+  margin: 0 auto;
+  gap: 0;
+  width: fit-content;
+}
+
+.footerContentLeft {
+  display: flex;
+  gap: 0.4rem;
+  flex-direction: column;
+  flex: 1;
+  min-width: 40rem;
+}
+
+.footerText {
+  color: var(--darker-text);
+  font-size: 0.9rem;
+  font-weight: 600;
+}
+
+.selectedScenariosContainer {
+  color: var(--darker-text);
+  font-size: 0.9rem;
+  font-weight: 400;
+  display: flex;
+  flex-direction: row;
+  gap: 0.8rem;
+  flex-wrap: wrap;
+  width: 100%;
+}
+
+.footerButtons {
+  display: flex;
+  gap: 12px;
+  flex-shrink: 0;
+  margin-left: auto;
+}
+
+.footerButtons button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.checkboxCell {
+  display: flex;
+  align-items: center;
+}
+
+.selectedScenarioButtonContainer {
+  display: flex;
+  flex-direction: row;
+  gap: 0.3rem;
+  align-items: center;
   cursor: pointer;
 }
 
-.customCheckbox:checked {
-  background: var(--accent);
+.number {
+  width: 1rem;
+  height: 1rem;
+  border-radius: 0.5rem;
+  background-color: var(--secondary-900);
+  color: var(--secondary-text);
+  font-size: 0.7rem;
+  align-items: center;
+  text-align: center;
+  font-weight: 600;
+  align-content: center;
+}
+
+.checkedName {
+  color: var(--accent);
+  font-size: 0.9rem;
+  font-weight: 600;
+}
+
+.removeScenarioIcon {
+  align-items: center;
+  text-align: center;
+  align-content: center;
+  justify-items: center;
 }

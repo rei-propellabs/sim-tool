@@ -60,9 +60,9 @@
     background-color: var(--accent);
     border: 0;
     color: var(--primary-button-text);
-    padding: 8px;
+    padding: 0.5rem 0.9rem;
     font-size: 0.9rem;
-    border-radius: 6px;
+    border-radius: 0.4rem;
     width: fit-content;
     display: flex;
     align-items: center;
@@ -71,14 +71,25 @@
     cursor: pointer;
     white-space: nowrap;
 }
+.primary-button:disabled {
+    background-color: var(--darker-text);
+    color: var(--dark-text);
+    cursor: not-allowed;
+}
 .border-button {
     background-color: transparent;
     border: 1px solid var(--accent);
     color: var(--accent);
-    padding: 6px 12px;
-    border-radius: 5px;
+    padding: 0.5rem 0.9rem;
+    border-radius: 0.4rem;
     width: fit-content;
 }
+.border-button:disabled {
+    border: 1px solid var(--darker-text);
+    color: var(--darker-text);
+    cursor: not-allowed;
+}
+
 .position-relative {
     position: relative;
 }

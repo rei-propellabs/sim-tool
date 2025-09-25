@@ -7,6 +7,7 @@ import { ColumnConfig, NavigationTable } from "components/NavigationTable/Naviga
 import { Presentation } from "images/Dynamic/Presentation";
 import { Edit } from "images/Dynamic/Edit";
 import navTableStyles from "components/NavigationTable/NavigationTable.module.css";
+import { PaginationBar } from "components/PaginationBar/PaginationBar";
 
 export const ScenariosTabContent = () => {
 
@@ -23,6 +24,19 @@ export const ScenariosTabContent = () => {
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [numRows, setNumRows] = useState<number>(0);
   const [orgTableData, setOrgTableData] = useState<PresentationTableRow[]>([]);
+  const orgId = query.get("orgId");
+
+  // placeholder data
+  const total = 12
+  const currentPage = 0;
+
+  const handlePageClick = (page: number) => {
+    // setPagination((prev) => ({
+    //   ...prev,
+    //   offset: (page - 1) * NUM_ROWS,
+    // }));
+  };
+
 
   useEffect(() => {
     if (!isLoading) {
@@ -123,12 +137,20 @@ export const ScenariosTabContent = () => {
             title="No Presentations yet"
             subtitle="Create a Presentation to select the desired scenarios"
             actionButtonText="Create a Presentation"
-            onActionButtonClick={() => { navigate(`/admin/presentation`) }}
+            onActionButtonClick={() => { navigate(`/admin/presentation?orgId=${orgId}`) }}
           />
         ) :
           table()
       }
-
+      {/* {!isLoading && (
+        <PaginationBar
+          total={total}
+          pageSize={NUM_ROWS}
+          currentPage={currentPage}
+          onPageChange={handlePageClick}
+          numRows={orgTableData.length}
+        />
+      )} */}
     </div >
   )
 }
