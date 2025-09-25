@@ -132,7 +132,7 @@ export const ScenariosTabContent = ({ companyName }: ScenariosTabContentProps) =
               }
               onClick={(e) => {
                 e.preventDefault();
-                // navigate(`/admin/c?orgId=${organizations[rowIndex].id}`);
+                navigate(`/admin/presentation?orgId=${orgId}&projectId=${presentations[rowIndex].projectId}`);
               }}
             >
               <Edit size={16} />

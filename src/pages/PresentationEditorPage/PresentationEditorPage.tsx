@@ -18,6 +18,7 @@ import { CloseFilled } from "images/Dynamic/CloseFilled";
 import { Play } from "images/Dynamic/Play";
 import useGetOrganizationById from "api/hooks/useGetOrganizationById";
 import usePostPresentation from "api/hooks/usePostPresentation";
+import useGetScenariosByProjectId from "api/hooks/useGetScenariosByProjectId";
 
 
 interface PresentationEditorRow {
@@ -48,15 +49,24 @@ export const PresentationEditorPage = () => {
   const query = new URLSearchParams(useLocation().search);
 
   const orgId = query.get("orgId") || "";
+  const projectId = query.get("projectId") || "";
   const { isLoading: isLoadingOrg, organization } = useGetOrganizationById(token, orgId || undefined);
+  const { isLoading: isLoadingPreselectedScenarios, data: preselectedScenarios } = useGetScenariosByProjectId(token, orgId, projectId);
   const { isLoading, data: scenarioData } = useGetScenarios(token, orgId)
   const { postPresentation } = usePostPresentation(token);
-  
+
   const [selectedIds, setSelectedIds] = useState<string[]>([]);
 
   useEffect(() => {
+    let preselecetedIds: string[] = [];
+
+    if (!isLoadingPreselectedScenarios && preselectedScenarios) {
+      preselecetedIds = preselectedScenarios ? preselectedScenarios.map(scenario => scenario.id) : [];
+      setSelectedIds(preselecetedIds);
+    }
+
     if (!isLoading && scenarioData !== undefined && scenarioData.length > 0) {
-      console.log(scenarioData?.length);
+
       setScenarioTableData(
         scenarioData?.map((scenario) => ({
           name: scenario.name,
@@ -65,12 +75,12 @@ export const PresentationEditorPage = () => {
           fileChecker: scenario.hasAllFiles ? "Missing Files" : "Completed",
           warning: scenario.hasAllFiles === false,
           id: scenario.id,
-          checked: false,
+          checked: preselecetedIds.includes(scenario.id),
         })) ||
         []
       );
     }
-  }, [isLoading, scenarioData, selectedIds]);
+  }, [isLoading, scenarioData, isLoadingPreselectedScenarios, preselectedScenarios]);
 
   useEffect(() => {
     if (!isLoadingOrg && organization) {
@@ -152,146 +162,153 @@ export const PresentationEditorPage = () => {
     },
   ]
 
-  const cancelOnClick = () => { navigate(`/admin/c?t=2&orgId=${orgId}`) }
-  const saveOnClick = () => { 
+  const backToPresentationList = () => {
+    navigate(`/admin/c?t=2&orgId=${orgId}`)
+  }
+  const cancelOnClick = () => { backToPresentationList() }
+
+  const handlePresentationSave = (onSuccess?: (res: any) => void) => {
     if (selectedIds.length === 0) return;
-    const result = postPresentation({
+    postPresentation({
       organizationId: orgId,
       projectId: scenarioData![0].projectId,
       scenarios: selectedIds
-    }).then((res) => { 
+    }).then((res) => {
       console.log("Presentation created:", res);
-      cancelOnClick()
-    })
-  }
-
-  const header = () => {
-    return (
-      <NavigationHeader
-        heading={title}
-        backText="BACK"
-        onBackClick={cancelOnClick}
-        headerIcon={<Presentation color={"var(--default-text)"} size={28} />}
-        actionButtons={
-          <div className="flex-row gap-8">
-            <button
-              className={"border-button"}
-              onClick={cancelOnClick}
-            >
-              Cancel
-            </button>
-            <button className={"primary-button"}
-              onClick={saveOnClick}
-            >
-              Save & Exit
-            </button>
-          </div>
-        }
-      />
-    )
-  }
-
-  const deselectAllOnClick = () => {
-    setSelectedIds([]);
+      if (onSuccess) onSuccess(res);
+    });
   };
 
-  const previewPresentationOnClick = () => {
-    // Handle preview presentation logic
-    console.log("Preview presentation with:", selectedIds);
-  };
+    const saveOnClick = () => {
+      handlePresentationSave(() => backToPresentationList());
+    }
 
-  const selectedScenarioButtons = () => {
-    return (
-      selectedIds.map((id, index) => {
-        const scenario = scenarioTableData.find(s => s.id === id);
-        const name = scenario ? scenario.name : id; // Fallback to ID if scenario not found
-
-        return (
-          <div key={id}
-            className={styles.selectedScenarioButtonContainer}
-            onClick={() => handleCheckboxChange(id)}
-          >
-            <span className={styles.number}>{index + 1}</span>
-            <span className={styles.checkedName}>{name}</span>
-            <CloseFilled size={12} />
-          </div>
-        );
-      })
-    );
-  };
-
-  return (
-    <div className={styles.pageContainer}>
-      <TopBar
-        leftElements={
-          <ProjectBreadcrumbs
-            texts={["All Projects"]} />
-        }
-      />
-
-      {header()}
-
-      <div className={styles.contentArea}>
-        <div className={styles.scrollableTableContainer}>
-          <NavigationTable
-            expandIndexes={[0, 1, 2, 3]}
-            highlightRows={selectedIds.map(id => scenarioTableData.findIndex(s => s.id === id)).filter(index => index !== -1)}
-            columns={orgColumns}
-            data={scenarioTableData}
-            onRowClick={(index) => {
-              handleCheckboxChange(scenarioTableData[index].id);
-            }}
-          />
-          {!isLoading && (
-            <PaginationBar
-              total={total}
-              pageSize={NUM_ROWS}
-              currentPage={currentPage}
-              onPageChange={handlePageClick}
-              numRows={scenarioTableData.length}
-            />
-          )}
-        </div>
-
-        {/* FOOTER */}
-        <div className={styles.stickyFooter}>
-          <div className={styles.footerContent}>
-            <div className={styles.footerContentLeft}>
-              <div className={styles.footerText}>
-                Select up to 3 scenarios
-              </div>
-
-
-              <div className={styles.selectedScenariosContainer}>
-                {
-                  selectedIds.length > 0 ? selectedScenarioButtons() :
-                    "No scenarios selected"
-                }
-              </div>
+    const header = () => {
+      return (
+        <NavigationHeader
+          heading={title}
+          backText="BACK"
+          onBackClick={cancelOnClick}
+          headerIcon={<Presentation color={"var(--default-text)"} size={28} />}
+          actionButtons={
+            <div className="flex-row gap-8">
+              <button
+                className={"border-button"}
+                onClick={cancelOnClick}
+              >
+                Cancel
+              </button>
+              <button className={"primary-button"}
+                onClick={saveOnClick}
+              >
+                Save & Exit
+              </button>
             </div>
+          }
+        />
+      )
+    }
 
-            <div className={styles.footerButtons}>
-              <button
-                className="border-button"
-                onClick={deselectAllOnClick}
-                disabled={selectedIds.length === 0}
-              >
-                Deselect All
-              </button>
-              <button
-                className="primary-button"
-                onClick={previewPresentationOnClick}
-                disabled={selectedIds.length === 0}
-              >
-                <span>
-                  <Play color={"var(--dark-text)"} size={20} />
-                </span>
-                Preview Presentation
-              </button>
+    const deselectAllOnClick = () => {
+      setSelectedIds([]);
+    };
+
+    const previewPresentationOnClick = () => {
+      handlePresentationSave(() => navigate(`/admin/scenarios?orgId=${orgId}&projectId=${projectId}`));
+    };
+
+    const selectedScenarioButtons = () => {
+      return (
+        selectedIds.map((id, index) => {
+          const scenario = scenarioTableData.find(s => s.id === id);
+          const name = scenario ? scenario.name : id; // Fallback to ID if scenario not found
+
+          return (
+            <div key={id}
+              className={styles.selectedScenarioButtonContainer}
+              onClick={() => handleCheckboxChange(id)}
+            >
+              <span className={styles.number}>{index + 1}</span>
+              <span className={styles.checkedName}>{name}</span>
+              <CloseFilled size={12} />
+            </div>
+          );
+        })
+      );
+    };
+
+    return (
+      <div className={styles.pageContainer}>
+        <TopBar
+          leftElements={
+            <ProjectBreadcrumbs
+              texts={["All Projects"]} />
+          }
+        />
+
+        {header()}
+
+        <div className={styles.contentArea}>
+          <div className={styles.scrollableTableContainer}>
+            <NavigationTable
+              expandIndexes={[0, 1, 2, 3]}
+              highlightRows={selectedIds.map(id => scenarioTableData.findIndex(s => s.id === id)).filter(index => index !== -1)}
+              columns={orgColumns}
+              data={scenarioTableData}
+              onRowClick={(index) => {
+                handleCheckboxChange(scenarioTableData[index].id);
+              }}
+            />
+            {!isLoading && (
+              <PaginationBar
+                total={total}
+                pageSize={NUM_ROWS}
+                currentPage={currentPage}
+                onPageChange={handlePageClick}
+                numRows={scenarioTableData.length}
+              />
+            )}
+          </div>
+
+          {/* FOOTER */}
+          <div className={styles.stickyFooter}>
+            <div className={styles.footerContent}>
+              <div className={styles.footerContentLeft}>
+                <div className={styles.footerText}>
+                  Select up to 3 scenarios
+                </div>
+
+
+                <div className={styles.selectedScenariosContainer}>
+                  {
+                    selectedIds.length > 0 ? selectedScenarioButtons() :
+                      "No scenarios selected"
+                  }
+                </div>
+              </div>
+
+              <div className={styles.footerButtons}>
+                <button
+                  className="border-button"
+                  onClick={deselectAllOnClick}
+                  disabled={selectedIds.length === 0}
+                >
+                  Deselect All
+                </button>
+                <button
+                  className="primary-button"
+                  onClick={previewPresentationOnClick}
+                  disabled={selectedIds.length === 0}
+                >
+                  <span>
+                    <Play color={"var(--dark-text)"} size={20} />
+                  </span>
+                  Preview Presentation
+                </button>
+              </div>
             </div>
           </div>
         </div>
       </div>
-    </div>
-  );
-}
+    );
+  }
