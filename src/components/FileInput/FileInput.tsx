@@ -33,10 +33,10 @@ export const FileInput = (props: FileInputProps) => {
   const [errorMsg, setErrorMsg] = useState<string>("");
   const [deleteMenuOpen, setDeleteMenuOpen] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
-  const user = JSON.parse(localStorage.getItem("user") ?? "{}");
+  const userStr = localStorage.getItem("user");
+  const user = (!userStr || userStr === "undefined" ) ?  null : JSON.parse(userStr);
   const readOnlyStatuses = ["readOnly", "download"];
   const editable = !readOnlyStatuses.includes(fileInfo.status);
-  // const [menuButtonRef, setMenuButtonRef] = useState<React.RefObject<HTMLButtonElement> | null>(null);
   const menuButtonRef = React.useRef<HTMLImageElement>(null);
   const [downloading, setDownloading] = useState(false);
 

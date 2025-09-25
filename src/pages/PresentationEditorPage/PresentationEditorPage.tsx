@@ -16,6 +16,8 @@ import { PaginationBar } from "components/PaginationBar/PaginationBar";
 import { Close } from "images/Dynamic/Close";
 import { CloseFilled } from "images/Dynamic/CloseFilled";
 import { Play } from "images/Dynamic/Play";
+import useGetOrganizationById from "api/hooks/useGetOrganizationById";
+import usePostPresentation from "api/hooks/usePostPresentation";
 
 
 interface PresentationEditorRow {
@@ -32,7 +34,7 @@ export const PresentationEditorPage = () => {
   const NUM_ROWS = 10;
   const navigate = useNavigate();
 
-  const [title, setTitle] = useState<string>("Presentation");
+  const [title, setTitle] = useState<string>("");
   const [pagination, setPagination] = useState<PaginationParams>({
     limit: NUM_ROWS,
     offset: 0,
@@ -46,10 +48,11 @@ export const PresentationEditorPage = () => {
   const query = new URLSearchParams(useLocation().search);
 
   const orgId = query.get("orgId") || "";
-
+  const { isLoading: isLoadingOrg, organization } = useGetOrganizationById(token, orgId || undefined);
   const { isLoading, data: scenarioData } = useGetScenarios(token, orgId)
-
-  const [checked, setChecked] = useState<string[]>([]); // Now stores IDs instead of names
+  const { postPresentation } = usePostPresentation(token);
+  
+  const [selectedIds, setSelectedIds] = useState<string[]>([]);
 
   useEffect(() => {
     if (!isLoading && scenarioData !== undefined && scenarioData.length > 0) {
@@ -67,7 +70,13 @@ export const PresentationEditorPage = () => {
         []
       );
     }
-  }, [isLoading, scenarioData, checked]);
+  }, [isLoading, scenarioData, selectedIds]);
+
+  useEffect(() => {
+    if (!isLoadingOrg && organization) {
+      setTitle(`${organization.name} Presentation`);
+    }
+  }, [isLoadingOrg, organization]);
 
   // placeholder data for pagination
   // const paginationMemo = React.useMemo(() => ({ ...pagination }), [pagination, refreshKey]);
@@ -84,7 +93,7 @@ export const PresentationEditorPage = () => {
 
   const handleCheckboxChange = (id: string) => {
     console.log(id);
-    setChecked((prev) => {
+    setSelectedIds((prev) => {
       if (prev.includes(id)) {
         // Remove if already selected
         return prev.filter((checkedId) => checkedId !== id);
@@ -100,9 +109,9 @@ export const PresentationEditorPage = () => {
 
   const renderNameCell = useCallback(
     (_row: PresentationEditorRow, rowIndex: number) => {
-      const isChecked = checked.includes(_row.id);
-      const isDisabled = _row.warning ;
-      
+      const isChecked = selectedIds.includes(_row.id);
+      const isDisabled = _row.warning;
+
       return (
         <div className={styles.checkboxCell}>
           <Checkbox
@@ -116,7 +125,7 @@ export const PresentationEditorPage = () => {
         </div>
       );
     },
-    [checked, handleCheckboxChange]
+    [selectedIds, handleCheckboxChange]
   );
 
   const orgColumns: ColumnConfig<PresentationEditorRow>[] = [
@@ -138,19 +147,30 @@ export const PresentationEditorPage = () => {
             Issues Found
           </span>
           :
-          <span style={{ color: "var(--success)" }}>No Issues</span>
+          <span style={{ color: "var(--success)" }}>Complete</span>
       )
     },
   ]
 
-  const cancelOnClick = () => { }
-  const saveOnClick = () => { }
+  const cancelOnClick = () => { navigate(`/admin/c?t=2&orgId=${orgId}`) }
+  const saveOnClick = () => { 
+    if (selectedIds.length === 0) return;
+    const result = postPresentation({
+      organizationId: orgId,
+      projectId: scenarioData![0].projectId,
+      scenarios: selectedIds
+    }).then((res) => { 
+      console.log("Presentation created:", res);
+      cancelOnClick()
+    })
+  }
 
   const header = () => {
     return (
       <NavigationHeader
         heading={title}
         backText="BACK"
+        onBackClick={cancelOnClick}
         headerIcon={<Presentation color={"var(--default-text)"} size={28} />}
         actionButtons={
           <div className="flex-row gap-8">
@@ -172,20 +192,20 @@ export const PresentationEditorPage = () => {
   }
 
   const deselectAllOnClick = () => {
-    setChecked([]);
+    setSelectedIds([]);
   };
 
   const previewPresentationOnClick = () => {
     // Handle preview presentation logic
-    console.log("Preview presentation with:", checked);
+    console.log("Preview presentation with:", selectedIds);
   };
 
   const selectedScenarioButtons = () => {
     return (
-      checked.map((id, index) => {
+      selectedIds.map((id, index) => {
         const scenario = scenarioTableData.find(s => s.id === id);
         const name = scenario ? scenario.name : id; // Fallback to ID if scenario not found
-        
+
         return (
           <div key={id}
             className={styles.selectedScenarioButtonContainer}
@@ -215,7 +235,7 @@ export const PresentationEditorPage = () => {
         <div className={styles.scrollableTableContainer}>
           <NavigationTable
             expandIndexes={[0, 1, 2, 3]}
-            highlightRows={checked.map(id => scenarioTableData.findIndex(s => s.id === id)).filter(index => index !== -1)}
+            highlightRows={selectedIds.map(id => scenarioTableData.findIndex(s => s.id === id)).filter(index => index !== -1)}
             columns={orgColumns}
             data={scenarioTableData}
             onRowClick={(index) => {
@@ -244,8 +264,8 @@ export const PresentationEditorPage = () => {
 
               <div className={styles.selectedScenariosContainer}>
                 {
-                checked.length > 0 ? selectedScenarioButtons() :
-                  "No scenarios selected"
+                  selectedIds.length > 0 ? selectedScenarioButtons() :
+                    "No scenarios selected"
                 }
               </div>
             </div>
@@ -254,14 +274,14 @@ export const PresentationEditorPage = () => {
               <button
                 className="border-button"
                 onClick={deselectAllOnClick}
-                disabled={checked.length === 0}
+                disabled={selectedIds.length === 0}
               >
                 Deselect All
               </button>
               <button
                 className="primary-button"
                 onClick={previewPresentationOnClick}
-                disabled={checked.length === 0}
+                disabled={selectedIds.length === 0}
               >
                 <span>
                   <Play color={"var(--dark-text)"} size={20} />

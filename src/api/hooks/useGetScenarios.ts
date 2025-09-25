@@ -33,11 +33,11 @@ const useGetScenarios = (token: string | null, orgId: string) => {
         }
 
         const parsed = JSON.parse(responseText);
-        // setData(parsed.rows as ScenarioData[]);
-        setData(Array.from({ length: 12 }, (_, i) => ({
-          ...parsed.rows[0],
-          id: `${parsed.rows[0].id} ${i + 1}`
-        })));
+        setData(parsed.rows as ScenarioData[]);
+        // setData(Array.from({ length: 12 }, (_, i) => ({
+        //   ...parsed.rows[0],
+        //   id: `${parsed.rows[0].id} ${i + 1}`
+        // })));
         //  setData(Array.from({ length: 12 }, (_, i) => ({
         //   inventory: "N/A",
         //   hasAllFiles: true,

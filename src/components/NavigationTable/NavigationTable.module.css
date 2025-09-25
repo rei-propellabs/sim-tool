@@ -1,5 +1,5 @@
 .tdContent {
-  min-height: 40px;
+  min-height: 2rem;
   display: flex;
   align-items: center;
 }

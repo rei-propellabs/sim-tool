@@ -1,15 +1,21 @@
 import { useLocation, useNavigate } from "react-router-dom";
 import styles from "./ScenariosTabContent.module.css"
 import { SmallLoadingSpinner } from "components/SmallLoadingSpinner/SmallLoadingSpinner";
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { NoItemsText } from "components/NoItemsText/NoItemsText";
 import { ColumnConfig, NavigationTable } from "components/NavigationTable/NavigationTable";
 import { Presentation } from "images/Dynamic/Presentation";
 import { Edit } from "images/Dynamic/Edit";
 import navTableStyles from "components/NavigationTable/NavigationTable.module.css";
 import { PaginationBar } from "components/PaginationBar/PaginationBar";
+import useListPresentation from "api/hooks/useListPresentation";
+import { getToken } from "utils/TokenManager";
+import { PaginationParams } from "utils/Pagination";
 
-export const ScenariosTabContent = () => {
+interface ScenariosTabContentProps {
+  companyName: string;
+}
+export const ScenariosTabContent = ({ companyName }: ScenariosTabContentProps) => {
 
   interface PresentationTableRow {
     name: string;
@@ -21,14 +27,25 @@ export const ScenariosTabContent = () => {
   const navigate = useNavigate();
 
   const query = new URLSearchParams(useLocation().search);
-  const [isLoading, setIsLoading] = useState<boolean>(false);
   const [numRows, setNumRows] = useState<number>(0);
-  const [orgTableData, setOrgTableData] = useState<PresentationTableRow[]>([]);
-  const orgId = query.get("orgId");
+  const [presentationTableData, setPresentationTableData] = useState<PresentationTableRow[]>([]);
+  const orgId = query.get("orgId") ?? "";
+
+  const [pagination, setPagination] = useState<PaginationParams>({
+    limit: NUM_ROWS,
+    offset: 0,
+    orderBy: "DESC",
+    order: "createdAt",
+  });
+  const [refreshKey, setRefreshKey] = useState(0);
+
+  const paginationMemo = useMemo(() => ({ ...pagination }), [pagination, refreshKey]);
+
+  const token = getToken("uploadAdmin")
+  const { isLoading, presentations, total } = useListPresentation(token, orgId, paginationMemo, refreshKey);
 
   // placeholder data
-  const total = 12
-  const currentPage = 0;
+  const currentPage = Math.floor((pagination.offset ?? 0) / NUM_ROWS) + 1;
 
   const handlePageClick = (page: number) => {
     // setPagination((prev) => ({
@@ -40,16 +57,15 @@ export const ScenariosTabContent = () => {
 
   useEffect(() => {
     if (!isLoading) {
-      setOrgTableData(
-        [
-          {
-            name: "Presentation 1",
-            dateCreated: "04/04/2024",
-            lastUpdated: "04/04/2024",
-            action: ""
-          },
-        ]
+      setPresentationTableData(
+        presentations.map((presentation) => ({
+          name:`${companyName ?? ""} Presentation`,
+          dateCreated: new Date(presentation.createdAt).toLocaleDateString(),
+          lastUpdated: new Date(presentation.updatedAt).toLocaleDateString(),
+          action: ""
+        }))
       );
+      setNumRows(presentations.length);
     }
   }, [isLoading]);
 
@@ -67,7 +83,7 @@ export const ScenariosTabContent = () => {
 
   const orgColumns: ColumnConfig<PresentationTableRow>[] = [
     {
-      key: 'name', header: 'Company',
+      key: 'name', header: 'Presentations',
     },
     // { key: 'lastUploadAt', header: 'Last upload' },
     {
@@ -102,7 +118,7 @@ export const ScenariosTabContent = () => {
       <NavigationTable
         expandIndexes={[0, 1, 2, 3]}
         columns={orgColumns}
-        data={orgTableData}
+        data={presentationTableData}
         onRowClick={(index) => {
           // localStorage.setItem("company", JSON.stringify(organizations[index]));
 
@@ -142,15 +158,15 @@ export const ScenariosTabContent = () => {
         ) :
           table()
       }
-      {/* {!isLoading && (
+      {!isLoading && (
         <PaginationBar
           total={total}
           pageSize={NUM_ROWS}
           currentPage={currentPage}
           onPageChange={handlePageClick}
-          numRows={orgTableData.length}
+          numRows={presentationTableData.length}
         />
-      )} */}
+      )}
     </div >
   )
 }

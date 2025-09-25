@@ -14,11 +14,11 @@ const useGetOrganizationById = (token: string | null, orgId: string | undefined)
           return;
         }
 
-        const apiEndpoint = `${API_BASE_URL}/auth/organization/organization/${orgId}`;
+        const apiEndpoint = `${API_BASE_URL}/auth/organization/id/${orgId}`;
         console.log("Fetching", apiEndpoint);
         
         const response = await fetch(apiEndpoint, {
-          method: "PUT",
+          method: "GET",
           headers: {
             "Content-Type": "application/json",
             "Authorization": `Bearer ${token}`,

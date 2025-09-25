@@ -66,7 +66,8 @@ export const CompanyDetailsPage = () => {
     )
   }
 
-  const tabContents = [<EditCompanyPage />, <FilesTabContent />, <ScenariosTabContent />];
+  const tabContents = [<EditCompanyPage />, <FilesTabContent />,
+    <ScenariosTabContent companyName={orgName} />];
 
   return (
     <div className={styles.pageContainer}>
