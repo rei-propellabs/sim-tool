@@ -8,6 +8,7 @@
     --light-accent: #BCF0EB;
     --default-text: #E5F3EBDE;
     --darker-text: #E5F3EB99;
+    --other-dark-300: #E5F3EB29;
     --darker-text-300: #E5F3EB61;
     --secondary-button: #BCCFBE29;
     --dark-background-200: #3b403d;
@@ -30,7 +31,7 @@
     --popup-menu-bg: #3b403d;
     --option-divider: #4b514d;
 
-    --input-background:  #BCCFBE14;
+    --input-background: #BCCFBE14;
     --highlight-background: #ECF4EE;
     --white-transparent: #FFFFFF80;
 
@@ -65,6 +66,7 @@
     --table-border: #3c423e;
     --table-border-transparent: #CCDCD029;
     --table-row-hover-solid: #242825;
+    --table-row-selected: #16645D14;
     --table-cell: #2A2F2C;
 
     --tab-active: #CCDCD0;

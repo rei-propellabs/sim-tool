@@ -15,6 +15,7 @@ import useGetScenarios from "api/hooks/useGetScenarios";
 import { PaginationBar } from "components/PaginationBar/PaginationBar";
 import { Close } from "images/Dynamic/Close";
 import { CloseFilled } from "images/Dynamic/CloseFilled";
+import { Play } from "images/Dynamic/Play";
 
 
 interface PresentationEditorRow {
@@ -48,7 +49,7 @@ export const PresentationEditorPage = () => {
 
   const { isLoading, data: scenarioData } = useGetScenarios(token, orgId)
 
-  const [checked, setChecked] = useState<string[]>([]);
+  const [checked, setChecked] = useState<string[]>([]); // Now stores IDs instead of names
 
   useEffect(() => {
     if (!isLoading && scenarioData !== undefined && scenarioData.length > 0) {
@@ -71,7 +72,7 @@ export const PresentationEditorPage = () => {
   // placeholder data for pagination
   // const paginationMemo = React.useMemo(() => ({ ...pagination }), [pagination, refreshKey]);
 
-  const total = 12
+  const total = scenarioTableData.length;
   const currentPage = Math.floor((pagination.offset ?? 0) / NUM_ROWS) + 1;
 
   const handlePageClick = (page: number) => {
@@ -81,31 +82,40 @@ export const PresentationEditorPage = () => {
     // }));
   };
 
-  const handleCheckboxChange = (name: string) => {
-    console.log(name);
-    setChecked((prev) =>
-      prev.includes(name) ? prev.filter((n) => n !== name) : [...prev, name]
-    );
+  const handleCheckboxChange = (id: string) => {
+    console.log(id);
+    setChecked((prev) => {
+      if (prev.includes(id)) {
+        // Remove if already selected
+        return prev.filter((checkedId) => checkedId !== id);
+      } else {
+        // Add only if we haven't reached the 3-item limit
+        if (prev.length < 3) {
+          return [...prev, id];
+        }
+        return prev; // Don't add if already at 3 items
+      }
+    });
   };
 
   const renderNameCell = useCallback(
-    (_row: PresentationEditorRow, rowIndex: number) => (
-      <div className={styles.checkboxCell}>
-        <Checkbox
-          onChange={(value) => {
-            if (value) {
-              setChecked((prev) => [...prev, _row.name]);
-            } else {
-              setChecked((prev) => prev.filter((n) => n !== _row.name));
-            }
-          }}
-          disabled={_row.warning}
-          checked={checked.includes(_row.name)}
-        />
-        {_row.name}
-      </div>
-
-    ),
+    (_row: PresentationEditorRow, rowIndex: number) => {
+      const isChecked = checked.includes(_row.id);
+      const isDisabled = _row.warning ;
+      
+      return (
+        <div className={styles.checkboxCell}>
+          <Checkbox
+            onChange={(value) => {
+              handleCheckboxChange(_row.id);
+            }}
+            disabled={isDisabled}
+            checked={isChecked}
+          />
+          {_row.name}
+        </div>
+      );
+    },
     [checked, handleCheckboxChange]
   );
 
@@ -172,20 +182,23 @@ export const PresentationEditorPage = () => {
 
   const selectedScenarioButtons = () => {
     return (
-      checked.map((name, index) => (
-        <div key={index}
-          className={styles.selectedScenarioButtonContainer}
-          onClick={() => handleCheckboxChange(name)}
-        >
-          <span className={styles.number}>{index + 1}</span>
-
-          <span className={styles.checkedName}>{name}</span>
-          <CloseFilled size={12} />
-        </div>
-      ))
-
-    )
-  }
+      checked.map((id, index) => {
+        const scenario = scenarioTableData.find(s => s.id === id);
+        const name = scenario ? scenario.name : id; // Fallback to ID if scenario not found
+        
+        return (
+          <div key={id}
+            className={styles.selectedScenarioButtonContainer}
+            onClick={() => handleCheckboxChange(id)}
+          >
+            <span className={styles.number}>{index + 1}</span>
+            <span className={styles.checkedName}>{name}</span>
+            <CloseFilled size={12} />
+          </div>
+        );
+      })
+    );
+  };
 
   return (
     <div className={styles.pageContainer}>
@@ -202,10 +215,11 @@ export const PresentationEditorPage = () => {
         <div className={styles.scrollableTableContainer}>
           <NavigationTable
             expandIndexes={[0, 1, 2, 3]}
+            highlightRows={checked.map(id => scenarioTableData.findIndex(s => s.id === id)).filter(index => index !== -1)}
             columns={orgColumns}
             data={scenarioTableData}
             onRowClick={(index) => {
-              handleCheckboxChange(scenarioTableData[index].name);
+              handleCheckboxChange(scenarioTableData[index].id);
             }}
           />
           {!isLoading && (
@@ -249,6 +263,9 @@ export const PresentationEditorPage = () => {
                 onClick={previewPresentationOnClick}
                 disabled={checked.length === 0}
               >
+                <span>
+                  <Play color={"var(--dark-text)"} size={20} />
+                </span>
                 Preview Presentation
               </button>
             </div>

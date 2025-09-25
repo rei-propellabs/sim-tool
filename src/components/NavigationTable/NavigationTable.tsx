@@ -17,11 +17,12 @@ export type TableViewProps<T> = {
   renderMenuButton?: (rowIndex: number, openMenu: () => void, ref: React.RefObject<HTMLButtonElement>) => React.ReactNode;
   renderMenu?: (rowIndex: number, closeMenu: () => void) => React.ReactNode;
   expandIndexes?: number[];
+  highlightRows?: number[];
 };
 
 
 export const NavigationTable = <T extends object>(props: TableViewProps<T>) => {
-  const { columns, data, onRowClick, renderMenuButton, renderMenu, expandIndexes } = props;
+  const { columns, data, onRowClick, renderMenuButton, renderMenu, expandIndexes, highlightRows } = props;
   const [showMenu, setShowMenu] = React.useState(false);
   const [selectedMenuIndex, setSelectedMenuIndex] = React.useState<number | null>(null);
   const menuButtonRefs = React.useRef<Array<React.RefObject<HTMLButtonElement>>>([]);
@@ -115,12 +116,14 @@ export const NavigationTable = <T extends object>(props: TableViewProps<T>) => {
       }
     }
     return (
-      <tr className={styles.tr}>
+      <tr className={styles.tr} >
         {columns.map((col, colIndex) => (
           <td
             key={colIndex}
             className={
-              `${styles.td} ${expandIndexes?.includes(colIndex) ? styles.expand : styles.shrink}` +
+              `${styles.td} 
+              ${highlightRows && highlightRows.includes(rowIndex) ? styles.trHighlight : ''}
+              ${expandIndexes?.includes(colIndex) ? styles.expand : styles.shrink}` +
               (hoveredRow === rowIndex ? ` ${styles.rowHover}` : "")
             }
             style={textStyle(col.key, renderCell(col, item, colIndex))}
@@ -140,8 +143,8 @@ export const NavigationTable = <T extends object>(props: TableViewProps<T>) => {
     <div className={styles.flexTableWrapper}>
       <table
         className={styles.table}
-        style={{ 
-          width: "100%", 
+        style={{
+          width: "100%",
           textAlign: "left",
           gridTemplateColumns: gridTemplateColumns
         }}>

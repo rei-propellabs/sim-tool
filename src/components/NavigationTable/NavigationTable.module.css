@@ -17,6 +17,9 @@
 .tr {
   display: contents;
 }
+tbody .trHighlight {
+  background-color: var(--other-dark-300);
+}
 
 .thead {
   display: contents;
