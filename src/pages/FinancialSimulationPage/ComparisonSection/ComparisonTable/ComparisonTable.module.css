@@ -3,12 +3,12 @@
   overflow: hidden;
   margin: 2vh 10vw;
   border: 1px solid var(--table-border);
-  min-width: 690px;
+  width: fit-content;
+  align-self: center;
 }
 
 .header {
   display: grid;
-  grid-template-columns: 200px repeat(3, 1fr);
   background-color: var(--table-cell);
 }
 
@@ -33,7 +33,6 @@
 
 .row {
   display: grid;
-  grid-template-columns: 200px repeat(3, 1fr);
   background-color: var(--table-cell);
 }
 
@@ -97,13 +96,20 @@
   align-items: center;
   justify-content: center;
   flex-grow: 1;
-  min-width: 8rem;
+  min-width: 18rem;
 }
 
 .divier { 
   width: 1px;
   height: 100%;
   background-color: var(--table-border-transparent);
+}
+
+.verticalStack {
+  display: flex;
+  flex-direction: column;
+  padding: 8px;
+  text-align: right;
 }
 
 .textCell {
@@ -132,6 +138,7 @@
   margin-top: 8px;
   justify-content: space-between;
   padding: 0 8px;
+  justify-content: end;
 }
 
 .diaDifference {

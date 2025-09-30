@@ -8,13 +8,14 @@ import { CashflowEntry, FinancialData, NumHolesLabels, OperationalData, Paramete
 
 export interface ComparisonTableProps {
   cashFlowData: CashflowEntry[][];
-  keyAssumptions: ParametersData[];
-  financialOutputData: FinancialData[]
-  operationalOutputData: OperationalData[]
+  keyAssumptions: any[];
+  financialOutputData: FinancialData[];
+  operationalOutputData: OperationalData[];
+  numScenarios: number;
 }
 
 const ComparisonTable = (props: ComparisonTableProps) => {
-  const { cashFlowData, keyAssumptions, financialOutputData, operationalOutputData } = props
+  const { cashFlowData, keyAssumptions, financialOutputData, operationalOutputData, numScenarios } = props
   const [showMore, setShowMore] = useState(false)
 
   const formatCurrency = (value: number) => {
@@ -145,52 +146,46 @@ const ComparisonTable = (props: ComparisonTableProps) => {
     )
   }
 
-  const keyAssumptionRow = (label: string, key: string, unit: string) => {
-    const values = keyAssumptions.map((item) => item[key as keyof ParametersData] as number);
+  const keyAssumptionRow = (label: string, values: number[], unitPrefix: string, unitSuffix: string) => {
+    // const values = keyAssumptions.map((item) => item[key as keyof ParametersData] as number);
 
-    const relativeDifferences = values.map((value, idx) =>
-      idx === 0 ? 0 : Number(((value - values[0]) / values[0] * 100).toFixed(2))
-    );
+    // const relativeDifferences = values.map((value, idx) =>
+    //   idx === 0 ? 0 : Number(((value - values[0]) / values[0] * 100).toFixed(2))
+    // );
 
-    const sameValues = relativeDifferences.every((val) => val === 0);
-    if (sameValues && !showMore) {
-      return null
-    }
+    // const sameValues = relativeDifferences.every((val) => val === 0);
+    // if (sameValues && !showMore) {
+    //   return null
+    // }
 
     const formatValue = (value: number) => {
-      if (unit === "$") {
-        return formatCurrency(value);
-      } else if (unit.startsWith("$/")) {
-        return <span>{formatCurrency(value)} / {unit.slice(2)}</span>;
-      } else {
-        return `${value}${unit}`;
-      }
+      // if (unitSuffix === "$") {
+      //   return formatCurrency(value);
+      // } else if (unitSuffix.startsWith("$/")) {
+      //   return <span>{formatCurrency(value)} / {unitSuffix.slice(2)}</span>;
+      // } else {
+      //   return `${value}${unitSuffix}`;
+      // }
+      return `${unitPrefix ?? ""}${value}${unitSuffix ?? ""}`
     };
 
+
+    const multiStreamValue = (values: any[]) => {
+      return values.map((val, idx) => (
+          <div className={styles.verticalStack}>
+            <span>{val.name}</span>
+            {formatValue(val.value)}
+          </div>
+      ));
+    }
+
     return (
-      renderDataRow(label, keyAssumptions.map((scenario, index) => (
+      renderDataRow(label, values.map((value, index) => (
         <div className={styles.assumptionValue}>
           {
-            values[index] === undefined ||
-              relativeDifferences[index] === 0 ?
-              <div className={styles.diaDifference}>
-                <div className={styles.noData} />
-              </div>
-              :
-              <>
-                <div className={styles.diaDifference}>
-                  {relativeDifferences[index] > 0 ? "+" : ""}
-                  {relativeDifferences[index]}%
-                  <span className={styles.diaDifferenceIcon}>
-                    {relativeDifferences[index] > 0 ? "▲" : "▼"}
-                  </span>
-                </div>
-              </>
-          }
-          {
-            values[index] === undefined ? <span>999</span> :
-              <span>{formatValue(values[index])}</span>
-
+            Array.isArray(value) === true ? multiStreamValue(value) :
+              value === undefined ? <span>999</span> :
+                <span>{formatValue(value)}</span>
           }
         </div>
       )))
@@ -268,7 +263,9 @@ const ComparisonTable = (props: ComparisonTableProps) => {
 
   const renderDataRow = (label: string, cellContents: React.ReactNode[], backgroundColors?: string[], indentLabel = false) => {
     return (
-      <div key={label} className={`${styles.row} ${styles.borderBottom}`}>
+      <div key={label} className={`${styles.row} ${styles.borderBottom}`}
+        style={{ gridTemplateColumns: `200px repeat(${numScenarios}, 1fr)` }}
+      >
         <div className={`${styles.rowLabel} ${indentLabel ? styles.indentLabel : ""}`}>
           <span className={`${styles.rowSubLabel}`}>
             {label}
@@ -289,8 +286,9 @@ const ComparisonTable = (props: ComparisonTableProps) => {
 
   const sectionTitleRow = (title: string, isSmall?: boolean) => {
     return (
-      <div className={styles.row}>
-        {Array.from({ length: keyAssumptions.length + 1 }).map((_, idx) => (
+      <div className={styles.row}
+        style={{ gridTemplateColumns: `200px repeat(${numScenarios}, 1fr)` }}>
+        {Array.from({ length: numScenarios + 1 }).map((_, idx) => (
           <div key={idx} className={`${styles.sectionCell} ${isSmall ? styles.sectionCellSmall : ""}`}>
             <div className={styles.sectionTitle}>{title}</div>
           </div>
@@ -300,23 +298,28 @@ const ComparisonTable = (props: ComparisonTableProps) => {
   }
 
   const keyAssumptionSection = () => {
-    const keyAssumptionRows = [
-      keyAssumptionRow("Commodity Price", "commodityPrice", "$"),
-      keyAssumptionRow("Number of Drills", "numberOfDrills", ""),
-      keyAssumptionRow("Cutter Head Size", "cutterHeadSize", "m"),
-      keyAssumptionRow("Mill Recovery", "millRecovery", "%"),
-      keyAssumptionRow("Processing Cost per Tonne", "processingCostPerTonne", "$"),
-      keyAssumptionRow("Waste Cost per Tonne", "wasteCostPerTonne", "$"),
-      keyAssumptionRow("Minimum Hole Inclination", "minimumHoleInclination", "°"),
-      keyAssumptionRow("Maximum Hole Length", "maximumHoleLength", "m"),
+    // const keyAssumptionRows = [
+    //   keyAssumptionRow("Number of Drills", "numberOfDrills", ""),
+    //   keyAssumptionRow("Cutter Head Size", "cutterHeadSize", "m"),
+    //   keyAssumptionRow("Commodity Price", "commodityPrice", ""),
 
-    ];
 
-    const constantAssumptions = [
-      keyAssumptionRow("Rate of Penetration", "rateOfPenetration", "m / hr"),
-      keyAssumptionRow("Availability", "availability", "%"),
-      keyAssumptionRow("Discount Rate", "discountRate", "%"),
-    ]
+    //   keyAssumptionRow("Processing Cost per Tonne", "processingCostPerTonne", "$"),
+    //   keyAssumptionRow("Minimum Hole Inclination", "minimumHoleInclination", "°"),
+    //   keyAssumptionRow("Maximum Hole Length", "maximumHoleLength", "m"),
+
+    // ];
+    const keyAssumptionRows = keyAssumptions.map((assumption, i) => {
+      return (
+        keyAssumptionRow(assumption.title, assumption.values, assumption.unitPrefix, assumption.unitSuffix)
+      )
+    })
+
+    // const constantAssumptions = [
+    //   keyAssumptionRow("Rate of Penetration", "rateOfPenetration", "m / hr"),
+    //   keyAssumptionRow("Availability", "availability", "%"),
+    //   keyAssumptionRow("Discount Rate", "discountRate", "%"),
+    // ]
     const visibleRows = keyAssumptionRows.filter(Boolean);
 
     return (
@@ -324,8 +327,8 @@ const ComparisonTable = (props: ComparisonTableProps) => {
         {visibleRows.length > 0 && sectionTitleRow("KEY ASSUMPTIONS", true)}
         {visibleRows}
 
-        {visibleRows.length > 0 && sectionTitleRow("CONSTANT ASSUMPTIONS", false)}
-        {constantAssumptions}
+        {/* {visibleRows.length > 0 && sectionTitleRow("CONSTANT ASSUMPTIONS", false)}
+        {constantAssumptions} */}
       </>
     )
   }
@@ -401,7 +404,8 @@ const ComparisonTable = (props: ComparisonTableProps) => {
 
   return (
     <div className={styles.tableContainer}>
-      <div className={styles.header}>
+      <div className={styles.header}
+        style={{ gridTemplateColumns: `200px repeat(${numScenarios}, 1fr)` }}>
         <div className={styles.subheader}>SCENARIO</div>
         {keyAssumptions.map((scenario, index) => (
           <div key={index} className={styles.headerCell}>
@@ -410,7 +414,9 @@ const ComparisonTable = (props: ComparisonTableProps) => {
         ))}
       </div>
 
-      <div className={styles.row}>
+      <div className={styles.row}
+        style={{ gridTemplateColumns: `200px repeat(${numScenarios}, 1fr)` }}
+      >
         <div className={styles.subheader}>TIME HORIZON</div>
         {cashFlowData.map((scenario, index) => (
           <div key={index} className={styles.cell}>

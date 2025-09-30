@@ -14,6 +14,7 @@ import useGetScenarios from "api/hooks/useGetScenarios"
 import { getToken } from "utils/TokenManager"
 import { CashflowEntry } from "api/models/ScenarioData"
 import MonthlySummarySection from "./MonthlySummarySection/MonthlySummarySection"
+import useGetScenariosByProjectId from "api/hooks/useGetScenariosByProjectId"
 
 const demoScenarios = [
   {
@@ -41,7 +42,9 @@ export function FinancialSimulationPage() {
   // Get orgId from URL parameter, fallback to default if not present
   const [searchParams] = useSearchParams();
   const orgId = searchParams.get("orgId") || "88e2e8e5-e9c4-40bd-94e4-856d963bb8ed";
-  const { isLoading: loadingScenarios, data: scenarioData } = useGetScenarios(token, orgId)
+  const projectId = searchParams.get("projectId") || "88e2e8e5-e9c4-40bd-94e4-856d963bb8ed";
+
+  const { isLoading: loadingScenarios, data: scenarioData } = useGetScenariosByProjectId(token, orgId, projectId)
 
   useEffect(() => {
     if (!loadingScenarios && scenarioData) {

@@ -1,56 +1,76 @@
 export const NumHolesLabels = ["35-49", "50-59", "60-69", "70-79", "80-90"];
 
+export interface ScenarioResponse{
+	scenarios: ScenarioData[];
+	total: number;
+}
+
 export interface ScenarioData {
 	id: string;
 	name: string;
 	isChosen: boolean;
 	hasAllFiles: boolean;
+	filesInfo: FilesInfo;
 	importNumber: number;
 	order: number;
 	simulation: number;
 	run: number;
 	path: string;
-	cashflow: CashflowSet;
-	collar: CollarEntry[];
-	financial: FinancialData;
-	operational: OperationalData;
-	parameters: ParametersData;
+	cashflow: Cashflow;
+	collar: Collar[];
+	composite: Composite[];
+	financial: Financial;
+	operational: Operational;
+	parameters: Parameters;
 	evaluationParameters: EvaluationParameters;
 	extractionGeometry: ExtractionGeometry;
-	metals: MetalEntry[];
-	processStreams: ProcessStreamEntry[];
+	metals: Metal[];
+	streams: Stream[];
 	projectMetadata: ProjectMetadata;
-	untransform: UntransformData;
+	untransform: Untransform;
+	grade: Grade;
 	projectId: string;
 	createdAt: string;
 	updatedAt: string;
+	presentationId: string;
 }
 
-export interface CashflowSet {
-	yearly: CashflowEntry[];
-	quarterly: CashflowEntry[];
-	monthly: CashflowEntry[];
+export interface FilesInfo {
+	grade: FileStatus;
+	collar: FileStatus;
+	cashflow: FileStatus;
+	composite: FileStatus;
+	parameters: FileStatus;
 }
 
-export interface CashflowEntry {
-	goldCost: number;
-	wasteCost: number;
+export interface FileStatus {
+	exists: boolean;
+	missingFields: string[];
+}
+
+export interface Cashflow {
+	yearly: CashflowPeriod[];
+	monthly: CashflowPeriod[];
+	quarterly: CashflowPeriod[];
+}
+
+export interface CashflowPeriod {
+	REEsCost: number;
+	WasteCost: number;
 	miningCost: number;
 	netRevenue: number;
-	goldRevenue: number;
+	REEsRevenue: number;
+	WasteRevenue: number;
 	grossRevenue: number;
-	wasteRevenue: number;
 	periodBeginning: string;
-	beneficiationCost: number;
 	totalProcessingCost: number;
-	beneficiationRevenue: number;
-	cumulativeNetCash: number;
 }
 
-export interface CollarEntry {
+export interface Collar {
 	dia: number;
 	depth: number;
 	serial: number;
+	REEsVol: number;
 	azimuth: number;
 	bottomX: number;
 	bottomY: number;
@@ -58,50 +78,108 @@ export interface CollarEntry {
 	collarX: number;
 	collarY: number;
 	collarZ: number;
-	goldVol: number;
-	goldAuKg: number;
-	goldMass: number;
+	REEsMass: number;
+	WasteVol: number;
 	netValue: number;
-	wasteVol: number;
-	goldAuPpm: number;
-	wasteAuKg: number;
-	wasteMass: number;
-	wasteAuPpm: number;
+	WasteMass: number;
+	REEsDy2O3Kg: number;
+	REEsNd2O3Kg: number;
 	inclination: number;
-	beneficiationVol: number;
-	beneficiationMass: number;
+	REEsDy2O3Pct: number;
+	REEsNd2O3Pct: number;
+	REEsPr6O11Kg: number;
+	WasteDy2O3Kg: number;
+	WasteNd2O3Kg: number;
+	REEsPr6O11Pct: number;
+	WasteDy2O3Pct: number;
+	WasteNd2O3Pct: number;
+	WastePr6O11Kg: number;
+	bottomRenderX: number;
+	bottomRenderY: number;
+	bottomRenderZ: number;
+	collarRenderX: number;
+	collarRenderY: number;
+	collarRenderZ: number;
+	WastePr6O11Pct: number;
 }
 
-export interface FinancialData {
-	aisc: number;
+export interface Composite {
+	month: number;
+	miningCost: number;
+	Dy2O3KgSold: number;
+	Nd2O3KgSold: number;
+	netCashFlow: number;
+	tonnesMined: number;
+	Dy2O3Revenue: number;
+	Nd2O3Revenue: number;
+	Pr6O11KgSold: number;
+	totalRevenue: number;
+	Pr6O11Revenue: number;
+	REEsProcessingCost: number;
+	REEsTonnesProcessed: number;
+	WasteProcessingCost: number;
+	totalProcessingCost: number;
+	WasteTonnesProcessed: number;
+}
+
+export interface Financial {
 	capex: number;
+	monthly: FinancialMonthly[];
 	revenue: number;
 	allInCost: number;
 	miningCost: number;
 	closureCost: number;
 	imagingCost: number;
 	netCashFlow: number;
-	revenueMeter: number;
 	revenueTonne: number;
-	cashFlowMeter: number;
-	allInCostMeter: number;
 	allInCostTonne: number;
 	extractionCost: number;
 	closureCostTonne: number;
 	imagingCostTonne: number;
 	netCashFlowTonne: number;
-	processingCostOre: number;
 	extractionCostTonne: number;
-	processingCostWaste: number;
 	totalProcessingCost: number;
 	totalProcessingCostTonne: number;
 }
 
-export interface OperationalData {
+export interface FinancialMonthly {
+	month: number;
+	metals: FinancialMetal[];
+	streams: FinancialStream[];
+	miningCost: number;
+	Dy2O3KgSold: number;
+	Nd2O3KgSold: number;
+	netCashFlow: number;
+	tonnesMined: number;
+	Dy2O3Revenue: number;
+	Nd2O3Revenue: number;
+	Pr6O11KgSold: number;
+	totalRevenue: number;
+	Pr6O11Revenue: number;
+	REEsProcessingCost: number;
+	REEsTonnesProcessed: number;
+	WasteProcessingCost: number;
+	totalProcessingCost: number;
+	WasteTonnesProcessed: number;
+	[key: string]: number | FinancialMetal[] | FinancialStream[];
+
+}
+
+export interface FinancialMetal {
+	name: string;
+	sold: number;
+	revenue: number;
+}
+
+export interface FinancialStream {
+	name: string;
+	processingCost: number;
+	tonnesProcessed: number;
+}
+
+export interface Operational {
 	lom: number;
-	metals: OperationalMetal[];
 	totalLength: number;
-	goldCostTonne: number;
 	holeLengthAvg: number;
 	holeLengthMax: number;
 	holeLengthMin: number;
@@ -109,41 +187,10 @@ export interface OperationalData {
 	holeInclinationAvg: number;
 	holeInclinationMax: number;
 	holeInclinationMin: number;
-	totalCommodityVolume: number;
 	quantityOfHolesPerInclination: number[];
-
 }
 
-export interface OperationalMetalFields {
-	per: string;
-	vol: string;
-	cost: string;
-	mass: string;
-	unit: string;
-	revenue: string;
-	recovery: string;
-	wastePer: string;
-	wasteUnit: string;
-}
-
-export interface OperationalMetal {
-	per: string;
-	cost: number;
-	mass: number;
-	name: string;
-	unit: string;
-	grade: number;
-	price: number;
-	fields: OperationalMetalFields;
-	recovery: number;
-	wastePer: number;
-	commodity: number;
-	costTonne: number;
-	wasteUnit: number;
-	wasteRecovery: number;
-}
-
-export interface ParametersData {
+export interface Parameters {
 	availability: number;
 	discountRate: number;
 	millRecovery: number;
@@ -152,10 +199,8 @@ export interface ParametersData {
 	numberOfDrills: number;
 	maximumHoleLength: number;
 	rateOfPenetration: number;
-	wasteCostPerTonne: number;
 	minimumHoleInclination: number;
 	processingCostPerTonne: number;
-	baselineMiningCostPerTonne: number;
 }
 
 export interface EvaluationParameters {
@@ -181,33 +226,31 @@ export interface ExtractionGeometry {
 	resamplePrecision: number;
 }
 
-export interface MetalEntry {
+export interface Metal {
 	per: string;
 	name: string;
 	unit: string;
 	price: number;
-	fields: MetalFields;
-	cost: number;
+	streams: MetalStream[];
+}
+
+export interface MetalStream {
+	mass: number;
+	name: string;
+	unit: number;
+	grade: number;
 	recovery: number;
-	wasteRecovery: number;
+	commodity: number;
 }
 
-export interface MetalFields {
-	per: string;
-	vol: string;
-	cost: string;
-	mass: string;
-	unit: string;
-	revenue: string;
-	wastePer: string;
-	wasteUnit: string;
-}
-
-export interface ProcessStreamEntry {
+export interface Stream {
+	vol: number;
 	cost: number;
+	mass: number;
 	name: string;
 	maxRate: number | null;
-	auRecovery: number;
+	revenue: number;
+	costTonne: number;
 }
 
 export interface ProjectMetadata {
@@ -231,7 +274,24 @@ export interface ProjectMetadata {
 	detectedSubblockScheme: string[];
 }
 
-export interface UntransformData {
+export interface Untransform {
 	matrix: number[][];
 	multiplier: number;
 }
+
+export interface Grade {
+	mined: GradeMetal[];
+	processed: GradeProcessed[];
+}
+
+export interface GradeMetal {
+	name: string;
+	grade: number;
+}
+
+export interface GradeProcessed {
+	name: string;
+	metals: GradeMetal[];
+}
+
+export interface ScenarioData { }

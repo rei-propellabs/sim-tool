@@ -22,6 +22,7 @@ export const ScenariosTabContent = ({ companyName }: ScenariosTabContentProps) =
     dateCreated: string;
     lastUpdated: string;
     action: string;
+    projectId: string;
   }
   const NUM_ROWS = 10;
   const navigate = useNavigate();
@@ -62,7 +63,8 @@ export const ScenariosTabContent = ({ companyName }: ScenariosTabContentProps) =
           name:`${companyName ?? ""} Presentation`,
           dateCreated: new Date(presentation.createdAt).toLocaleDateString(),
           lastUpdated: new Date(presentation.updatedAt).toLocaleDateString(),
-          action: ""
+          action: "",
+          projectId: presentation.projectId,
         }))
       );
       setNumRows(presentations.length);
@@ -94,13 +96,12 @@ export const ScenariosTabContent = ({ companyName }: ScenariosTabContentProps) =
       key: 'actions',
       header: 'Actions',
       render: (scenario) => {
-        // if (scenario.uploadCount === 0) return null;
         return (
           <button
             className={"primary-button"}
             onClick={(e) => {
               e.stopPropagation();
-              navigate(`/admin/scenarios?orgId=${query.get("orgId")}`);
+              navigate(`/admin/scenarios?orgId=${query.get("orgId")}&projectId=${scenario.projectId}`);
             }}>
             <Presentation size={16} />
             Launch Presentation

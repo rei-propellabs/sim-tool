@@ -58,7 +58,7 @@ export const OverviewSection: React.FC<OverviewSectionProps> = (props) => {
       if (metals.length === 1) {
         needTwoRows = false
       } else if (metals.length === 2) {
-        const maxCharLength = Math.max(...metals.map(metal => Math.round(metal.costTonne ).toLocaleString().length + 1))
+        const maxCharLength = Math.max(...metals.map(metal => Math.round(metal.costTonne).toLocaleString().length + 1))
         needTwoRows = maxCharLength > 7
       } else {
         needTwoRows = true
@@ -91,7 +91,7 @@ export const OverviewSection: React.FC<OverviewSectionProps> = (props) => {
           values={currentData.metals.map(metal => ({ name: metal.name, value: Math.round(metal.price).toLocaleString() }))}
           title={"Commodity Price"}
           unitPrefix="$"
-          unitSuffix={`/` + (metals[0]?.per || "")}
+          unitSuffix={`/` + (currentData.metals[0]?.per || "")}
         />
         <div className={styles.row}>
           <ResponsiveMetalCard
@@ -104,12 +104,24 @@ export const OverviewSection: React.FC<OverviewSectionProps> = (props) => {
             unitSuffix="m"
           />
         </div>
+        {
+          currentData.metals.map((metal) => {
+            return <ResponsiveMetalCard
+              values={metal.streams.map((stream) => (
+                { name: stream.name, value: Math.round(stream.recovery).toLocaleString() }))}
+              title={`${metal.name} Recovery`}
+              unitSuffix="%"
+            />
+          })
+        }
+
         <ResponsiveMetalCard
-          values={currentData.metals.map((metal) => ({ name: metal.name, value: Math.round(metal.recovery).toLocaleString() }))}
-          title={"Mill Recovery"}
-          unitSuffix="%"
+          values={currentData.streams.map((stream) => (
+            { name: stream.name, value: Math.round(stream.costTonne).toLocaleString() }))}
+          title={`Processing Cost per Tonne`}
+          unitPrefix="$"
         />
-        {processingAndWasteCost()}
+        {/* {processingAndWasteCost()} */}
       </div>
     )
   }
@@ -127,9 +139,9 @@ export const OverviewSection: React.FC<OverviewSectionProps> = (props) => {
           rows={[
             {
               leftLabel: "Revenue",
-              leftValue: `${displayValue(formatNumberWithAbbreviation(metric.revenue, 1), "$")}`,
+              leftValue: `${displayValue(localeNumber(metric.revenue, 0), "$")}`,
               rightLabel: "/tonne",
-              rightValue: `${displayValue(formatNumberWithAbbreviation(metric.revenueTonne, 1), "$")}`
+              rightValue: `${displayValue(localeNumber(metric.revenueTonne, 0), "$")}`
             },
           ]}
         />
@@ -138,7 +150,7 @@ export const OverviewSection: React.FC<OverviewSectionProps> = (props) => {
           rows={[
             {
               leftLabel: "Capex",
-              leftValue: `${displayValue(formatNumberWithAbbreviation(metric.capex, 1), "$")}`,
+              leftValue: `${displayValue(localeNumber(metric.capex, 0), "$")}`,
             },
           ]}
         />
@@ -147,21 +159,21 @@ export const OverviewSection: React.FC<OverviewSectionProps> = (props) => {
           rows={[
             {
               leftLabel: "Extraction Cost",
-              leftValue: `${displayValue(formatNumberWithAbbreviation(metric.extractionCost, 1), "$")}`,
+              leftValue: `${displayValue(localeNumber(metric.extractionCost, 0), "$")}`,
               rightLabel: "/tonne",
-              rightValue: `${displayValue(formatNumberWithAbbreviation(metric.extractionCostTonne, 1), "$")}`
+              rightValue: `${displayValue(localeNumber(metric.extractionCostTonne, 1), "$")}`
             },
             {
               leftLabel: "Imaging Cost",
-              leftValue: `${displayValue(formatNumberWithAbbreviation(metric.imagingCost, 1), "$")}`,
+              leftValue: `${displayValue(localeNumber(metric.imagingCost, 0), "$")}`,
               rightLabel: "/tonne",
-              rightValue: `${displayValue(formatNumberWithAbbreviation(metric.imagingCostTonne, 1), "$")}`
+              rightValue: `${displayValue(localeNumber(metric.imagingCostTonne, 0), "$")}`
             },
             {
               leftLabel: "Closure Cost",
-              leftValue: `${displayValue(formatNumberWithAbbreviation(metric.closureCost, 1), "$")}`,
+              leftValue: `${displayValue(localeNumber(metric.closureCost, 0), "$")}`,
               rightLabel: "/tonne",
-              rightValue: `${displayValue(formatNumberWithAbbreviation(metric.closureCostTonne, 1), "$")}`
+              rightValue: `${displayValue(localeNumber(metric.closureCostTonne, 0), "$")}`
             },
           ]}
         />
@@ -170,9 +182,9 @@ export const OverviewSection: React.FC<OverviewSectionProps> = (props) => {
           rows={[
             {
               leftLabel: "Total Processing Cost",
-              leftValue: `${displayValue(formatNumberWithAbbreviation(metric.totalProcessingCost, 1), "$")}`,
+              leftValue: `${displayValue(localeNumber(metric.totalProcessingCost, 0), "$")}`,
               rightLabel: "/tonne",
-              rightValue: `${displayValue(formatNumberWithAbbreviation(metric.totalProcessingCostTonne, 1), "$")}`
+              rightValue: `${displayValue(localeNumber(metric.totalProcessingCostTonne, 0), "$")}`
             },
           ]}
         />
@@ -181,7 +193,7 @@ export const OverviewSection: React.FC<OverviewSectionProps> = (props) => {
           rows={[
             {
               leftLabel: "Total Project Cost",
-              leftValue: `${displayValue(formatNumberWithAbbreviation(metric.allInCost, 1), "$")}`,
+              leftValue: `${displayValue(localeNumber(metric.allInCost, 0), "$")}`,
               dark: true,
             },
           ]}
@@ -193,9 +205,9 @@ export const OverviewSection: React.FC<OverviewSectionProps> = (props) => {
           rows={[
             {
               leftLabel: "Project Net Cash Flow",
-              leftValue: `${displayValue(formatNumberWithAbbreviation(metric.netCashFlow, 1), "$")}`,
+              leftValue: `${displayValue(localeNumber(metric.netCashFlow, 0), "$")}`,
               rightLabel: "/tonne",
-              rightValue: `${displayValue(formatNumberWithAbbreviation(metric.netCashFlowTonne, 1), "$")}`,
+              rightValue: `${displayValue(localeNumber(metric.netCashFlowTonne, 0), "$")}`,
             },
           ]}
         />
@@ -211,7 +223,6 @@ export const OverviewSection: React.FC<OverviewSectionProps> = (props) => {
     const metric = currentData.operational
 
     const metals = metric.metals
-
 
     const gradeAndLom = () => {
       let needTwoRows = false
@@ -288,9 +299,44 @@ export const OverviewSection: React.FC<OverviewSectionProps> = (props) => {
     const numHolesLabels = ["35-49", "50-59", "60-69", "70-79", "80-90"]
     return (
       <div className={styles.outputGridRight}>
-        {gradeAndLom()}
-        <span /><span />
+        {/* {gradeAndLom()} */}
+        <MetricCardTwoRows
+          key="lom"
+          value={`${displayValue(metric.lom)}`}
+          label="LOM"
+          description="Life of Mine"
+          unitSuffix="mo" />
+        <ResponsiveMetalCard
+          values={currentData.metals.map((metal) => ({
+            name: metal.name,
+            value: Math.round(
+              metal.streams
+                .filter(stream => stream.name !== "Waste")
+                .map(stream => stream.commodity)
+                .reduce((a, b) => a + b, 0)
+            ).toLocaleString()
+          }))}
+          unitSuffix={`${currentData.metals[0]?.per || ""}`}
+          title={"Total Commodity Volume"}
+        />
 
+        {
+          currentData.metals.map((metal) => (
+            <ResponsiveMetalCard
+              values={metal.streams.map(stream => ({ name: stream.name, value: localeNumber(stream.grade, 3) ?? "" }))}
+              title={`${metal.name} Grade`}
+              unitSuffix={metal.unit || ""}
+            />
+          ))
+        }
+        {/* <ResponsiveMetalCard
+          key={"MassOfMaterialsProcessed"}
+          values={currentData.metals.map(metal => ({ name: metal.name, value: localeNumber(metal.mass) ?? "" }))}
+          title={`Mass of Materials Processed`}
+          unitSuffix={"t"}
+        /> */}
+
+        <span /><span />
         <view className={styles.row}>
           <ResponsiveMetalCard
             values={[{ name: "", value: metric.extractionHoles }]}
@@ -304,13 +350,6 @@ export const OverviewSection: React.FC<OverviewSectionProps> = (props) => {
           />
         </view>
 
-        {wasteAndOreMass()}
-
-        <ResponsiveMetalCard
-          values={metals.map((metal) => ({ name: metal.name, value: Math.round(metal.commodity).toLocaleString() }))}
-          unitSuffix="oz"
-          title={"Total Commodity Volume"}
-        />
         <MetricCardThreeRows topLabels={["Hole Length"]}
           values={[
             { key: "holeLengthMin", value: `${displayValue(localeNumber(metric.holeLengthMin), "", "")}`, label: "MIN", unitSuffix: "m" },

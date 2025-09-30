@@ -1,10 +1,29 @@
 export function getMetricBgClasses(values: number[], higherIsBetter: boolean): string[] {
-  if (values.length !== 3) return values.map(() => medium); // fallback
-
   const good = "var(--good-metrics)";
   const bad = "var(--bad-metrics)";
   const medium = "var(--medium-metrics)";
-  
+  const none = "transparent";
+
+  // If only one value, return none
+  if (values.length === 1) return [none];
+
+  // If two values
+  if (values.length === 2) {
+    const [val1, val2] = values;
+    // If both values are the same, return none for both
+    if (val1 === val2) return [none, none];
+    
+    // Otherwise, assign good/bad based on higherIsBetter
+    if (higherIsBetter) {
+      return val1 > val2 ? [good, bad] : [bad, good];
+    } else {
+      return val1 < val2 ? [good, bad] : [bad, good];
+    }
+  }
+
+  // For three or more values, use original logic
+  if (values.length !== 3) return values.map(() => medium); // fallback
+
   const min = Math.min(...values);
   const max = Math.max(...values);
 
@@ -45,7 +64,7 @@ export function getMetricBgClasses(values: number[], higherIsBetter: boolean): s
 
 export function getValuesRelativeToMax(values: number[]): number[] {
   const max = Math.max(...values);
-  if (max === 0) return values.map(() => 0);  
+  if (max === 0) return values.map(() => 0);
 
   return values.map(v => ((v / max)));
 }
