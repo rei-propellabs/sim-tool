@@ -3,128 +3,235 @@ import finSimStyles from '../FinancialSimulationPage.module.css';
 import SummaryTable from "./SummaryTable/SummaryTable";
 import { exportToExcel } from "./ExportToExcel";
 import { SummaryTableType } from "types/SummaryTableType"
+import { Financial } from "api/models/ScenarioData";
 
 interface MonthlySummarySectionProps {
-  data: any;
-  scenario: string;
+  scenarioTitle: string;
+  scenarioData: any[];
 }
-const tableData: SummaryTableType = {
-  columns: ["-1", "0", "1", "2", "3", "4", "5", "6", "7", "8", "9", "10"],
-  sections: [
-    {
-      title: "Project Summary by Year",
-      rows: [
-        {
-          label: "Production in Tonnes",
-          values: [123, 123, 123, 123, 123, 123, 123, 123, 123, 123, 123, 123],
-          type: "number",
-        },
-        {
-          label: "Production in Oz",
-          values: [123, 123, 123, 123, 123, 123, 123, 123, 123, 123, 123, 123],
-          type: "number",
-        },
-        {
-          label: "Meters Drilled",
-          values: [123, 123, 123, 123, 123, 123, 123, 123, 123, 123, 123, 123],
-          type: "number",
-        },
-        {
-          label: "Holes",
-          values: [123, 123, 123, 123, 123, 123, 123, 123, 123, 123, 123, 123],
-          type: "number",
-        },
-        {
-          label: "Revenue",
-          values: [123, 123, 123, 123, 123, 123, 123, 123, 123, 123, 123, 123],
-          type: "currency",
-        },
-        {
-          label: "Operating Cost",
-          values: [123, 123, 123, 123, 123, 123, 123, 123, 123, 123, 123, 123],
-          type: "currency",
-        },
-        {
-          label: "Operating Income",
-          values: [123, 123, 123, 123, 123, 123, 123, 123, 123, 123, 123, 123],
-          type: "currency",
-        },
-        {
-          label: "CAPEX",
-          values: [123, 123, 123, 123, 123, 123, 123, 123, 123, 123, 123, 123],
-          type: "currency",
-        },
-        {
-          label: "Project FCF*",
-          values: [123, 123, 123, 123, 123, 123, 123, 123, 123, 123, 123, 123],
-          type: "currency",
-        },
-      ],
-    },
-    {
-      title: "Unit Economics / Tonne",
-      rows: [
-        {
-          label: "Revenue",
-          values: [123456, 123456, 123456, 123456, 123456, 123456, 123456, 123456, 123456, 123456, 123456, 123456],
-          type: "currency",
-        },
-        {
-          label: "Mining Cost",
-          values: [123456, 123456, 123456, 123456, 123456, 123456, 123456, 123456, 123456, 123456, 123456, 123456],
-          type: "currency",
-        },
-        {
-          label: "Operating Cost",
-          values: [123456, 123456, 123456, 123456, 123456, 123456, 123456, 123456, 123456, 123456, 123456, 123456],
-          type: "currency",
-        },
-        {
-          label: "All-In Cost",
-          values: [123456, 123456, 123456, 123456, 123456, 123456, 123456, 123456, 123456, 123456, 123456, 123456],
-          type: "currency",
-        },
-      ],
-    },
-    {
-      title: "Unit Economics / Oz",
-      rows: [
-        {
-          label: "Revenue",
-          values: [123456, 123456, 123456, 123456, 123456, 123456, 123456, 123456, 123456, 123456, 123456, 123456],
-          type: "currency",
-        },
-        {
-          label: "Mining Cost",
-          values: [123456, 123456, 123456, 123456, 123456, 123456, 123456, 123456, 123456, 123456, 123456, 123456],
-          type: "currency",
-        },
-        {
-          label: "Operating Cost",
-          values: [123456, 123456, 123456, 123456, 123456, 123456, 123456, 123456, 123456, 123456, 123456, 123456],
-          type: "currency",
-        },
-        {
-          label: "All-In Cost",
-          values: [123456, 123456, 123456, 123456, 123456, 123456, 123456, 123456, 123456, 123456, 123456, 123456],
-          type: "currency",
-        },
-      ],
-    },
-  ],
-}
+// const tableData: SummaryTableType = {
+//   columns: ["-1", "0", "1", "2", "3", "4", "5", "6", "7", "8", "9", "10"],
+//   sections: [
+//     {
+//       title: "Project Summary by Year",
+//       rows: [
+//         {
+//           label: "Production in Tonnes",
+//           values: [123, 123, 123, 123, 123, 123, 123, 123, 123, 123, 123, 123],
+//           type: "number",
+//         },
+//         {
+//           label: "Production in Oz",
+//           values: [123, 123, 123, 123, 123, 123, 123, 123, 123, 123, 123, 123],
+//           type: "number",
+//         },
+//         {
+//           label: "Meters Drilled",
+//           values: [123, 123, 123, 123, 123, 123, 123, 123, 123, 123, 123, 123],
+//           type: "number",
+//         },
+//         {
+//           label: "Holes",
+//           values: [123, 123, 123, 123, 123, 123, 123, 123, 123, 123, 123, 123],
+//           type: "number",
+//         },
+//         {
+//           label: "Revenue",
+//           values: [123, 123, 123, 123, 123, 123, 123, 123, 123, 123, 123, 123],
+//           type: "currency",
+//         },
+//         {
+//           label: "Operating Cost",
+//           values: [123, 123, 123, 123, 123, 123, 123, 123, 123, 123, 123, 123],
+//           type: "currency",
+//         },
+//         {
+//           label: "Operating Income",
+//           values: [123, 123, 123, 123, 123, 123, 123, 123, 123, 123, 123, 123],
+//           type: "currency",
+//         },
+//         {
+//           label: "CAPEX",
+//           values: [123, 123, 123, 123, 123, 123, 123, 123, 123, 123, 123, 123],
+//           type: "currency",
+//         },
+//         {
+//           label: "Project FCF*",
+//           values: [123, 123, 123, 123, 123, 123, 123, 123, 123, 123, 123, 123],
+//           type: "currency",
+//         },
+//       ],
+//     },
+//     {
+//       title: "Unit Economics / Tonne",
+//       rows: [
+//         {
+//           label: "Revenue",
+//           values: [123456, 123456, 123456, 123456, 123456, 123456, 123456, 123456, 123456, 123456, 123456, 123456],
+//           type: "currency",
+//         },
+//         {
+//           label: "Mining Cost",
+//           values: [123456, 123456, 123456, 123456, 123456, 123456, 123456, 123456, 123456, 123456, 123456, 123456],
+//           type: "currency",
+//         },
+//         {
+//           label: "Operating Cost",
+//           values: [123456, 123456, 123456, 123456, 123456, 123456, 123456, 123456, 123456, 123456, 123456, 123456],
+//           type: "currency",
+//         },
+//         {
+//           label: "All-In Cost",
+//           values: [123456, 123456, 123456, 123456, 123456, 123456, 123456, 123456, 123456, 123456, 123456, 123456],
+//           type: "currency",
+//         },
+//       ],
+//     },
+//     {
+//       title: "Unit Economics / Oz",
+//       rows: [
+//         {
+//           label: "Revenue",
+//           values: [123456, 123456, 123456, 123456, 123456, 123456, 123456, 123456, 123456, 123456, 123456, 123456],
+//           type: "currency",
+//         },
+//         {
+//           label: "Mining Cost",
+//           values: [123456, 123456, 123456, 123456, 123456, 123456, 123456, 123456, 123456, 123456, 123456, 123456],
+//           type: "currency",
+//         },
+//         {
+//           label: "Operating Cost",
+//           values: [123456, 123456, 123456, 123456, 123456, 123456, 123456, 123456, 123456, 123456, 123456, 123456],
+//           type: "currency",
+//         },
+//         {
+//           label: "All-In Cost",
+//           values: [123456, 123456, 123456, 123456, 123456, 123456, 123456, 123456, 123456, 123456, 123456, 123456],
+//           type: "currency",
+//         },
+//       ],
+//     },
+//   ],
+// }
 
-const scenarioTableData = [tableData, tableData, tableData]
-const fileName = "SummaryTable"
+const MonthlySummarySection: React.FC<MonthlySummarySectionProps> = ({ scenarioTitle, scenarioData }) => {
 
-const MonthlySummarySection: React.FC<MonthlySummarySectionProps> = ({ data, scenario }) => {
+  const parseData = (financial: Financial) => {
+    // Get unique metal names from the first month
+    const uniqueMetals = financial.monthly[0]?.metals?.map(metal => metal.name) || [];
+
+    // Create revenue and sold rows for each metal in the specified order
+    const metalRows = uniqueMetals.flatMap(metalName => [
+      // Revenue row for this metal
+      {
+        label: `Revenue from ${metalName}`,
+        values: [null, ...financial.monthly.map(month => {
+          const metal = month.metals.find(m => m.name === metalName);
+          return metal ? metal.revenue : 0;
+        })],
+        type: "currency" as const,
+      },
+      // Sold row for this metal
+      {
+        label: `${metalName} Sold`,
+        values: [null, ...financial.monthly.map(month => {
+          const metal = month.metals.find(m => m.name === metalName);
+          return metal ? metal.sold : 0;
+        })],
+        type: "number" as const,
+      }
+    ]);
+
+    const uniqueStreams = financial.monthly[0]?.streams?.map(s => s.name) || [];
+    const streamProcessingCostRows = uniqueStreams.flatMap(streamName => [
+      // Revenue row for this metal
+      {
+        label: `${streamName} Processing Cost`,
+        values: [null, ...financial.monthly.map(month => {
+          const stream = month.streams.find(s => s.name === streamName);
+          return stream ? stream.processingCost : 0;
+        })],
+        type: "currency" as const,
+      },
+    ],
+    );
+
+    const streamTonnesProcessedRows = uniqueStreams.flatMap(streamName => [
+      // Revenue row for this metal
+      {
+        label: `${streamName} Processed (Tonnes)`,
+        values: [null, ...financial.monthly.map(month => {
+          const stream = month.streams.find(s => s.name === streamName);
+          return stream ? stream.tonnesProcessed : 0;
+        })],
+        type: "number" as const,
+      },
+    ],
+    );
+
+    const tableData: SummaryTableType = {
+      columns: ["0", ...financial.monthly.map(month => month.month.toString())],
+      sections: [
+        {
+          title: "Project Summary by Month",
+          rows: [
+            {
+              label: "Revenue",
+              values: [null, ...financial.monthly.map(item => item.totalRevenue)],
+              type: "currency",
+            },
+            ...metalRows, // Add all the metal revenue and sold rows here
+            {
+              label: "Mining Cost",
+              values: [null, ...financial.monthly.map(item => item.miningCost)],
+              type: "currency",
+            },
+            {
+              label: "Total Material Mined (Tonnes)",
+              values: [null, ...financial.monthly.map(item => item.tonnesMined)],
+              type: "number",
+            },
+            {
+              label: "Total Processing Cost",
+              values: [null, ...financial.monthly.map(item => item.totalProcessingCost)],
+              type: "currency",
+            },
+            {
+              label: "Total Processing Cost",
+              values: [null, ...financial.monthly.map(item => item.totalProcessingCost)],
+              type: "currency",
+            },
+            ...streamProcessingCostRows,
+            ...streamTonnesProcessedRows,
+            {
+              label: "Capex",
+              values: financial.monthly.map(() => financial.capex),
+              type: "currency",
+            },
+            {
+              label: "Net Cash Flow",
+              values: [null, ...financial.monthly.map(item => item.netCashFlow)],
+              type: "currency",
+            }
+          ],
+        },
+      ]
+    }
+
+    return tableData;
+  }
+  const scenarioTableData = [parseData(scenarioData[0]?.financial), parseData(scenarioData[1]?.financial), parseData(scenarioData[2]?.financial)];
+  const fileName = "SummaryTable"
+
+
   return (
     <div className={finSimStyles.sectionContainer}>
 
       <div className={finSimStyles.heading}>
         <div className={finSimStyles.left}>
-          <div className={finSimStyles.scenarioLabel}>{scenario}</div>
-          <div className={finSimStyles.title}>Project Summary by Year</div>
+          <div className={finSimStyles.scenarioLabel}>{scenarioTitle}</div>
+          <div className={finSimStyles.title}>Project Summary by Month</div>
         </div>
         <div className={finSimStyles.right}>
           <button onClick={() => exportToExcel(scenarioTableData, fileName)} className={"primary-button"}>
@@ -133,7 +240,7 @@ const MonthlySummarySection: React.FC<MonthlySummarySectionProps> = ({ data, sce
 
         </div>
       </div>
-      <SummaryTable columns={tableData.columns} sections={tableData.sections} />
+      <SummaryTable columns={scenarioTableData[0].columns} sections={scenarioTableData[0].sections} />
 
     </div>
   )

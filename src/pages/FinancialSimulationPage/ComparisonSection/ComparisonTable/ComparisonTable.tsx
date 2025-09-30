@@ -12,10 +12,13 @@ export interface ComparisonTableProps {
   financialOutputData: FinancialData[];
   operationalOutputData: OperationalData[];
   numScenarios: number;
+  operationalData?: any[];
+  constantAssumptions?: any[];
+
 }
 
 const ComparisonTable = (props: ComparisonTableProps) => {
-  const { cashFlowData, keyAssumptions, financialOutputData, operationalOutputData, numScenarios } = props
+  const { cashFlowData, keyAssumptions, financialOutputData, operationalOutputData, numScenarios, operationalData, constantAssumptions } = props
   const [showMore, setShowMore] = useState(false)
 
   const formatCurrency = (value: number) => {
@@ -147,35 +150,18 @@ const ComparisonTable = (props: ComparisonTableProps) => {
   }
 
   const keyAssumptionRow = (label: string, values: number[], unitPrefix: string, unitSuffix: string) => {
-    // const values = keyAssumptions.map((item) => item[key as keyof ParametersData] as number);
 
-    // const relativeDifferences = values.map((value, idx) =>
-    //   idx === 0 ? 0 : Number(((value - values[0]) / values[0] * 100).toFixed(2))
-    // );
-
-    // const sameValues = relativeDifferences.every((val) => val === 0);
-    // if (sameValues && !showMore) {
-    //   return null
-    // }
-
-    const formatValue = (value: number) => {
-      // if (unitSuffix === "$") {
-      //   return formatCurrency(value);
-      // } else if (unitSuffix.startsWith("$/")) {
-      //   return <span>{formatCurrency(value)} / {unitSuffix.slice(2)}</span>;
-      // } else {
-      //   return `${value}${unitSuffix}`;
-      // }
+    const formatValue = (value: number, unitPrefix: string | undefined, unitSuffix: string | undefined) => {
       return `${unitPrefix ?? ""}${value}${unitSuffix ?? ""}`
     };
 
 
     const multiStreamValue = (values: any[]) => {
       return values.map((val, idx) => (
-          <div className={styles.verticalStack}>
-            <span>{val.name}</span>
-            {formatValue(val.value)}
-          </div>
+        <div className={styles.verticalStack}>
+          <span className={styles.verticalStackLabel}>{val.name}</span>
+          {formatValue(val.value, val.unitPrefix, val.unitSuffix)}
+        </div>
       ));
     }
 
@@ -185,7 +171,7 @@ const ComparisonTable = (props: ComparisonTableProps) => {
           {
             Array.isArray(value) === true ? multiStreamValue(value) :
               value === undefined ? <span>999</span> :
-                <span>{formatValue(value)}</span>
+                <span>{formatValue(value, unitPrefix, unitSuffix)}</span>
           }
         </div>
       )))
@@ -209,7 +195,7 @@ const ComparisonTable = (props: ComparisonTableProps) => {
     )), colorCodes);
   }
 
-  const financialSubRow = (label: string, key: string, perKey: string, higherIsBetter: boolean, indentLabel = false) => {
+  const financialSplitRow = (label: string, key: string, perKey: string, higherIsBetter: boolean, indentLabel = false) => {
     const values = financialOutputData.map((item) => item[key as keyof FinancialOutputData]);
     const perValues = financialOutputData.map((item) => item[perKey as keyof FinancialOutputData]);
 
@@ -298,37 +284,43 @@ const ComparisonTable = (props: ComparisonTableProps) => {
   }
 
   const keyAssumptionSection = () => {
-    // const keyAssumptionRows = [
-    //   keyAssumptionRow("Number of Drills", "numberOfDrills", ""),
-    //   keyAssumptionRow("Cutter Head Size", "cutterHeadSize", "m"),
-    //   keyAssumptionRow("Commodity Price", "commodityPrice", ""),
 
-
-    //   keyAssumptionRow("Processing Cost per Tonne", "processingCostPerTonne", "$"),
-    //   keyAssumptionRow("Minimum Hole Inclination", "minimumHoleInclination", "°"),
-    //   keyAssumptionRow("Maximum Hole Length", "maximumHoleLength", "m"),
-
-    // ];
-    const keyAssumptionRows = keyAssumptions.map((assumption, i) => {
+    let keyAssumptionRows: any[] = []
+    keyAssumptionRows = keyAssumptions.map((assumption, i) => {
+      if (showMore === false) {
+        const allSame = assumption.values.every((val: number, _, arr: number[]) => val === arr[0]);
+        if (allSame) {
+          return null;
+        }
+      }
       return (
         keyAssumptionRow(assumption.title, assumption.values, assumption.unitPrefix, assumption.unitSuffix)
       )
-    })
+    }).filter(Boolean)
 
-    // const constantAssumptions = [
-    //   keyAssumptionRow("Rate of Penetration", "rateOfPenetration", "m / hr"),
-    //   keyAssumptionRow("Availability", "availability", "%"),
-    //   keyAssumptionRow("Discount Rate", "discountRate", "%"),
-    // ]
-    const visibleRows = keyAssumptionRows.filter(Boolean);
+    let constantAssumptionRows: any[] = []
+    if (constantAssumptions !== undefined) {
+      constantAssumptionRows = constantAssumptions.map((assumption, i) => {
+        if (showMore === false) {
+          const allSame = assumption.values.every((val: number, _, arr: number[]) => val === arr[0]);
+          if (allSame) {
+            return;
+          }
+        }
+        return (
+          keyAssumptionRow(assumption.title, assumption.values, assumption.unitPrefix, assumption.unitSuffix)
+        )
+      }).filter(Boolean)
+    }
 
+    console.log("constantAssumptionRows", constantAssumptionRows)
     return (
       <>
-        {visibleRows.length > 0 && sectionTitleRow("KEY ASSUMPTIONS", true)}
-        {visibleRows}
+        {keyAssumptionRows.length > 0 && sectionTitleRow("KEY ASSUMPTIONS", true)}
+        {keyAssumptionRows}
 
-        {/* {visibleRows.length > 0 && sectionTitleRow("CONSTANT ASSUMPTIONS", false)}
-        {constantAssumptions} */}
+        {constantAssumptionRows.length > 0 && sectionTitleRow("CONSTANT ASSUMPTIONS", false)}
+        {constantAssumptionRows}
       </>
     )
   }
@@ -338,15 +330,15 @@ const ComparisonTable = (props: ComparisonTableProps) => {
       financialRow("Revenue", "revenue", true),
       financialRow("CapEx", "capex", false),
       financialRow("Total Mining Cost", "miningCost", false),
-      financialSubRow("Extraction Cost", "extractionCost", "extractionCostTonne", false, true),
-      financialSubRow("Imaging Cost", "imagingCost", "imagingCostTonne", false, true),
-      financialSubRow("Closure Cost", "closureCost", "closureCostTonne", false, true),
+      financialSplitRow("Extraction Cost", "extractionCost", "extractionCostTonne", false, true),
+      financialSplitRow("Imaging Cost", "imagingCost", "imagingCostTonne", false, true),
+      financialSplitRow("Closure Cost", "closureCost", "closureCostTonne", false, true),
 
-      financialSubRow("Total Processing Cost", "totalProcessingCost", "totalProcessingCostTonne", false),
-      financialSubRow("Processing Cost (Ore)", "totalProcessingCost", "totalProcessingCostTonne", false, true),
-      financialSubRow("Processing Cost (Waste)", "totalProcessingCost", "totalProcessingCostTonne", false, true),
+      financialSplitRow("Total Processing Cost", "totalProcessingCost", "totalProcessingCostTonne", false),
+      financialSplitRow("Processing Cost (Ore)", "totalProcessingCost", "totalProcessingCostTonne", false, true),
+      financialSplitRow("Processing Cost (Waste)", "totalProcessingCost", "totalProcessingCostTonne", false, true),
 
-      financialRow("Net Cash Flow", "netCashFlow", true),
+      financialSplitRow("Net Cash Flow", "netCashFlow", "netCashFlowTonne", true, false),
     ];
 
     const visibleRows = financialRows.filter(Boolean);
@@ -360,12 +352,14 @@ const ComparisonTable = (props: ComparisonTableProps) => {
   }
 
   const operationalSection = () => {
+    if (operationalData === undefined) return null
+
+    const keyAssumptionRows = operationalData!.map((data) => {
+      return keyAssumptionRow(data.title, data.values, data.unitPrefix, data.unitSuffix)
+    })
+
     const operationalRows = [
-      operationalRow("Life of Mine (LOM)", "lom", " months"),
-      operationalRow("Extraction Holes", "extractionHoles", ""),
-      operationalRow("Total Length", "totalLength", "m"),
-      operationalRow("Ore Mass", "oreMass", " tonnes"),
-      operationalRow("Waste Mass", "wasteMass", " tonnes"),
+      ...keyAssumptionRows,
       chartDataRow(
         "Hole Length",
         HorizontalBarChart,
@@ -407,7 +401,7 @@ const ComparisonTable = (props: ComparisonTableProps) => {
       <div className={styles.header}
         style={{ gridTemplateColumns: `200px repeat(${numScenarios}, 1fr)` }}>
         <div className={styles.subheader}>SCENARIO</div>
-        {keyAssumptions.map((scenario, index) => (
+        {numScenarios > 0 && Array.from({ length: numScenarios }, (_, index) => (
           <div key={index} className={styles.headerCell}>
             {index + 1}
           </div>

@@ -97,18 +97,11 @@ export function FinancialSimulationPage() {
         discountRate={scenarioData ? scenarioData[activeScenarioIdx].evaluationParameters.discRate : 0}
       />
       <MonthlySummarySection
-        data={1}
-        scenario={demoScenarios[activeScenarioIdx].title} />
+        scenarioTitle={demoScenarios[activeScenarioIdx].title}
+        scenarioData={scenarioData ? scenarioData : []} />
+
       <ComparisonSection
         scenarioData={scenarioData ? scenarioData : []}
-        // cashFlowData={scenarioData ? scenarioData.map(d => d.cashflow!.monthly!) : []}
-        // keyAssumptions={
-        //   scenarioData
-        //     ? scenarioData.map(s => ({ ...s.parameters, ...s.evaluationParameters }))
-        //     : []
-        // }
-        // financialOutputData={scenarioData ? scenarioData.map(s => s.financial) : []}
-        // operationalOutputData={scenarioData ? scenarioData.map(s => s.operational) : []}
       />
     </div>
 

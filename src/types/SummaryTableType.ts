@@ -1,6 +1,6 @@
 export interface TableRow {
   label: string
-  values: number[]
+  values: (number | null)[]
   type?: "currency" | "number"
 }
 

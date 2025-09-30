@@ -3,7 +3,8 @@ import styles from "./SummaryTable.module.css"
 import { SummaryTableType } from "types/SummaryTableType"
 
 
-const formatValue = (value: string | number, type?: string): string => {
+const formatValue = (value: string | number | null, type?: string): string => {
+  if (value === null) return ""
   if (typeof value === "string") return value
 
   switch (type) {

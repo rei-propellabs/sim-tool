@@ -33,16 +33,19 @@ const ComparisonSection: React.FC<ComparisonSectionProps> = (props) => {
         values: scenarioData.map(s => s.metals.map((metal) => {
           return ({
             value: metal.price,
-            name: metal.name
+            name: metal.name,
+            unitPrefix: "$",
+            unitSuffix: `/${metal.per}`,
+
           })
-        })) ,
+        })),
         unitPrefix: "$",
       },
       ...(() => {
         const uniqueMetals = Array.from(
           new Set(scenarioData.flatMap(s => s.metals.map(metal => metal.name)))
         );
-        
+
         return uniqueMetals.map(metalName => ({
           title: `${metalName} Mill Recovery`,
           values: scenarioData.map(s => {
@@ -69,7 +72,85 @@ const ComparisonSection: React.FC<ComparisonSectionProps> = (props) => {
         title: "Maximum Hole Length",
         unitSuffix: "m",
       },
+    ]
+  }
 
+  let constantAssumptions
+
+  if (scenarioData) {
+    constantAssumptions = [
+      {
+        title: "Rate of Penetration",
+        values: scenarioData.map(s => s.parameters.rateOfPenetration),
+        unitSuffix: "m / hr",
+      },
+      {
+        title: "Availability",
+        values: scenarioData.map(s => s.parameters.availability),
+        unitSuffix: "%",
+      },
+      {
+        title: "Discound Rate",
+        values: scenarioData.map(s => s.evaluationParameters.discRate),
+        unitSuffix: "%",
+      }
+    ]
+  }
+
+  let operationalData
+  if (scenarioData) {
+    operationalData = [
+      {
+        title: "Life of Mine (LOM)",
+        values: scenarioData.map(s => s.operational.lom),
+        unitSuffix: " months",
+      },
+      {
+        title: "Extraction Holes",
+        values: scenarioData.map(s => s.operational.extractionHoles),
+      },
+      {
+        title: "Total Commodity Volume",
+        values: scenarioData.map(s => s.metals.map((metal) => {
+          return ({
+            value: Math.round(metal.streams.reduce((sum, stream) => sum + (stream.commodity || 0), 0)), // todo: confirm this
+            name: metal.name,
+            unitSuffix: metal.per,
+          })
+        })),
+      },
+      ...(() => {
+        const uniqueMetals = Array.from(
+          new Set(scenarioData.flatMap(s => s.metals.map(metal => metal.name)))
+        );
+
+        return uniqueMetals.map(metalName => ({
+          title: `${metalName} Grade`,
+          values: scenarioData.map(s => {
+            const metal = s.metals.find(m => m.name === metalName);
+            return metal ? metal.streams.map(stream => ({
+              value: Math.round(stream.grade * 100) / 100,
+              name: stream.name,
+              unitSuffix: metal.unit,
+            })) : [];
+          })
+        }));
+      })(),
+      {
+        title: "Mass of Materials",
+        values: scenarioData.map(s => s.metals.map((metal) => {
+          return ({
+            value: Math.round(metal.streams.filter((stream) => stream.name.toLocaleLowerCase() !== "waste").reduce((sum, stream) => sum + (stream.mass || 0), 0)), // todo: confirm this
+            name: metal.name,
+            unitSuffix: metal.per,
+          })
+        })),
+      },
+      {
+        title: "Total Length",
+        values: scenarioData.map(s => s.operational.totalLength),
+        unitSuffix: "m",
+      },
 
     ]
   }
@@ -89,6 +170,8 @@ const ComparisonSection: React.FC<ComparisonSectionProps> = (props) => {
       <ComparisonTable
         cashFlowData={cashFlowData}
         keyAssumptions={keyAssumptions}
+        operationalData={operationalData}
+        constantAssumptions={constantAssumptions}
         financialOutputData={financialOutputData}
         operationalOutputData={operationalOutputData}
         numScenarios={scenarioData.length}

@@ -112,6 +112,12 @@
   text-align: right;
 }
 
+.verticalStackLabel {
+  font-size: 0.9rem;
+  color: var(--darker-text);
+  font-weight: 500;
+}
+
 .textCell {
   padding: 8px 8px 0px 8px;
   text-align: right;
