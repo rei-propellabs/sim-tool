@@ -4,7 +4,6 @@ import { ScenarioData } from "api/models/ScenarioData";
 
 
 export interface ComparisonSectionProps {
-  // cashFlowData: CashflowEntry[][];
   scenarioData: ScenarioData[];
 }
 
@@ -59,7 +58,7 @@ const ComparisonSection: React.FC<ComparisonSectionProps> = (props) => {
         }));
       })(),
       {
-        values: scenarioData.map(s => s.parameters.processingCostPerTonne),
+        values: scenarioData.map(s => s.financial.totalProcessingCostTonne),
         title: "Processing Cost per Tonne",
       },
       {

@@ -38,6 +38,7 @@ const useGetScenariosByProjectId = (token: string | null, orgId: string, project
         }
 
         const parsed = JSON.parse(responseText);
+        console.log("getScenariosByProjectId", parsed)
         setData(parsed.scenarios as ScenarioData[]);
         // setData(Array.from({ length: 12 }, (_, i) => ({
         //   ...parsed.rows[0],
