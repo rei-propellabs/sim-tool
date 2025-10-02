@@ -158,7 +158,7 @@ const ComparisonTable = (props: ComparisonTableProps) => {
 
     const multiStreamValue = (values: any[]) => {
       return values.map((val, idx) => (
-        <div className={styles.verticalStack}>
+        <div key={`stream-${label}-${idx}`} className={styles.verticalStack}>
           <span className={styles.verticalStackLabel}>{val.name}</span>
           {formatValue(val.value, val.unitPrefix, val.unitSuffix)}
         </div>
@@ -167,7 +167,7 @@ const ComparisonTable = (props: ComparisonTableProps) => {
 
     return (
       renderDataRow(label, values.map((value, index) => (
-        <div className={styles.assumptionValue}>
+        <div key={`split-${label}-${index}`} className={styles.assumptionValue}>
           {
             Array.isArray(value) === true ? multiStreamValue(value) :
               value === undefined ? <span>999</span> :
@@ -188,8 +188,8 @@ const ComparisonTable = (props: ComparisonTableProps) => {
 
     const colorCodes = getMetricBgClasses(values, higherIsBetter);
 
-    return renderDataRow(label, values.map((value, id) => (
-      <div key={id} className={styles.textCell}>
+    return renderDataRow(label, values.map((value, index) => (
+      <div key={`financial-${index}`} className={styles.textCell}>
         {formatCurrency(value)}
       </div>
     )), colorCodes);
@@ -208,11 +208,11 @@ const ComparisonTable = (props: ComparisonTableProps) => {
 
     return renderDataRow(label, values.map((value, index) => (
       <>
-        <div key={index} className={styles.textCell}>
+        <div key={`${label}-${perKey}1-${index}`} className={styles.textCell}>
           {formatCurrency(value)}
         </div>
         <span className={styles.divier}></span>
-        <div key={index} className={styles.textCell}>
+        <div key={`${label}-${perKey}2-${index}`} className={styles.textCell}>
           {formatCurrency(perValues[index]) + "/tonne"}
         </div>
       </>
@@ -242,7 +242,7 @@ const ComparisonTable = (props: ComparisonTableProps) => {
   ) => {
     return renderDataRow(
       label,
-      operationalOutputData.map((scenario) => <Component data={dataMapper(scenario)} />),
+      operationalOutputData.map((scenario, idx) => <Component key={`chart-${idx}`} data={dataMapper(scenario)} />),
       undefined
     );
   }
@@ -259,7 +259,7 @@ const ComparisonTable = (props: ComparisonTableProps) => {
         </div>
         {cellContents.map((content, index) => (
           <div
-            key={index}
+            key={`${label}-cell-${index}`}
             className={styles.cell}
             style={backgroundColors ? { backgroundColor: backgroundColors[index] } : {}}
           >
@@ -275,7 +275,7 @@ const ComparisonTable = (props: ComparisonTableProps) => {
       <div className={styles.row}
         style={{ gridTemplateColumns: `200px repeat(${numScenarios}, 1fr)` }}>
         {Array.from({ length: numScenarios + 1 }).map((_, idx) => (
-          <div key={idx} className={`${styles.sectionCell} ${isSmall ? styles.sectionCellSmall : ""}`}>
+          <div key={`${title}-section-${idx}`} className={`${styles.sectionCell} ${isSmall ? styles.sectionCellSmall : ""}`}>
             <div className={styles.sectionTitle}>{title}</div>
           </div>
         ))}
@@ -288,13 +288,15 @@ const ComparisonTable = (props: ComparisonTableProps) => {
     let keyAssumptionRows: any[] = []
     keyAssumptionRows = keyAssumptions.map((assumption, i) => {
       if (showMore === false) {
-        const allSame = assumption.values.every((val: number, _, arr: number[]) => val === arr[0]);
+        const allSame = assumption.values.every((val: number, _: any, arr: number[]) => val === arr[0]);
         if (allSame) {
           return null;
         }
       }
       return (
-        keyAssumptionRow(assumption.title, assumption.values, assumption.unitPrefix, assumption.unitSuffix)
+        <div key={`key-assumption-${i}`}>
+          {keyAssumptionRow(assumption.title, assumption.values, assumption.unitPrefix, assumption.unitSuffix)}
+        </div>
       )
     }).filter(Boolean)
 
@@ -302,13 +304,15 @@ const ComparisonTable = (props: ComparisonTableProps) => {
     if (constantAssumptions !== undefined) {
       constantAssumptionRows = constantAssumptions.map((assumption, i) => {
         if (showMore === false) {
-          const allSame = assumption.values.every((val: number, _, arr: number[]) => val === arr[0]);
+          const allSame = assumption.values.every((val: number, _: any, arr: number[]) => val === arr[0]);
           if (allSame) {
-            return;
+            return null;
           }
         }
         return (
-          keyAssumptionRow(assumption.title, assumption.values, assumption.unitPrefix, assumption.unitSuffix)
+          <div key={`constant-assumption-${i}`}>
+            {keyAssumptionRow(assumption.title, assumption.values, assumption.unitPrefix, assumption.unitSuffix)}
+          </div>
         )
       }).filter(Boolean)
     }
@@ -354,8 +358,12 @@ const ComparisonTable = (props: ComparisonTableProps) => {
   const operationalSection = () => {
     if (operationalData === undefined) return null
 
-    const keyAssumptionRows = operationalData!.map((data) => {
-      return keyAssumptionRow(data.title, data.values, data.unitPrefix, data.unitSuffix)
+    const keyAssumptionRows = operationalData!.map((data, index) => {
+      return (
+        <div key={`operational-data-${index}`}>
+          {keyAssumptionRow(data.title, data.values, data.unitPrefix, data.unitSuffix)}
+        </div>
+      )
     })
 
     const operationalRows = [
@@ -402,7 +410,7 @@ const ComparisonTable = (props: ComparisonTableProps) => {
         style={{ gridTemplateColumns: `200px repeat(${numScenarios}, 1fr)` }}>
         <div className={styles.subheader}>SCENARIO</div>
         {numScenarios > 0 && Array.from({ length: numScenarios }, (_, index) => (
-          <div key={index} className={styles.headerCell}>
+          <div key={`scenario-${index}`} className={styles.headerCell}>
             {index + 1}
           </div>
         ))}
@@ -413,7 +421,7 @@ const ComparisonTable = (props: ComparisonTableProps) => {
       >
         <div className={styles.subheader}>TIME HORIZON</div>
         {cashFlowData.map((scenario, index) => (
-          <div key={index} className={styles.cell}>
+          <div key={`cashflow-${index}`} className={styles.cell}>
             <LineChart data={scenario.map(d => d.cumulativeNetCash)} />
           </div>
         ))}

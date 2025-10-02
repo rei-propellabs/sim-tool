@@ -28,22 +28,22 @@ export default function SummaryTable({ columns, sections }: SummaryTableType) {
       <table className={styles.table}>
         <tbody>
           {sections.map((section, sectionIndex) => (
-            <React.Fragment key={sectionIndex}>
+            <React.Fragment key={`stsection-${sectionIndex}`}>
               {section.title && (
                 <tr className={styles.headerRow}>
                   <th className={styles.headerCell}>{section.title}</th>
                   {columns.map((column, index) => (
-                    <th key={index} className={styles.headerCell}>
+                    <th key={`stheader-${sectionIndex}-${index}`} className={styles.headerCell}>
                       {column}
                     </th>
                   ))}
                 </tr>
               )}
               {section.rows.map((row, rowIndex) => (
-                <tr key={rowIndex} className={styles.dataRow}>
+                <tr key={`strow-${sectionIndex}-${rowIndex}`} className={styles.dataRow}>
                   <td className={styles.labelCell}>{row.label}</td>
                   {row.values.map((value, valueIndex) => (
-                    <td key={valueIndex} className={styles.dataCell}>
+                    <td key={`stcell-${sectionIndex}-${rowIndex}-${valueIndex}`} className={styles.dataCell}>
                       {formatValue(value, row.type)}
                     </td>
                   ))}

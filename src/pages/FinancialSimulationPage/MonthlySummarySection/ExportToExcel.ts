@@ -1,17 +1,15 @@
 import { SummaryTableType } from "types/SummaryTableType";
 import * as XLSX from "xlsx";
 
-export const exportToExcel = async (tableData: SummaryTableType[], fileName: string) => {
+export const exportToExcel = async (tableData: SummaryTableType[] | null, fileName: string) => {
+  if (!tableData || tableData.length === 0) return;
+  
   const workbook = XLSX.utils.book_new();
-
-  const worksheet1 = tableToSheet(tableData[0])
-  XLSX.utils.book_append_sheet(workbook, worksheet1, "Scenario 1");
-
-  const worksheet2 = tableToSheet(tableData[1])
-  XLSX.utils.book_append_sheet(workbook, worksheet2, "Scenario 2");
-
-  const worksheet3 = tableToSheet(tableData[2])
-  XLSX.utils.book_append_sheet(workbook, worksheet3, "Scenario 3");
+  console.log("LENGTH", tableData.length)
+  tableData.forEach((table, index) => {
+    const worksheet = tableToSheet(table)
+    XLSX.utils.book_append_sheet(workbook, worksheet, `Scenario ${index + 1}`);
+  })
 
   // This will trigger a download in browser
   XLSX.writeFile(workbook, `${fileName}.xlsx`);

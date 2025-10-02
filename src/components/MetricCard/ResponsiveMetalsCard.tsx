@@ -97,7 +97,11 @@ export function ResponsiveMetalCard(props: ResponsiveMetalCardProps) {
   function renderGridCells() {
     if (!specialCase) {
       // Default: all data, then title below
-      return values.map((v, i) => renderDataCell({ name: values.length === 1 ? "" : v.name, value: v.value.toLocaleString() }));
+      return values.map((v, i) => (
+        <div key={`data-${i}-${v.name}`}>
+          {renderDataCell({ name: values.length === 1 ? "" : v.name, value: v.value.toLocaleString() })}
+        </div>
+      ));
     }
     // Special case: fill all but last row with data
     const cells = [];
@@ -106,23 +110,31 @@ export function ResponsiveMetalCard(props: ResponsiveMetalCardProps) {
     for (let r = 0; r < fullRows; r++) {
       for (let c = 0; c < columns; c++) {
         if (idx < values.length) {
-          cells.push(renderDataCell({ name: values.length === 1 ? "" : values[idx].name, value: values[idx].value.toLocaleString() }));
+          cells.push(
+            <div key={`data-${idx}-${values[idx].name}`}>
+              {renderDataCell({ name: values.length === 1 ? "" : values[idx].name, value: values[idx].value.toLocaleString() })}
+            </div>
+          );
           idx++;
         }
       }
     }
     // Last row: first cell is title, rest are data or empty
     cells.push(
-      <div className={styles.metricGridCell} key="title-cell">
+      <div className={styles.metricGridCell} key={`title-${title}`}>
         <div className={styles.metricLabel}>{title}</div>
       </div>
     );
     for (let c = 1; c < columns; c++) {
       if (idx < values.length) {
-        cells.push(renderDataCell({ name: values.length === 1 ? "" : values[idx].name, value: values[idx].value.toLocaleString() }));
+        cells.push(
+          <div key={`data-${idx}-${values[idx].name}`}>
+            {renderDataCell({ name: values.length === 1 ? "" : values[idx].name, value: values[idx].value.toLocaleString() })}
+          </div>
+        );
         idx++;
       } else {
-        cells.push(<div className={styles.metricGridCell} key={`ph-${c}`} style={{ opacity: 0 }} />);
+        cells.push(<div className={styles.metricGridCell} key={`placeholder-${c}`} style={{ opacity: 0 }} />);
       }
     }
     return cells;
@@ -130,6 +142,7 @@ export function ResponsiveMetalCard(props: ResponsiveMetalCardProps) {
 
   return (
     <div
+      key={`metric-card-${title}`}
       ref={containerRef}
       className={`${styles.metricCardThreeRows} ${flash ? styles.flash : ""}`}
     >

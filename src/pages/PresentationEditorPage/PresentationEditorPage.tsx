@@ -20,6 +20,7 @@ import usePostPresentation from "api/hooks/usePostPresentation";
 import useGetScenariosByProjectId from "api/hooks/useGetScenariosByProjectId";
 import usePutPresentation from "api/hooks/usePutPresentation";
 
+import WarningIcon from "images/Warning.svg";
 
 interface PresentationEditorRow {
   name: string;
@@ -160,9 +161,12 @@ export const PresentationEditorPage = () => {
       key: "fileChecker", header: "File Checker",
       render: (row) => (
         row.warning ?
-          <span style={{ color: "var(--error)" }}>
-            Issues Found
-          </span>
+          <div className="flex-row gap-8">
+            <img src={WarningIcon} />
+            <span style={{ color: "var(--warning200)" }}>
+              Missing Files
+            </span>
+          </div>
           :
           <span style={{ color: "var(--success)" }}>Complete</span>
       )
@@ -178,15 +182,18 @@ export const PresentationEditorPage = () => {
     if (selectedIds.length === 0) return;
 
     if (isEditing) {
-      const payload = {
-        organizationId: orgId,
-        id: scenarioData![0].presentationId,
-        scenarios: selectedIds
+      if (preselectedScenarios !== undefined && preselectedScenarios.length > 0) {
+        const payload = {
+          organizationId: orgId,
+          id: preselectedScenarios![0].presentationId,
+          scenarios: selectedIds
+        }
+        putPresentation(payload).then((res) => {
+          console.log("Presentation updated:", res);
+          if (onSuccess) onSuccess(res);
+        })
       }
-      putPresentation(payload).then((res) => {
-        console.log("Presentation updated:", res);
-        if (onSuccess) onSuccess(res);
-      })
+
     } else {
       const payload = {
         organizationId: orgId,

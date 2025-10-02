@@ -16,7 +16,8 @@ import { ResponsiveMetalCard } from "components/MetricCard/ResponsiveMetalsCard"
 interface OverviewSectionProps {
   activeScenarioIdx: number,
   setActiveScenarioIdx: (index: number) => void,
-  scenarioData?: ScenarioData
+  scenarioData?: ScenarioData,
+  numScenarios?: number,
 }
 export const OverviewSection: React.FC<OverviewSectionProps> = (props) => {
   const { activeScenarioIdx, setActiveScenarioIdx, scenarioData } = props
@@ -25,12 +26,13 @@ export const OverviewSection: React.FC<OverviewSectionProps> = (props) => {
 
   const [scrollPosition, setScrollPosition] = useState(0.5);
 
-  const scenarios = ["SCENARIO 1", "SCENARIO 2", "SCENARIO 3"]
   const outputs = ["financial (USD)", "operational"]
   const orebodyView = ["3D animation", "plan view"]
 
   // const currentData = scenarioData[activeScenarioIdx]
   const currentData = scenarioData // ? scenarioData : scenarioData_mock[0]
+  const scenarios = Array(props.numScenarios || 1).fill(0).map((_, i) => `SCENARIO ${i + 1}`)
+
   const planViews = [planView, planView, planView]
 
   const displayValue = (value: number | string | undefined, prefix?: string, suffix?: string) => {
@@ -105,8 +107,9 @@ export const OverviewSection: React.FC<OverviewSectionProps> = (props) => {
           />
         </div>
         {
-          currentData.metals.map((metal) => {
+          currentData.metals.map((metal, index) => {
             return <ResponsiveMetalCard
+              key={`metal-recovery-${index}`}
               values={metal.streams.map((stream) => (
                 { name: stream.name, value: Math.round(stream.recovery).toLocaleString() }))}
               title={`${metal.name} Recovery`}
@@ -321,8 +324,9 @@ export const OverviewSection: React.FC<OverviewSectionProps> = (props) => {
         />
 
         {
-          currentData.metals.map((metal) => (
+          currentData.metals.map((metal, index) => (
             <ResponsiveMetalCard
+              key={`metal-grade-${index}`}
               values={metal.streams.map(stream => ({ name: stream.name, value: localeNumber(stream.grade, 3) ?? "" }))}
               title={`${metal.name} Grade`}
               unitSuffix={metal.unit || ""}

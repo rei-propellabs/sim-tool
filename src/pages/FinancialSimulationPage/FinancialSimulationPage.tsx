@@ -90,6 +90,7 @@ export function FinancialSimulationPage() {
         activeScenarioIdx={activeScenarioIdx}
         setActiveScenarioIdx={setActiveScenarioIdx}
         scenarioData={scenarioData ? scenarioData[activeScenarioIdx] : undefined}
+        numScenarios={scenarioData ? scenarioData.length : 1}
       />
       <NPVSection
         cashFlowData={parsedData[activeScenarioIdx].cashFlow}

@@ -118,6 +118,8 @@ interface MonthlySummarySectionProps {
 const MonthlySummarySection: React.FC<MonthlySummarySectionProps> = ({ scenarioTitle, scenarioData }) => {
 
   const parseData = (financial: Financial) => {
+    if (!financial) return;
+
     // Get unique metal names from the first month
     const uniqueMetals = financial.monthly[0]?.metals?.map(metal => metal.name) || [];
 
@@ -221,9 +223,12 @@ const MonthlySummarySection: React.FC<MonthlySummarySectionProps> = ({ scenarioT
 
     return tableData;
   }
-  const scenarioTableData = [parseData(scenarioData[0]?.financial), parseData(scenarioData[1]?.financial), parseData(scenarioData[2]?.financial)];
-  const fileName = "SummaryTable"
 
+  const scenarioTableData = scenarioData
+    .map(scenario => scenario?.financial ? parseData(scenario.financial) : undefined)
+    .filter(Boolean).filter((s): s is SummaryTableType => s !== undefined);
+
+  const fileName = "SummaryTable";
 
   return (
     <div className={finSimStyles.sectionContainer}>
