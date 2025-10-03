@@ -3,7 +3,8 @@ import { CashFlowData, CashFlowRow } from "models/CashFlow"
 import * as XLSX from 'xlsx'
 
 export interface ChartData {
-  month: string;
+  monthStart: string;
+  monthEnd: string;
   revenue: number;
   miningCost: number;
   processingCost: number;
@@ -92,6 +93,14 @@ export function cashFlowToChartData(cashFlowData: CashflowSet): ChartData[] {
 
   // Step 2: Group if needed
   let grouped: CashflowEntry[] = []
+  // Determine granularity
+  let granularity: 'monthly' | 'quarterly' | 'yearly' = 'monthly';
+  for (let key of ['monthly', 'quarterly', 'yearly'] as const) {
+    if (cashFlowData[key] === data) {
+      granularity = key;
+      break;
+    }
+  }
   if (data.length > 20) {
     const divisor = findDivisor(data.length, 20)
     const groupSize = divisor
@@ -99,6 +108,33 @@ export function cashFlowToChartData(cashFlowData: CashflowSet): ChartData[] {
       const group = data.slice(i, i + groupSize)
       // Combine values
       const first = group[0]
+      const last = group[group.length - 1]
+      let periodEnding: any = last.periodBeginning;
+      if (granularity === 'quarterly') {
+        // Add 3 months
+        const date = typeof last.periodBeginning === 'number'
+          ? (() => {
+              const parsed = (XLSX as any).SSF.parse_date_code(last.periodBeginning)
+              return parsed
+                ? new Date(Date.UTC(parsed.y, parsed.m - 1, parsed.d))
+                : new Date(0)
+            })()
+          : new Date(last.periodBeginning ?? 0)
+        date.setUTCMonth(date.getUTCMonth() + 2); // last month of the quarter
+        periodEnding = Date.UTC(date.getUTCFullYear(), date.getUTCMonth(), date.getUTCDate());
+      } else if (granularity === 'yearly') {
+        // Add 12 months
+        const date = typeof last.periodBeginning === 'number'
+          ? (() => {
+              const parsed = (XLSX as any).SSF.parse_date_code(last.periodBeginning)
+              return parsed
+                ? new Date(Date.UTC(parsed.y, parsed.m - 1, parsed.d))
+                : new Date(0)
+            })()
+          : new Date(last.periodBeginning ?? 0)
+        date.setUTCMonth(date.getUTCMonth() + 11); // last month of the year
+        periodEnding = Date.UTC(date.getUTCFullYear(), date.getUTCMonth(), date.getUTCDate());
+      }
       grouped.push({
         ...first,
         miningCost: group.reduce((sum, row) => sum + (row.miningCost ?? 0), 0),
@@ -106,24 +142,34 @@ export function cashFlowToChartData(cashFlowData: CashflowSet): ChartData[] {
         grossRevenue: group.reduce((sum, row) => sum + (row.grossRevenue ?? 0), 0),
         netRevenue: group.reduce((sum, row) => sum + (row.netRevenue ?? 0), 0),
         periodBeginning: first.periodBeginning,
+        periodEnding,
       })
     }
   } else {
-    grouped = data
+    grouped = data.map(row => ({ ...row, periodEnding: row.periodBeginning }))
   }
 
   // Step 3: Convert to ChartData and calculate cumulativeNetCash
   let cumulative = 0
   const chartData: ChartData[] = grouped.map(row => {
     // Convert Excel date (number) to JS Date
-    const date = typeof row.periodBeginning === "number"
+    const dateStart = typeof row.periodBeginning === "number"
       ? (() => {
-          const parsed = (XLSX as any).SSF.parse_date_code(row.periodBeginning)
-          return parsed
-            ? new Date(Date.UTC(parsed.y, parsed.m - 1, parsed.d))
-            : new Date(0)
-        })()
+        const parsed = (XLSX as any).SSF.parse_date_code(row.periodBeginning)
+        return parsed
+          ? new Date(Date.UTC(parsed.y, parsed.m - 1, parsed.d))
+          : new Date(0)
+      })()
       : new Date(row.periodBeginning ?? 0)
+
+    const dateEnd = typeof row.periodEnding === "number"
+      ? (() => {
+        const parsed = (XLSX as any).SSF.parse_date_code(row.periodEnding)
+        return parsed
+          ? new Date(Date.UTC(parsed.y, parsed.m - 1, parsed.d))
+          : new Date(0)
+      })()
+      : new Date(row.periodEnding ?? 0)
 
     const revenue = row.grossRevenue ?? 0
     const miningCost = -Math.abs(row.miningCost ?? 0)
@@ -131,7 +177,8 @@ export function cashFlowToChartData(cashFlowData: CashflowSet): ChartData[] {
     cumulative += row.netRevenue ?? 0
 
     return {
-      month: formatMonth(date),
+      monthStart: formatMonth(dateStart),
+      monthEnd: formatMonth(dateEnd),
       revenue,
       miningCost,
       processingCost,

@@ -3,16 +3,10 @@ import { useSearchParams } from "react-router-dom"
 import styles from "./FinancialSimulationPage.module.css"
 import { NPVSection } from "./NPVSection/NPVSection"
 import { OverviewSection } from "./OverviewSection/OverviewSection"
-import * as XLSX from 'xlsx'
-import { CashFlowRow } from "models/CashFlow"
+
 import { FinancialSimulationData } from "models/FinancialSimulationData"
 import ComparisonSection from "./ComparisonSection/ComparisonSection"
-import { operationalOutput_mock } from "api/mock/OperationOutputMock"
-import { financialOutput_mock } from "api/mock/FinancialOutputMock"
-import { scenarioData_mock } from "api/mock/MiningScenarioDataMock"
-import useGetScenarios from "api/hooks/useGetScenarios"
 import { getToken } from "utils/TokenManager"
-import { CashflowEntry } from "api/models/ScenarioData"
 import MonthlySummarySection from "./MonthlySummarySection/MonthlySummarySection"
 import useGetScenariosByProjectId from "api/hooks/useGetScenariosByProjectId"
 
@@ -51,17 +45,17 @@ export function FinancialSimulationPage() {
       let parsedArr: FinancialSimulationData[] = [];
       scenarioData.forEach((_, index: number) => {
         let cumulativeNetCash = 0;
-        scenarioData[index].cashflow.yearly.forEach((row: CashflowEntry) => {
+        scenarioData[index].cashflow.yearly.forEach((row: any) => {
           cumulativeNetCash += row.netRevenue;
           row.cumulativeNetCash = cumulativeNetCash;
         });
         cumulativeNetCash = 0;
-        scenarioData[index].cashflow.quarterly.forEach((row: CashflowEntry) => {
+        scenarioData[index].cashflow.quarterly.forEach((row: any) => {
           cumulativeNetCash += row.netRevenue;
           row.cumulativeNetCash = cumulativeNetCash;
         });
         cumulativeNetCash = 0;
-        scenarioData[index].cashflow.monthly.forEach((row: CashflowEntry) => {
+        scenarioData[index].cashflow.monthly.forEach((row: any) => {
           cumulativeNetCash += row.netRevenue;
           row.cumulativeNetCash = cumulativeNetCash;
         });
@@ -98,6 +92,7 @@ export function FinancialSimulationPage() {
         discountRate={scenarioData ? scenarioData[activeScenarioIdx].evaluationParameters.discRate : 0}
       />
       <MonthlySummarySection
+        scenarioIdx={activeScenarioIdx}
         scenarioTitle={demoScenarios[activeScenarioIdx].title}
         scenarioData={scenarioData ? scenarioData : []} />
 

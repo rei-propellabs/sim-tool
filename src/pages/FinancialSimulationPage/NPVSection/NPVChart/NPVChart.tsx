@@ -7,7 +7,8 @@ import { getYAxisTicksAndDomain } from "../NPVHelper"
 
 interface NPVChartProps {
   data: Array<{
-    month: string
+    monthStart: string
+    monthEnd: string
     revenue: number
     miningCost: number
     processingCost: number
@@ -98,6 +99,10 @@ const NPVChart: React.FC<NPVChartProps> = ({ data, hoveredIndex, setHoveredIndex
           }}
         >
           <div className={styles.tooltipItem}>
+            <span className={styles.dateTooltip}>{data.monthStart}
+              {data.monthStart === data.monthEnd ? "" : ` - ${data.monthEnd}`}</span>
+          </div>
+          <div className={styles.tooltipItem}>
             <div className={styles.indicator} style={{ backgroundColor: "var(--revenue)" }}></div>
             <span className={styles.label}>Revenue</span>
             <span className={styles.value}>{formatValue(revenue)}</span>
@@ -150,7 +155,7 @@ const NPVChart: React.FC<NPVChartProps> = ({ data, hoveredIndex, setHoveredIndex
         >
           <CartesianGrid horizontal={true} vertical={false} stroke="var(--chart-grid)" />
 
-          <XAxis dataKey="month" interval={0} axisLine={false} tickLine={false}
+          <XAxis dataKey="monthStart" interval={0} axisLine={false} tickLine={false}
             tick={(props) => <CustomXAxisTick {...props} />}
           />
 

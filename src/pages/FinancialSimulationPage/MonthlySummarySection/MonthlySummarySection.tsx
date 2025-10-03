@@ -8,6 +8,7 @@ import { Financial } from "api/models/ScenarioData";
 interface MonthlySummarySectionProps {
   scenarioTitle: string;
   scenarioData: any[];
+  scenarioIdx: number;
 }
 // const tableData: SummaryTableType = {
 //   columns: ["-1", "0", "1", "2", "3", "4", "5", "6", "7", "8", "9", "10"],
@@ -115,7 +116,7 @@ interface MonthlySummarySectionProps {
 //   ],
 // }
 
-const MonthlySummarySection: React.FC<MonthlySummarySectionProps> = ({ scenarioTitle, scenarioData }) => {
+const MonthlySummarySection: React.FC<MonthlySummarySectionProps> = ({ scenarioTitle, scenarioData, scenarioIdx }) => {
 
   const parseData = (financial: Financial) => {
     if (!financial) return;
@@ -245,7 +246,7 @@ const MonthlySummarySection: React.FC<MonthlySummarySectionProps> = ({ scenarioT
 
         </div>
       </div>
-      <SummaryTable columns={scenarioTableData[0].columns} sections={scenarioTableData[0].sections} />
+      <SummaryTable columns={scenarioTableData[scenarioIdx].columns} sections={scenarioTableData[scenarioIdx].sections} />
 
     </div>
   )

@@ -44,7 +44,7 @@ export default function SummaryTable({ columns, sections }: SummaryTableType) {
                   <td className={styles.labelCell}>{row.label}</td>
                   {row.values.map((value, valueIndex) => (
                     <td key={`stcell-${sectionIndex}-${rowIndex}-${valueIndex}`} className={styles.dataCell}>
-                      {formatValue(value, row.type)}
+                      {value === undefined ? "-" : formatValue(value, row.type)}
                     </td>
                   ))}
                 </tr>
