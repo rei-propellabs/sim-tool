@@ -10,111 +10,6 @@ interface MonthlySummarySectionProps {
   scenarioData: any[];
   scenarioIdx: number;
 }
-// const tableData: SummaryTableType = {
-//   columns: ["-1", "0", "1", "2", "3", "4", "5", "6", "7", "8", "9", "10"],
-//   sections: [
-//     {
-//       title: "Project Summary by Year",
-//       rows: [
-//         {
-//           label: "Production in Tonnes",
-//           values: [123, 123, 123, 123, 123, 123, 123, 123, 123, 123, 123, 123],
-//           type: "number",
-//         },
-//         {
-//           label: "Production in Oz",
-//           values: [123, 123, 123, 123, 123, 123, 123, 123, 123, 123, 123, 123],
-//           type: "number",
-//         },
-//         {
-//           label: "Meters Drilled",
-//           values: [123, 123, 123, 123, 123, 123, 123, 123, 123, 123, 123, 123],
-//           type: "number",
-//         },
-//         {
-//           label: "Holes",
-//           values: [123, 123, 123, 123, 123, 123, 123, 123, 123, 123, 123, 123],
-//           type: "number",
-//         },
-//         {
-//           label: "Revenue",
-//           values: [123, 123, 123, 123, 123, 123, 123, 123, 123, 123, 123, 123],
-//           type: "currency",
-//         },
-//         {
-//           label: "Operating Cost",
-//           values: [123, 123, 123, 123, 123, 123, 123, 123, 123, 123, 123, 123],
-//           type: "currency",
-//         },
-//         {
-//           label: "Operating Income",
-//           values: [123, 123, 123, 123, 123, 123, 123, 123, 123, 123, 123, 123],
-//           type: "currency",
-//         },
-//         {
-//           label: "CAPEX",
-//           values: [123, 123, 123, 123, 123, 123, 123, 123, 123, 123, 123, 123],
-//           type: "currency",
-//         },
-//         {
-//           label: "Project FCF*",
-//           values: [123, 123, 123, 123, 123, 123, 123, 123, 123, 123, 123, 123],
-//           type: "currency",
-//         },
-//       ],
-//     },
-//     {
-//       title: "Unit Economics / Tonne",
-//       rows: [
-//         {
-//           label: "Revenue",
-//           values: [123456, 123456, 123456, 123456, 123456, 123456, 123456, 123456, 123456, 123456, 123456, 123456],
-//           type: "currency",
-//         },
-//         {
-//           label: "Mining Cost",
-//           values: [123456, 123456, 123456, 123456, 123456, 123456, 123456, 123456, 123456, 123456, 123456, 123456],
-//           type: "currency",
-//         },
-//         {
-//           label: "Operating Cost",
-//           values: [123456, 123456, 123456, 123456, 123456, 123456, 123456, 123456, 123456, 123456, 123456, 123456],
-//           type: "currency",
-//         },
-//         {
-//           label: "All-In Cost",
-//           values: [123456, 123456, 123456, 123456, 123456, 123456, 123456, 123456, 123456, 123456, 123456, 123456],
-//           type: "currency",
-//         },
-//       ],
-//     },
-//     {
-//       title: "Unit Economics / Oz",
-//       rows: [
-//         {
-//           label: "Revenue",
-//           values: [123456, 123456, 123456, 123456, 123456, 123456, 123456, 123456, 123456, 123456, 123456, 123456],
-//           type: "currency",
-//         },
-//         {
-//           label: "Mining Cost",
-//           values: [123456, 123456, 123456, 123456, 123456, 123456, 123456, 123456, 123456, 123456, 123456, 123456],
-//           type: "currency",
-//         },
-//         {
-//           label: "Operating Cost",
-//           values: [123456, 123456, 123456, 123456, 123456, 123456, 123456, 123456, 123456, 123456, 123456, 123456],
-//           type: "currency",
-//         },
-//         {
-//           label: "All-In Cost",
-//           values: [123456, 123456, 123456, 123456, 123456, 123456, 123456, 123456, 123456, 123456, 123456, 123456],
-//           type: "currency",
-//         },
-//       ],
-//     },
-//   ],
-// }
 
 const MonthlySummarySection: React.FC<MonthlySummarySectionProps> = ({ scenarioTitle, scenarioData, scenarioIdx }) => {
 
@@ -142,7 +37,7 @@ const MonthlySummarySection: React.FC<MonthlySummarySectionProps> = ({ scenarioT
           const metal = month.metals.find(m => m.name === metalName);
           return metal ? metal.sold : 0;
         })],
-        type: "number" as const,
+        type: "currency" as const,
       }
     ]);
 
@@ -200,16 +95,11 @@ const MonthlySummarySection: React.FC<MonthlySummarySectionProps> = ({ scenarioT
               values: [null, ...financial.monthly.map(item => item.totalProcessingCost)],
               type: "currency",
             },
-            {
-              label: "Total Processing Cost",
-              values: [null, ...financial.monthly.map(item => item.totalProcessingCost)],
-              type: "currency",
-            },
             ...streamProcessingCostRows,
             ...streamTonnesProcessedRows,
             {
               label: "Capex",
-              values: financial.monthly.map(() => financial.capex),
+              values: [financial.capex, ...financial.monthly.map(() => financial.capex)],
               type: "currency",
             },
             {

@@ -45,3 +45,27 @@
   flex: 1;
 
 }
+
+.headerContainer {
+  width: 100%;
+  box-sizing: border-box;
+  padding: 0 10vw;
+  flex-direction: row;
+  z-index: 999;
+}
+
+.headerContentLeft {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: flex-start;
+  flex: 1;
+}
+
+
+.headerContentRight{
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  flex: 1;
+}

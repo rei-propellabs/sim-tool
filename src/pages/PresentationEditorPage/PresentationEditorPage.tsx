@@ -227,7 +227,9 @@ export const PresentationEditorPage = () => {
             >
               Cancel
             </button>
-            <button className={"primary-button"}
+            <button 
+              disabled={selectedIds.length === 0}
+              className={"primary-button"}
               onClick={saveOnClick}
             >
               Save & Exit

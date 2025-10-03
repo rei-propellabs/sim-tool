@@ -10,26 +10,15 @@ import { getToken } from "utils/TokenManager"
 import MonthlySummarySection from "./MonthlySummarySection/MonthlySummarySection"
 import useGetScenariosByProjectId from "api/hooks/useGetScenariosByProjectId"
 
-const demoScenarios = [
-  {
-    fileName: "/demo/scenario1/Drill 200 Cu Cashflows.xlsx",
-    title: "SCENARIO 1"
-  },
-  {
-    fileName: "/demo/scenario2/Cashflow ReAlloys.xlsx",
-    title: "SCENARIO 2"
-  },
-  {
-    fileName: "/demo/scenario3/West Red Lake Cashflows.xlsx",
-    title: "SCENARIO 3"
-  },
-]
+
+// const scenarioTitles = ["SCENARIO 1", "SCENARIO 2", "SCENARIO 3"]
 
 export function FinancialSimulationPage() {
   const [activeScenarioIdx, setActiveScenarioIdx] = useState<number>(0)
 
   const [loading, setLoading] = useState(true)
   const [parsedData, setParsedData] = useState<FinancialSimulationData[]>([])
+  const [scenarioTitles, setScenarioTitles] = useState<string[]>([])
   // const scenarioData = scenarioData_mock
   const token = getToken("uploadAdmin")
 
@@ -40,8 +29,13 @@ export function FinancialSimulationPage() {
 
   const { isLoading: loadingScenarios, data: scenarioData } = useGetScenariosByProjectId(token, orgId, projectId)
 
+  const isPreviewing = false
   useEffect(() => {
     if (!loadingScenarios && scenarioData) {
+
+      const scenarioTitles = Array(scenarioData.length).fill(0).map((_, i) => `SCENARIO ${i + 1}`)
+      setScenarioTitles(scenarioTitles);
+
       let parsedArr: FinancialSimulationData[] = [];
       scenarioData.forEach((_, index: number) => {
         let cumulativeNetCash = 0;
@@ -60,40 +54,61 @@ export function FinancialSimulationPage() {
           row.cumulativeNetCash = cumulativeNetCash;
         });
         parsedArr.push({
-          title: demoScenarios[index].title,
+          title: scenarioTitles[index],
           cashFlow: scenarioData[index].cashflow,
         });
       });
+
+
       setParsedData(parsedArr);
       setLoading(false);
+
     }
   }, [loadingScenarios, scenarioData]);
-
-  // useEffect(() => {
-  //   if (!loadingScenarios) {
-  //     // Perform actions when scenarios are loaded
-  //   }
-  // }, [loadingScenarios])
 
   if (loading) {
     return <div className={styles.spinner}>Loading...</div>
   }
+
+  const Header = () => {
+    return (
+      <div className={styles.headerContainer}>
+        <div className={styles.headerContentLeft}>
+
+        </div>
+
+        <div className={styles.headerContentRight}>
+          {
+            isPreviewing &&
+            <>
+              <button className="border-button">Edit Selections</button>
+              <button className="primay-button">Save & Exit</button>
+            </>
+          }
+
+        </div>
+
+      </div>
+    )
+  }
+
   return (
     <div className={styles.dashboard}>
+      {/* <Header /> */}
       <OverviewSection
         activeScenarioIdx={activeScenarioIdx}
         setActiveScenarioIdx={setActiveScenarioIdx}
         scenarioData={scenarioData ? scenarioData[activeScenarioIdx] : undefined}
-        numScenarios={scenarioData ? scenarioData.length : 1}
+        scenarioTitles={scenarioTitles}
       />
       <NPVSection
         cashFlowData={parsedData[activeScenarioIdx].cashFlow}
-        scenario={demoScenarios[activeScenarioIdx].title}
+        scenarioTitle={scenarioTitles[activeScenarioIdx]}
         discountRate={scenarioData ? scenarioData[activeScenarioIdx].evaluationParameters.discRate : 0}
       />
       <MonthlySummarySection
         scenarioIdx={activeScenarioIdx}
-        scenarioTitle={demoScenarios[activeScenarioIdx].title}
+        scenarioTitle={scenarioTitles[activeScenarioIdx]}
         scenarioData={scenarioData ? scenarioData : []} />
 
       <ComparisonSection

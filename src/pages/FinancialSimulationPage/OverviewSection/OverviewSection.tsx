@@ -17,10 +17,10 @@ interface OverviewSectionProps {
   activeScenarioIdx: number,
   setActiveScenarioIdx: (index: number) => void,
   scenarioData?: ScenarioData,
-  numScenarios?: number,
+  scenarioTitles: string[],
 }
 export const OverviewSection: React.FC<OverviewSectionProps> = (props) => {
-  const { activeScenarioIdx, setActiveScenarioIdx, scenarioData } = props
+  const { activeScenarioIdx, setActiveScenarioIdx, scenarioData, scenarioTitles } = props
   const [activeOutputIdx, setActiveOutputIdx] = useState<number>(0)
   const [activeOrebodyView, setActiveOrebodyView] = useState<number>(0)
 
@@ -31,7 +31,6 @@ export const OverviewSection: React.FC<OverviewSectionProps> = (props) => {
 
   // const currentData = scenarioData[activeScenarioIdx]
   const currentData = scenarioData // ? scenarioData : scenarioData_mock[0]
-  const scenarios = Array(props.numScenarios || 1).fill(0).map((_, i) => `SCENARIO ${i + 1}`)
 
   const planViews = [planView, planView, planView]
 
@@ -50,41 +49,6 @@ export const OverviewSection: React.FC<OverviewSectionProps> = (props) => {
   function InputPanel() {
     if (!currentData) {
       return null
-    }
-
-    const metals = currentData!.operational.metals
-
-    function processingAndWasteCost() {
-      let needTwoRows = false
-
-      if (metals.length === 1) {
-        needTwoRows = false
-      } else if (metals.length === 2) {
-        const maxCharLength = Math.max(...metals.map(metal => Math.round(metal.costTonne).toLocaleString().length + 1))
-        needTwoRows = maxCharLength > 7
-      } else {
-        needTwoRows = true
-      }
-
-      const cards = (
-        <>
-          <ResponsiveMetalCard
-            values={currentData!.operational.metals.map((metal) => ({ name: metal.name, value: metal.costTonne }))}
-            title={"Processing Cost per Tonne"}
-            unitPrefix="$"
-          />
-          <ResponsiveMetalCard
-            values={currentData!.processStreams.filter(ps => ps.name === "Waste").map((ps) => ({ name: ps.name, value: ps.cost }))}
-            title={"Waste Cost per Tonne"}
-            unitPrefix="$"
-          />
-        </>
-      )
-      if (needTwoRows) {
-        return cards
-      } else {
-        return <div className={styles.row}>{cards}</div>
-      }
     }
 
     return (
@@ -124,7 +88,6 @@ export const OverviewSection: React.FC<OverviewSectionProps> = (props) => {
           title={`Processing Cost per Tonne`}
           unitPrefix="$"
         />
-        {/* {processingAndWasteCost()} */}
       </div>
     )
   }
@@ -225,84 +188,9 @@ export const OverviewSection: React.FC<OverviewSectionProps> = (props) => {
 
     const metric = currentData.operational
 
-    const metals = metric.metals
-
-    const gradeAndLom = () => {
-      let needTwoRows = false
-
-      if (metals.length === 1) {
-        needTwoRows = false
-      } else if (metals.length === 2) {
-        const maxCharLength = Math.max(...metals.map(metal => Math.round(metal.grade).toLocaleString().length + (metal.unit?.length || 0)))
-        needTwoRows = maxCharLength > 7
-      } else {
-        needTwoRows = true
-      }
-
-      const gradeAndLomContent = (
-        <>
-          <ResponsiveMetalCard
-            values={metals.map(metal => ({ name: metal.name, value: Math.round(metal.grade).toLocaleString() }))}
-            title="Grade"
-            unitSuffix={metals[0]?.unit || ""}
-          />
-          <MetricCardTwoRows
-            key="lom"
-            value={`${displayValue(metric.lom)}`}
-            label="LOM"
-            description="Life of Mine"
-            unitSuffix="mo" />
-        </>
-      );
-
-      if (needTwoRows) {
-        return gradeAndLomContent
-      } else {
-        return <view className={styles.row}>{gradeAndLomContent}</view>;
-      }
-
-    }
-
-    function wasteAndOreMass() {
-      let needTwoRows = false
-
-      if (metals.length === 1) {
-        needTwoRows = false
-      } else if (metals.length === 2) {
-        let maxCharLength = Math.max(...metals.map(metal => Math.round(metal.wastePer).toLocaleString().length + (metal.unit?.length || 0)))
-        maxCharLength = Math.max(maxCharLength, ...metals.map(metal => Math.round(metal.mass).toLocaleString().length + (metal.unit?.length || 0)))
-
-        needTwoRows = maxCharLength > 7
-      } else {
-        needTwoRows = true
-      }
-
-      const content = (
-        <>
-          <ResponsiveMetalCard
-            values={metals.map((metal) => ({ name: metal.name, value: Math.round(metal.wastePer).toLocaleString() }))} // todo confirm this is correct
-            unitSuffix={metals[0].per}
-            title={"Waste Mass"}
-          />
-
-          <ResponsiveMetalCard
-            values={metals.map((metal) => ({ name: metal.name, value: Math.round(metal.mass).toLocaleString() }))} // todo confirm this is correct
-            unitSuffix={metals[0].per}
-            title={"Ore Mass"}
-          />
-        </>
-      )
-      if (needTwoRows) {
-        return content
-      } else {
-        return <view className={styles.row}>{content}</view>;
-      }
-    }
-
     const numHolesLabels = ["35-49", "50-59", "60-69", "70-79", "80-90"]
     return (
       <div className={styles.outputGridRight}>
-        {/* {gradeAndLom()} */}
         <MetricCardTwoRows
           key="lom"
           value={`${displayValue(metric.lom)}`}
@@ -398,7 +286,7 @@ export const OverviewSection: React.FC<OverviewSectionProps> = (props) => {
       <div >
         <div className={styles.scenarioTab} style={{ zIndex: 1000 }}>
           <TabBar
-            texts={scenarios}
+            texts={scenarioTitles}
             activeIdx={activeScenarioIdx}
             onActiveIdxChange={setActiveScenarioIdx} />
         </div>

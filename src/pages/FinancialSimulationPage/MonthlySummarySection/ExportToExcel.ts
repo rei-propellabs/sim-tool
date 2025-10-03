@@ -6,7 +6,6 @@ export const exportToExcel = async (tableData: SummaryTableType[] | null, fileNa
   
   const workbook = XLSX.utils.book_new();
 
-  
   // const metricsData = {
   //   "  Total Project Cost": "$500,000",
   //   "  Initial Capital": "$300,000",

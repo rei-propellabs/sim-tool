@@ -9,7 +9,7 @@ import { cashFlowToChartData, getTotalValues } from "./NPVHelper";
 import { CashflowEntry, CashflowSet } from "api/models/ScenarioData";
 
 export interface NPVSectionProps {
-  scenario: string;
+  scenarioTitle: string;
   cashFlowData?: CashflowSet;
   discountRate: number;
 
@@ -22,7 +22,7 @@ const legendItems = [
   { label: "CUMULATIVE NET CASH", color: "var(--cumulative-net-cash)" },
 ];
 
-export function NPVSection({ scenario, cashFlowData, discountRate }: NPVSectionProps) {
+export function NPVSection({ scenarioTitle, cashFlowData, discountRate }: NPVSectionProps) {
   const [hoveredIndex, setHoveredIndex] = useState<number | null>(null)
 
   if (cashFlowData === undefined) {
@@ -38,7 +38,7 @@ export function NPVSection({ scenario, cashFlowData, discountRate }: NPVSectionP
 
       <div className={finSimStyles.heading}>
         <div className={finSimStyles.left}>
-          <div className={finSimStyles.scenarioLabel}>{scenario}</div>
+          <div className={finSimStyles.scenarioLabel}>{scenarioTitle}</div>
           <div className={finSimStyles.title}>Net Present Value</div>
         </div>
         <div className={styles.legend}>

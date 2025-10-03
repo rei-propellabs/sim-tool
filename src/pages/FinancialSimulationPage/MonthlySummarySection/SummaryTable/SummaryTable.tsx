@@ -4,7 +4,7 @@ import { SummaryTableType } from "types/SummaryTableType"
 
 
 const formatValue = (value: string | number | null, type?: string): string => {
-  if (value === null) return ""
+  if (value === null) return "-"
   if (typeof value === "string") return value
 
   switch (type) {
@@ -44,7 +44,7 @@ export default function SummaryTable({ columns, sections }: SummaryTableType) {
                   <td className={styles.labelCell}>{row.label}</td>
                   {row.values.map((value, valueIndex) => (
                     <td key={`stcell-${sectionIndex}-${rowIndex}-${valueIndex}`} className={styles.dataCell}>
-                      {value === undefined ? "-" : formatValue(value, row.type)}
+                      {(value === undefined || value === null) ? "-" : formatValue(value, row.type)}
                     </td>
                   ))}
                 </tr>
