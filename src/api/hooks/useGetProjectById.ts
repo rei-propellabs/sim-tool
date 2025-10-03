@@ -6,8 +6,6 @@ import { buildQueryString } from "utils/Query";
 interface GetProjectByIdProps  {
   id: string; // projectID
   organizationId: string;
-  // siteId?: string;
-  // projectId?: string;
 }
 const useGetProjectById = (token: string | null, payload: GetProjectByIdProps) => {
   const { id } = payload;

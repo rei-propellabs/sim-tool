@@ -177,7 +177,10 @@ export default function STLCanvas({
         return () => {
             window.removeEventListener("keydown", handleKeyDown);
             window.removeEventListener("keyup", handleKeyUp);
+
         };
+
+
     }, []);
 
     // Add this useEffect to detect button clicks and reset OrbitControls
@@ -203,36 +206,6 @@ export default function STLCanvas({
         }
     }, [resetButton]);
 
-    // Add custom zoom control with modifier key requirement
-    useEffect(() => {
-        const canvasElement = canvasRef.current;
-        if (!canvasElement) return;
-
-        const handleWheel = (event: WheelEvent) => {
-            // Check if Ctrl (Windows/Linux) or Cmd (Mac) is pressed
-            const isModifierPressed = event.ctrlKey || event.metaKey;
-
-            if (!isModifierPressed) {
-                // Only stop propagation to prevent 3D zoom, but allow page scroll
-                event.stopPropagation();
-                // Don't call preventDefault() - this allows page scroll to continue
-                return;
-            }
-
-            // When modifier is pressed, allow 3D zoom and prevent page scroll
-            event.preventDefault();
-        };
-
-        // Use capture phase to intercept before OrbitControls gets the event
-        canvasElement.addEventListener('wheel', handleWheel, {
-            passive: false,
-            capture: true
-        });
-
-        return () => {
-            canvasElement.removeEventListener('wheel', handleWheel, { capture: true });
-        };
-    }, []);
 
     useEffect(() => {
         setViewerConfig({ ...viewerConfig, mode: cameraMode });

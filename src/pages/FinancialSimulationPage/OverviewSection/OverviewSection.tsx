@@ -284,12 +284,12 @@ export const OverviewSection: React.FC<OverviewSectionProps> = (props) => {
 
       {/* Input Panel */}
       <div >
-        <div className={styles.scenarioTab} style={{ zIndex: 1000 }}>
+        {/* <div className={styles.scenarioTab} style={{ zIndex: 1000 }}>
           <TabBar
             texts={scenarioTitles}
             activeIdx={activeScenarioIdx}
             onActiveIdxChange={setActiveScenarioIdx} />
-        </div>
+        </div> */}
         {InputPanel()}
       </div>
 
