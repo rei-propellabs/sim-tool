@@ -6,7 +6,7 @@ import { useNavigate } from "react-router-dom";
 import { ProjectBreadcrumbs } from "components/ProjectBreadcrumbs/ProjectBreadcrumbs";
 import { ColumnConfig, NavigationTable } from "components/NavigationTable/NavigationTable";
 import useListOrganizations from "api/hooks/useListOrganizations";
-import { OrganizationTableRow } from "types/OrganizationTableRow";
+import { OrganizationTableRow, ProjectStatus } from "types/OrganizationTableRow";
 import { SmallLoadingSpinner } from "components/SmallLoadingSpinner/SmallLoadingSpinner";
 import { getToken } from "utils/TokenManager";
 import { PaginationParams } from "utils/Pagination";
@@ -19,6 +19,9 @@ import navTableStyles from "components/NavigationTable/NavigationTable.module.cs
 import { AttachFile } from "images/Dynamic/AttachFile";
 import useDeleteOrganization from "api/hooks/useDeleteOrganization";
 import Company from "images/Company.svg";
+import { Organization } from "api/models/Organization";
+import { Presentation } from "images/Dynamic/Presentation";
+import { Play } from "images/Dynamic/Play";
 
 export const CompanyListPage = () => {
 
@@ -42,19 +45,31 @@ export const CompanyListPage = () => {
   const navigate = useNavigate();
   const currentPage = Math.floor((pagination.offset ?? 0) / NUM_ROWS) + 1;
 
+
   useEffect(() => {
+
+    const getStatusAndAction = (org: Organization): { title: string, status: ProjectStatus } => {
+      if (org.statuses["PresentationAvailable"] > 0) {
+        return { title: `Presentation`, status: "PresentationAvailable" }
+      } else if (org.statuses["ScenariosUploaded"] > 0) {
+        return { title: `Scenarios Ready`, status: "ScenariosUploaded" }
+      } else if (org.statuses["ReadyForCalculation"] > 0 && org.uploadCount > 0) {
+        return { title: `Action Required`, status: "ReadyForCalculation" }
+      } else {
+        return { title: `No Action Required`, status: "NoActionRequired" }
+      }
+    }
+
     if (!isLoading) {
       setOrgTableData(
         organizations.map((org) => ({
           name: org.name,
           id: org.id,
           siteCount: org.siteCount,
-          uploadCount: org.uploadCount,
+          projectStatus: getStatusAndAction(org),
           createdAt: formatDateMMDDYY(org.createdAt),
           updatedAt: formatDateMMDDYY(org.updatedAt),
           lastUploadAt: org.lastUpload ? daysElapsed(org.lastUpload?.lastUploadAt ?? org.createdAt) : "N/A",
-          projectStatus: org.statuses["ReadyForCalculation"] > 0 ? "Action Required" : "Files Required",
-          numActionRequired: org.statuses["ReadyForCalculation"] ?? 0,
         }))
       );
     }
@@ -94,23 +109,11 @@ export const CompanyListPage = () => {
     {
       key: 'projectStatus', header: 'Project status',
       render: (company) => {
-        if (company.uploadCount > 0) {
-          return (
-            <span className={styles.projectStatus}>
-              Uploads ({company.uploadCount})
-            </span>
-            // <span className={styles.actionRequiredText}>
-            //   <Info color={"var(--warning200)"} size={16} />
-            //   Action required ({company.numActionRequired})
-            // </span>
-          );
-        } else {
-          return (
-            <span className={styles.projectStatus}>
-              No action required
-            </span>
-          );
-        }
+        return (
+          <span className={styles.projectStatus}>
+            {company.projectStatus.title}
+          </span>
+        );
       }
     },
     { key: 'updatedAt', header: 'Last Activity (DD/MM/YY)' },
@@ -118,20 +121,52 @@ export const CompanyListPage = () => {
       key: 'actions',
       header: 'Actions',
       render: (org) => {
-        if (org.uploadCount === 0) return null;
-        return (
-          <button
-            className={"primary-button"}
-            onClick={(e) => {
-              e.stopPropagation();
-              navigate(`/admin/c?t=1&orgId=${org.id}`)
-            }}>
-            <AttachFile size={16}
-              color="var(--primary-button-text)"
-            />
-            View files
-          </button>
-        );
+        switch (org.projectStatus.status) {
+          case "PresentationAvailable":
+            return (
+              <button
+                className={"primary-button"}
+                onClick={(e) => {
+                  e.stopPropagation();
+                  navigate(`/admin/c?t=2&orgId=${org.id}`)
+                }}>
+                <Play size={16}
+                  color="var(--primary-button-text)"
+                />
+                Launch presentation
+              </button>
+            );
+          case "ScenariosUploaded":
+            return (
+              <button
+                className={"primary-button"}
+                onClick={(e) => {
+                  e.stopPropagation();
+                  navigate(`/admin/c?t=2&orgId=${org.id}`)
+                }}>
+                <Presentation size={16}
+                  color="var(--primary-button-text)"
+                />
+                Create presentation
+              </button>
+            );
+          case "ReadyForCalculation":
+            return (
+              <button
+                className={"primary-button"}
+                onClick={(e) => {
+                  e.stopPropagation();
+                  navigate(`/admin/c?t=1&orgId=${org.id}`)
+                }}>
+                <AttachFile size={16}
+                  color="var(--primary-button-text)"
+                />
+                View files
+              </button>
+            )
+          case "NoActionRequired":
+            return null;
+        }
       },
     },
     { key: 'menu', header: 'Menu' },
