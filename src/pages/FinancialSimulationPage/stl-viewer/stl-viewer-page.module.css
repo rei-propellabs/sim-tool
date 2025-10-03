@@ -31,7 +31,7 @@
 
 .controls {
   position: absolute;
-  bottom: 1vh;
+  bottom: 7vh;
   left: 50%;
   transform: translateX(-50%);
   display: flex;

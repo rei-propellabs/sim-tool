@@ -9,6 +9,9 @@ import ComparisonSection from "./ComparisonSection/ComparisonSection"
 import { getToken } from "utils/TokenManager"
 import MonthlySummarySection from "./MonthlySummarySection/MonthlySummarySection"
 import useGetScenariosByProjectId from "api/hooks/useGetScenariosByProjectId"
+import { Breadcrumbs } from "@mui/material"
+import { ProjectBreadcrumbs } from "components/ProjectBreadcrumbs/ProjectBreadcrumbs"
+import { TopBar } from "components/TopBar/TopBar"
 
 
 // const scenarioTitles = ["SCENARIO 1", "SCENARIO 2", "SCENARIO 3"]
@@ -95,12 +98,21 @@ export function FinancialSimulationPage() {
   return (
     <div className={styles.dashboard}>
       {/* <Header /> */}
+      <TopBar
+        leftElements={
+          <ProjectBreadcrumbs
+            texts={["Financial Simulation"]}
+          />
+        }
+      />
+      <div  style={{ position: "relative" }}>
       <OverviewSection
         activeScenarioIdx={activeScenarioIdx}
         setActiveScenarioIdx={setActiveScenarioIdx}
         scenarioData={scenarioData ? scenarioData[activeScenarioIdx] : undefined}
         scenarioTitles={scenarioTitles}
       />
+      </div>
       <NPVSection
         cashFlowData={parsedData[activeScenarioIdx].cashFlow}
         scenarioTitle={scenarioTitles[activeScenarioIdx]}

@@ -5,12 +5,11 @@
   box-sizing: border-box;
   display: flex;
   justify-content: space-between;
-  background: #000;
 }
 
 .scenarioTab {
   position: fixed;
-  top: 1rem;
+  top: 3.5rem;
   z-index: 100;
 }
 
@@ -40,7 +39,7 @@
   width: fit-content;
   position: absolute;
   left: 1vw;
-  bottom: 1vw;
+  bottom: 5vw;
   z-index: 100;
 }
 
