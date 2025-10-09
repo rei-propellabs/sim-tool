@@ -35,51 +35,53 @@ export function NPVSection({ scenarioTitle, cashFlowData, discountRate }: NPVSec
 
   return (
     <div className={finSimStyles.sectionContainer}>
+      <div className={finSimStyles.content}>
 
-      <div className={finSimStyles.heading}>
-        <div className={finSimStyles.left}>
-          <div className={finSimStyles.scenarioLabel}>{scenarioTitle}</div>
-          <div className={finSimStyles.title}>Net Present Value</div>
+        <div className={finSimStyles.heading}>
+          <div className={finSimStyles.left}>
+            <div className={finSimStyles.scenarioLabel}>{scenarioTitle}</div>
+            <div className={finSimStyles.title}>Net Present Value</div>
+          </div>
+          <div className={styles.legend}>
+            {legendItems.map((item, index) => (
+              <div key={item.label} className={styles.legendItem}>
+
+                <span className={styles.legendText}>{item.label}</span>
+                {
+                  index === 3 ? // icon for cumulative-net-cash
+                    <div className={styles.lineLegendIconBackground}>
+                      <div className={styles.lineLegendIcon} />
+                    </div>
+                    :
+                    <span
+                      className={styles.colorBox}
+                      style={{ backgroundColor: item.color }}
+                    />
+                }
+              </div>
+            ))}
+          </div>
         </div>
-        <div className={styles.legend}>
-          {legendItems.map((item, index) => (
-            <div key={item.label} className={styles.legendItem}>
 
-              <span className={styles.legendText}>{item.label}</span>
-              {
-                index === 3 ? // icon for cumulative-net-cash
-                  <div className={styles.lineLegendIconBackground}>
-                    <div className={styles.lineLegendIcon} />
-                  </div>
-                  :
-                  <span
-                    className={styles.colorBox}
-                    style={{ backgroundColor: item.color }}
-                  />
-              }
-            </div>
-          ))}
+        <div className={styles.chartContainer}>
+          <NPVChart data={chartData}
+            hoveredIndex={hoveredIndex}
+            setHoveredIndex={setHoveredIndex}
+          />
         </div>
-      </div>
 
-      <div className={styles.chartContainer}>
-        <NPVChart data={chartData}
-          hoveredIndex={hoveredIndex}
-          setHoveredIndex={setHoveredIndex}
-        />
-      </div>
+        <div className={styles.dataPanelContainer}>
+          <DataPanel
+            totalGrossRevenue={hoveredIndex !== null ? chartData[hoveredIndex].revenue : totalValue.totalGrossRevenue}
+            totalMiningCost={hoveredIndex !== null ? chartData[hoveredIndex].miningCost : totalValue.totalMiningCost}
+            totalProcessingCost={hoveredIndex !== null ? chartData[hoveredIndex].processingCost : totalValue.totalProcessingCost}
+            totalNetCashFlow={hoveredIndex !== null ? chartData[hoveredIndex].cumulativeNetCash : npv}
+            totalNetCashFlowPeriod={hoveredIndex !== null ? chartData[hoveredIndex].revenue + chartData[hoveredIndex].miningCost + chartData[hoveredIndex].processingCost : undefined}
+            discountRate={discountRate}
+          />
+        </div>
 
-      <div className={styles.dataPanelContainer}>
-        <DataPanel
-          totalGrossRevenue={hoveredIndex !== null ? chartData[hoveredIndex].revenue : totalValue.totalGrossRevenue}
-          totalMiningCost={hoveredIndex !== null ? chartData[hoveredIndex].miningCost : totalValue.totalMiningCost}
-          totalProcessingCost={hoveredIndex !== null ? chartData[hoveredIndex].processingCost : totalValue.totalProcessingCost}
-          totalNetCashFlow={hoveredIndex !== null ? chartData[hoveredIndex].cumulativeNetCash : npv}
-          totalNetCashFlowPeriod={hoveredIndex !== null ? chartData[hoveredIndex].revenue + chartData[hoveredIndex].miningCost + chartData[hoveredIndex].processingCost : undefined}
-          discountRate={discountRate}
-        />
       </div>
-
     </div>
   );
 }

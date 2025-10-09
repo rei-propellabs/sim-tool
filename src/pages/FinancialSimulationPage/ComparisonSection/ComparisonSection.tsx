@@ -159,7 +159,7 @@ const ComparisonSection: React.FC<ComparisonSectionProps> = (props) => {
 
   return (
     <div className={finSimStyles.sectionContainer}>
-
+      <div className={finSimStyles.content}>
       <div className={finSimStyles.heading}>
         <div className={finSimStyles.left}>
           <div className={finSimStyles.scenarioLabel}>ALL SCENARIOS</div>
@@ -175,6 +175,7 @@ const ComparisonSection: React.FC<ComparisonSectionProps> = (props) => {
         operationalOutputData={operationalOutputData}
         numScenarios={scenarioData.length}
       />
+      </div>
     </div>
   )
 }

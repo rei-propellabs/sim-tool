@@ -1,6 +1,6 @@
 export const NumHolesLabels = ["35-49", "50-59", "60-69", "70-79", "80-90"];
 
-export interface ScenarioResponse{
+export interface ScenarioResponse {
 	scenarios: ScenarioData[];
 	total: number;
 }
@@ -82,44 +82,28 @@ export interface Collar {
 	WasteVol: number;
 	netValue: number;
 	WasteMass: number;
-	REEsDy2O3Kg: number;
-	REEsNd2O3Kg: number;
 	inclination: number;
-	REEsDy2O3Pct: number;
-	REEsNd2O3Pct: number;
-	REEsPr6O11Kg: number;
-	WasteDy2O3Kg: number;
-	WasteNd2O3Kg: number;
-	REEsPr6O11Pct: number;
-	WasteDy2O3Pct: number;
-	WasteNd2O3Pct: number;
-	WastePr6O11Kg: number;
 	bottomRenderX: number;
 	bottomRenderY: number;
 	bottomRenderZ: number;
 	collarRenderX: number;
 	collarRenderY: number;
 	collarRenderZ: number;
-	WastePr6O11Pct: number;
+	[key: string]: number;
 }
 
 export interface Composite {
 	month: number;
 	miningCost: number;
-	Dy2O3KgSold: number;
-	Nd2O3KgSold: number;
 	netCashFlow: number;
 	tonnesMined: number;
-	Dy2O3Revenue: number;
-	Nd2O3Revenue: number;
-	Pr6O11KgSold: number;
 	totalRevenue: number;
-	Pr6O11Revenue: number;
 	REEsProcessingCost: number;
 	REEsTonnesProcessed: number;
 	WasteProcessingCost: number;
 	totalProcessingCost: number;
 	WasteTonnesProcessed: number;
+	[key: string]: number;
 }
 
 export interface Financial {
@@ -147,15 +131,9 @@ export interface FinancialMonthly {
 	metals: FinancialMetal[];
 	streams: FinancialStream[];
 	miningCost: number;
-	Dy2O3KgSold: number;
-	Nd2O3KgSold: number;
 	netCashFlow: number;
 	tonnesMined: number;
-	Dy2O3Revenue: number;
-	Nd2O3Revenue: number;
-	Pr6O11KgSold: number;
 	totalRevenue: number;
-	Pr6O11Revenue: number;
 	REEsProcessingCost: number;
 	REEsTonnesProcessed: number;
 	WasteProcessingCost: number;
@@ -229,8 +207,10 @@ export interface ExtractionGeometry {
 export interface Metal {
 	per: string;
 	name: string;
+	sold: number;
 	unit: string;
 	price: number;
+	revenue: number;
 	streams: MetalStream[];
 }
 
@@ -238,9 +218,7 @@ export interface MetalStream {
 	mass: number;
 	name: string;
 	unit: number;
-	grade: number;
 	recovery: number;
-	commodity: number;
 }
 
 export interface Stream {
@@ -251,6 +229,7 @@ export interface Stream {
 	maxRate: number | null;
 	revenue: number;
 	costTonne: number;
+	tonnesProcessed: number;
 }
 
 export interface ProjectMetadata {

@@ -3,13 +3,10 @@ import styles from "./OverviewSection.module.css"
 import { MetricCardTwoRows } from "components/MetricCard/MetricCardTwoRows"
 import { TabBar } from "components/TabBar/TabBar"
 import { MetricCardThreeRows } from "components/MetricCard/MetricCardThreeRows"
-import { formatNumberWithAbbreviation } from "utils/NumberFormatter"
 import STLPage from "../stl-viewer/stl-viewer-page"
 import planView from "images/planView.png"
-import planView2 from "images/planView2.png"
-import planView3 from "images/planView3.png"
 import ScrollableImage from "./ScrollableImage/ScrollableImage"
-import { ParametersData, ScenarioData } from "api/models/ScenarioData"
+import { ScenarioData } from "api/models/ScenarioData"
 import GroupedInfoCard from "components/MetricCard/GroupedInfoCard"
 import { ResponsiveMetalCard } from "components/MetricCard/ResponsiveMetalsCard"
 
@@ -20,7 +17,7 @@ interface OverviewSectionProps {
   scenarioTitles: string[],
 }
 export const OverviewSection: React.FC<OverviewSectionProps> = (props) => {
-  const { activeScenarioIdx, setActiveScenarioIdx, scenarioData, scenarioTitles } = props
+  const { activeScenarioIdx, scenarioData, scenarioTitles } = props
   const [activeOutputIdx, setActiveOutputIdx] = useState<number>(0)
   const [activeOrebodyView, setActiveOrebodyView] = useState<number>(0)
 
@@ -61,11 +58,11 @@ export const OverviewSection: React.FC<OverviewSectionProps> = (props) => {
         />
         <div className={styles.row}>
           <ResponsiveMetalCard
-            values={[{ name: "", value: currentData.parameters.numberOfDrills }]}
+            values={[{ name: "", value: currentData.parameters.numberOfDrills.toString() }]}
             title={"Number of Drills"}
           />
           <ResponsiveMetalCard
-            values={[{ name: "", value: currentData.parameters.cutterHeadSize }]}
+            values={[{ name: "", value: currentData.parameters.cutterHeadSize.toString() }]}
             title={"Cutter Head Size"}
             unitSuffix="m"
           />
@@ -196,16 +193,11 @@ export const OverviewSection: React.FC<OverviewSectionProps> = (props) => {
           value={`${displayValue(metric.lom)}`}
           label="LOM"
           description="Life of Mine"
-          unitSuffix="mo" />
+          unitSuffix=" mo" />
         <ResponsiveMetalCard
           values={currentData.metals.map((metal) => ({
             name: metal.name,
-            value: Math.round(
-              metal.streams
-                .filter(stream => stream.name !== "Waste")
-                .map(stream => stream.commodity)
-                .reduce((a, b) => a + b, 0)
-            ).toLocaleString()
+            value: Math.round(metal.sold).toLocaleString()
           }))}
           unitSuffix={`${currentData.metals[0]?.per || ""}`}
           title={"Total Commodity Volume"}
@@ -215,28 +207,34 @@ export const OverviewSection: React.FC<OverviewSectionProps> = (props) => {
           currentData.metals.map((metal, index) => (
             <ResponsiveMetalCard
               key={`metal-grade-${index}`}
-              values={metal.streams.map(stream => ({ name: stream.name, value: localeNumber(stream.grade, 3) ?? "" }))}
+              values={currentData.grade.processed.map((processed, i) => {
+                const metalEntry = processed.metals.find(m => m.name === metal.name);
+                return {
+                  name: processed.name,
+                  value: metalEntry ? metalEntry.grade.toString() : "-"
+                };
+              })}
               title={`${metal.name} Grade`}
               unitSuffix={metal.unit || ""}
             />
           ))
         }
-        {/* <ResponsiveMetalCard
+        <ResponsiveMetalCard
           key={"MassOfMaterialsProcessed"}
-          values={currentData.metals.map(metal => ({ name: metal.name, value: localeNumber(metal.mass) ?? "" }))}
+          values={currentData.streams.map(stream => ({ name: stream.name, value: localeNumber(stream.tonnesProcessed) ?? "" }))}
           title={`Mass of Materials Processed`}
           unitSuffix={"t"}
-        /> */}
+        />
 
         <span /><span />
         <view className={styles.row}>
           <ResponsiveMetalCard
-            values={[{ name: "", value: metric.extractionHoles }]}
+            values={[{ name: "", value: metric.extractionHoles.toString() }]}
             title={"Extraction Holes"}
           />
 
           <ResponsiveMetalCard
-            values={[{ name: "", value: metric.totalLength }]}
+            values={[{ name: "", value: metric.totalLength.toLocaleString() }]}
             unitSuffix="m"
             title={"Total Length"}
           />

@@ -2,6 +2,7 @@
   border-radius: 8px;
   margin: 24px;
   overflow-x: auto;
+  overflow: visible;
 }
 
 .table {
@@ -40,6 +41,7 @@
   background: var(--table-cell);
   border-bottom: 1px solid  var(--table-border);
 }
+
 .dataRow:hover,
 .dataRow:hover .labelCell {
   background: var(--table-row-hover-solid);
@@ -51,9 +53,10 @@
   color: var(--default-text);
   position: sticky;
   left: 0;
-  z-index: 1;
+  z-index: 5;
   min-width: 200px;
   background: var(--table-cell);
+  box-shadow: 8px 0 16px -4px rgba(0,0,0,0.15);
 }
 
 .dataCell {

@@ -71,27 +71,27 @@ const ComparisonTable = (props: ComparisonTableProps) => {
 
     return (
       <div className={styles.horizontalBarChart}>
-        <div className={styles.barRow}>
-          <span className={styles.barLabel}>MIN</span>
-          <div className={styles.barContainer}>
-            <div className={styles.bar} style={{ width: `${Math.max(widths[0], 0.01) * 100}%` }}></div>
+          <div className={styles.barRow}>
+            <span className={styles.barLabel}>MIN</span>
+            <div className={styles.barContainer}>
+              <div className={styles.bar} style={{ width: `${Math.max(widths[0], 0.01) * 100}%` }}></div>
+            </div>
+            <span className={styles.barValue}>{min}m</span>
           </div>
-          <span className={styles.barValue}>{min}m</span>
-        </div>
-        <div className={styles.barRow}>
-          <span className={styles.barLabel}>MAX</span>
-          <div className={styles.barContainer}>
-            <div className={styles.bar} style={{ width: `${widths[1] * 100}%` }}></div>
+          <div className={styles.barRow}>
+            <span className={styles.barLabel}>MAX</span>
+            <div className={styles.barContainer}>
+              <div className={styles.bar} style={{ width: `${widths[1] * 100}%` }}></div>
+            </div>
+            <span className={styles.barValue}>{max}m</span>
           </div>
-          <span className={styles.barValue}>{max}m</span>
-        </div>
-        <div className={styles.barRow}>
-          <span className={styles.barLabel}>AVG</span>
-          <div className={styles.barContainer}>
-            <div className={styles.bar} style={{ width: `${widths[2] * 100}%` }}></div>
+          <div className={styles.barRow}>
+            <span className={styles.barLabel}>AVG</span>
+            <div className={styles.barContainer}>
+              <div className={styles.bar} style={{ width: `${widths[2] * 100}%` }}></div>
+            </div>
+            <span className={styles.barValue}>{Math.round(average)}m</span>
           </div>
-          <span className={styles.barValue}>{Math.round(average)}m</span>
-        </div>
       </div>
     )
   }

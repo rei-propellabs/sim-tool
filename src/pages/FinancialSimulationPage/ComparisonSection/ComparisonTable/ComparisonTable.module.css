@@ -1,9 +1,8 @@
 .tableContainer {
   border-radius: 8px;
   overflow: hidden;
-  margin: 2vh 10vw;
+  margin: 2vh 0vw;
   border: 1px solid var(--table-border);
-  width: fit-content;
   align-self: center;
 }
 
@@ -96,7 +95,7 @@
   align-items: center;
   justify-content: center;
   flex-grow: 1;
-  min-width: 18rem;
+  min-width: 14rem;
 }
 
 .divier { 

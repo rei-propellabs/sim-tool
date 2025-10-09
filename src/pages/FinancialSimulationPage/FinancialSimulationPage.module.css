@@ -5,15 +5,21 @@
   flex-direction: column;
   overflow-x: hidden;
 }
-
+.content {
+  max-width: 1020px;
+  align-self: center;
+  width: 100%;
+  min-height: 90vh;
+}
 .sectionContainer {
-  min-height: 100vh;
   width: 100%;
   justify-items: center;
   box-sizing: border-box;
   padding: 6vh 0;
   display: flex;
   flex-direction: column;
+  overflow: visible;
+  margin-bottom: 2rem; /* ensures next component does not overlap */
 }
 
 .scenarioLabel {
@@ -34,7 +40,7 @@
   justify-content: space-between;
   color: var(--default-text);
   align-items: flex-end;
-  padding: 1vh 10vw;
+  padding: 1vh 0vw;
 }
 
 .left {

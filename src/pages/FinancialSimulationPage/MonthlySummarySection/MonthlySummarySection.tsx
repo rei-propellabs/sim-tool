@@ -122,22 +122,22 @@ const MonthlySummarySection: React.FC<MonthlySummarySectionProps> = ({ scenarioT
   const fileName = "SummaryTable";
 
   return (
-    <div className={finSimStyles.sectionContainer}>
+    <div className={finSimStyles.sectionContainer} style={{ minHeight: "auto" }}>
+      <div className={finSimStyles.content}>
+        <div className={finSimStyles.heading}>
+          <div className={finSimStyles.left}>
+            <div className={finSimStyles.scenarioLabel}>{scenarioTitle}</div>
+            <div className={finSimStyles.title}>Project Summary by Month</div>
+          </div>
+          <div className={finSimStyles.right}>
+            <button onClick={() => exportToExcel(scenarioTableData, fileName)} className={"primary-button"}>
+              <Download size={18} color={"var(--primary-button-text)"} />
+              Download</button>
 
-      <div className={finSimStyles.heading}>
-        <div className={finSimStyles.left}>
-          <div className={finSimStyles.scenarioLabel}>{scenarioTitle}</div>
-          <div className={finSimStyles.title}>Project Summary by Month</div>
+          </div>
         </div>
-        <div className={finSimStyles.right}>
-          <button onClick={() => exportToExcel(scenarioTableData, fileName)} className={"primary-button"}>
-            <Download size={18} color={"var(--primary-button-text)"} />
-            Download</button>
-
-        </div>
+        <SummaryTable columns={scenarioTableData[scenarioIdx].columns} sections={scenarioTableData[scenarioIdx].sections} />
       </div>
-      <SummaryTable columns={scenarioTableData[scenarioIdx].columns} sections={scenarioTableData[scenarioIdx].sections} />
-
     </div>
   )
 

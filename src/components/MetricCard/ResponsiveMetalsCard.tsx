@@ -3,7 +3,7 @@ import styles from "./MetricCard.module.css";
 import { MetricCardBase } from "./MetricCardBase";
 
 interface ResponsiveMetalCardProps {
-  values: { name: string, value: number | string }[];
+  values: { name: string, value: string }[];
   unitPrefix?: string;
   unitSuffix?: string;
   title: string;
@@ -22,7 +22,7 @@ export function ResponsiveMetalCard(props: ResponsiveMetalCardProps) {
   const [parentWidth, setParentWidth] = useState<number>(0);
 
   // Calculate display lengths
-  const valueStrings = values.map(v => v.value.toLocaleString());
+  const valueStrings = values.map(v => v.value);
   const displayLengths = valueStrings.map((val, i) => getDisplayLength(val, unitPrefix, unitSuffix));
   const maxDisplayLength = Math.max(...displayLengths, 0);
 
@@ -99,7 +99,7 @@ export function ResponsiveMetalCard(props: ResponsiveMetalCardProps) {
       // Default: all data, then title below
       return values.map((v, i) => (
         <div key={`data-${i}-${v.name}`}>
-          {renderDataCell({ name: values.length === 1 ? "" : v.name, value: v.value.toLocaleString() })}
+          {renderDataCell({ name: values.length === 1 ? "" : v.name, value: v.value })}
         </div>
       ));
     }
@@ -112,7 +112,7 @@ export function ResponsiveMetalCard(props: ResponsiveMetalCardProps) {
         if (idx < values.length) {
           cells.push(
             <div key={`data-${idx}-${values[idx].name}`}>
-              {renderDataCell({ name: values.length === 1 ? "" : values[idx].name, value: values[idx].value.toLocaleString() })}
+              {renderDataCell({ name: values.length === 1 ? "" : values[idx].name, value: values[idx].value })}
             </div>
           );
           idx++;
@@ -129,7 +129,7 @@ export function ResponsiveMetalCard(props: ResponsiveMetalCardProps) {
       if (idx < values.length) {
         cells.push(
           <div key={`data-${idx}-${values[idx].name}`}>
-            {renderDataCell({ name: values.length === 1 ? "" : values[idx].name, value: values[idx].value.toLocaleString() })}
+            {renderDataCell({ name: values.length === 1 ? "" : values[idx].name, value: values[idx].value})}
           </div>
         );
         idx++;
