@@ -22,37 +22,39 @@ const formatValue = (value: string | number | null, type?: string): string => {
   }
 }
 
-export default function SummaryTable({ columns, sections }: SummaryTableType) {
+export default function SummaryTable({ columns, sections, marginRight }: SummaryTableType) {
   return (
     <div className={styles.tableContainer}>
-      <table className={styles.table}>
-        <tbody>
-          {sections.map((section, sectionIndex) => (
-            <React.Fragment key={`stsection-${sectionIndex}`}>
-              {section.title && (
-                <tr className={styles.headerRow}>
-                  <th className={styles.headerCell}>{section.title}</th>
-                  {columns.map((column, index) => (
-                    <th key={`stheader-${sectionIndex}-${index}`} className={styles.headerCell}>
-                      {column}
-                    </th>
-                  ))}
-                </tr>
-              )}
-              {section.rows.map((row, rowIndex) => (
-                <tr key={`strow-${sectionIndex}-${rowIndex}`} className={styles.dataRow}>
-                  <td className={styles.labelCell}>{row.label}</td>
-                  {row.values.map((value, valueIndex) => (
-                    <td key={`stcell-${sectionIndex}-${rowIndex}-${valueIndex}`} className={styles.dataCell}>
-                      {(value === undefined || value === null) ? "-" : formatValue(value, row.type)}
-                    </td>
-                  ))}
-                </tr>
-              ))}
-            </React.Fragment>
-          ))}
-        </tbody>
-      </table>
+      <div className={styles.scrollWrapper}>
+        <table className={styles.table} style={{ marginRight: marginRight }}>
+          <tbody>
+            {sections.map((section, sectionIndex) => (
+              <React.Fragment key={`stsection-${sectionIndex}`}>
+                {section.title && (
+                  <tr className={styles.headerRow}>
+                    <th className={styles.headerCell}>{section.title}</th>
+                    {columns.map((column, index) => (
+                      <th key={`stheader-${sectionIndex}-${index}`} className={styles.headerCell}>
+                        {column}
+                      </th>
+                    ))}
+                  </tr>
+                )}
+                {section.rows.map((row, rowIndex) => (
+                  <tr key={`strow-${sectionIndex}-${rowIndex}`} className={styles.dataRow}>
+                    <td className={styles.labelCell}>{row.label}</td>
+                    {row.values.map((value, valueIndex) => (
+                      <td key={`stcell-${sectionIndex}-${rowIndex}-${valueIndex}`} className={styles.dataCell}>
+                        {(value === undefined || value === null) ? "-" : formatValue(value, row.type)}
+                      </td>
+                    ))}
+                  </tr>
+                ))}
+              </React.Fragment>
+            ))}
+          </tbody>
+        </table>
+      </div>
     </div>
   )
 }

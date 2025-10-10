@@ -12,4 +12,5 @@ export interface TableSection {
 export interface SummaryTableType {
   columns: string[]
   sections: TableSection[]
+  marginRight?: any
 }

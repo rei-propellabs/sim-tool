@@ -112,7 +112,7 @@ const ComparisonSection: React.FC<ComparisonSectionProps> = (props) => {
         title: "Total Commodity Volume",
         values: scenarioData.map(s => s.metals.map((metal) => {
           return ({
-            value: Math.round(metal.streams.reduce((sum, stream) => sum + (stream.commodity || 0), 0)), // todo: confirm this
+            value: Math.round(metal.sold),
             name: metal.name,
             unitSuffix: metal.per,
           })
@@ -126,12 +126,14 @@ const ComparisonSection: React.FC<ComparisonSectionProps> = (props) => {
         return uniqueMetals.map(metalName => ({
           title: `${metalName} Grade`,
           values: scenarioData.map(s => {
-            const metal = s.metals.find(m => m.name === metalName);
-            return metal ? metal.streams.map(stream => ({
-              value: Math.round(stream.grade * 100) / 100,
-              name: stream.name,
-              unitSuffix: metal.unit,
-            })) : [];
+            return s.grade.processed.map((processed) => {
+              const metalEntry = processed.metals.find(m => m.name === metalName);
+              return {
+                name: processed?.name,
+                value: metalEntry ? metalEntry.grade.toString() : "-",
+                unitSuffix: "pct",
+              }
+            })
           })
         }));
       })(),
@@ -160,21 +162,21 @@ const ComparisonSection: React.FC<ComparisonSectionProps> = (props) => {
   return (
     <div className={finSimStyles.sectionContainer}>
       <div className={finSimStyles.content}>
-      <div className={finSimStyles.heading}>
-        <div className={finSimStyles.left}>
-          <div className={finSimStyles.scenarioLabel}>ALL SCENARIOS</div>
-          <div className={finSimStyles.title}>Comparison View</div>
+        <div className={finSimStyles.heading}>
+          <div className={finSimStyles.left}>
+            <div className={finSimStyles.scenarioLabel}>ALL SCENARIOS</div>
+            <div className={finSimStyles.title}>Comparison View</div>
+          </div>
         </div>
-      </div>
-      <ComparisonTable
-        cashFlowData={cashFlowData}
-        keyAssumptions={keyAssumptions}
-        operationalData={operationalData}
-        constantAssumptions={constantAssumptions}
-        financialOutputData={financialOutputData}
-        operationalOutputData={operationalOutputData}
-        numScenarios={scenarioData.length}
-      />
+        <ComparisonTable
+          cashFlowData={cashFlowData}
+          keyAssumptions={keyAssumptions}
+          operationalData={operationalData}
+          constantAssumptions={constantAssumptions}
+          financialOutputData={financialOutputData}
+          operationalOutputData={operationalOutputData}
+          numScenarios={scenarioData.length}
+        />
       </div>
     </div>
   )

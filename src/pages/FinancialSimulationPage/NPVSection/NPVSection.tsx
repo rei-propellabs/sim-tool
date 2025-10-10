@@ -6,11 +6,11 @@ import NPVChart from "./NPVChart/NPVChart";
 import { CashFlowData } from "models/CashFlow";
 import { useEffect, useState } from "react";
 import { cashFlowToChartData, getTotalValues } from "./NPVHelper";
-import { CashflowEntry, CashflowSet } from "api/models/ScenarioData";
+import { Cashflow } from "api/models/ScenarioData";
 
 export interface NPVSectionProps {
   scenarioTitle: string;
-  cashFlowData?: CashflowSet;
+  cashFlowData?: Cashflow;
   discountRate: number;
 
 }
