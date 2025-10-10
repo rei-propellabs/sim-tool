@@ -162,7 +162,7 @@ export default function STLPage() {
             }>
 
                 <STLCanvas {...stlCanvasProps} />
-                <div className={styles.controls}>
+                {/* <div className={styles.controls}>
 
                     <button className={styles.playPause} onClick={() => setAutoRotate(!autoRotate)}>
                         <img src={autoRotate ? pause : play} />
@@ -179,7 +179,7 @@ export default function STLPage() {
                         checked={showSurface}
                         onValueChange={setShowSurface}
                     />
-                </div>
+                </div> */}
 
                 <div className={'absolute top-1/2 z-10 left-4 flex flex-col gap-2'}>
                     {/*// @ts-ignore*/}
