@@ -56,8 +56,8 @@ export const FileInput = (props: FileInputProps) => {
   const handleUploadFile = (file: File) => {
     // Check file size
 
-    if (maxSizeMB && file.size > maxSizeMB * 1000 * 1000) {
-      setErrorMsg(`File size exceeds ${formatFileSize(maxSizeMB * 1000 * 1000)} limit.`);
+    if (maxSizeMB && file.size > maxSizeMB * 1024 * 1024) {
+      setErrorMsg(`File size exceeds ${formatFileSize(maxSizeMB * 1024 * 1024)} limit.`);
       if (setFileInfo) setFileInfo({ ...fileInfo, status: "error" });
       return;
     }

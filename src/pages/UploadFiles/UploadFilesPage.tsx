@@ -399,7 +399,7 @@ export const UploadFilesPage = () => {
                 setBlockModel({ status: "required", type: FileType.BLOCK_MODEL })
               }}
               allowedExtensions={["zip", "rar", "dm", "csv"]}
-              maxSizeMB={1000}
+              maxSizeMB={1024}
               required
             />
 
@@ -564,7 +564,7 @@ export const UploadFilesPage = () => {
               }}
               required
               allowedExtensions={["zip", "rar", "dxf", "stl", "dwg", "csv"]}
-              maxSizeMB={1000}
+              maxSizeMB={1024}
             />
             <div className="row">
               <div >
