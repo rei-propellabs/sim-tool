@@ -49,3 +49,9 @@
   gap: 0.2rem;
   
 }
+.seeMore {
+  background: var(--metric-card-background);
+  color: var(--darker-text);
+  border: var(--metric-card-border);
+  border-radius: 8px;
+}

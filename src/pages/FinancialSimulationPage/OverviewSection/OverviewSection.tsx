@@ -1,4 +1,4 @@
-import { useState } from "react"
+import { useState, useEffect } from "react"
 import styles from "./OverviewSection.module.css"
 import { MetricCardTwoRows } from "components/MetricCard/MetricCardTwoRows"
 import { TabBar } from "components/TabBar/TabBar"
@@ -22,7 +22,23 @@ export const OverviewSection: React.FC<OverviewSectionProps> = (props) => {
   const [activeOrebodyView, setActiveOrebodyView] = useState<number>(0)
 
   const [scrollPosition, setScrollPosition] = useState(0.5);
+  const [windowWidth, setWindowWidth] = useState(typeof window !== 'undefined' ? window.innerWidth : 1000);
+  const isMobile = windowWidth < 760;
+  const [seeMoreInput, setSeeMoreInput] = useState(isMobile ? false : true);
+  const [seeMoreOperational, setSeeMoreOperational] = useState(isMobile ? false : true);
+  const [seeMoreFinancial, setSeeMoreFinancial] = useState(isMobile ? false : true);
 
+  useEffect(() => {
+    const handleResize = () => setWindowWidth(window.innerWidth);
+    window.addEventListener("resize", handleResize);
+    return () => window.removeEventListener("resize", handleResize);
+  }, []);
+
+  useEffect(() => {
+    setSeeMoreInput(isMobile ? false : true);
+    setSeeMoreOperational(isMobile ? false : true);
+    setSeeMoreFinancial(isMobile ? false : true);
+  }, [isMobile]);
   const outputs = ["financial (USD)", "operational"]
   const orebodyView = ["3D animation", "plan view"]
 
@@ -67,24 +83,37 @@ export const OverviewSection: React.FC<OverviewSectionProps> = (props) => {
             unitSuffix="m"
           />
         </div>
-        {
-          currentData.metals.map((metal, index) => {
-            return <ResponsiveMetalCard
-              key={`metal-recovery-${index}`}
-              values={metal.streams.map((stream) => (
-                { name: stream.name, value: Math.round(stream.recovery).toLocaleString() }))}
-              title={`${metal.name} Recovery`}
-              unitSuffix="%"
-            />
-          })
-        }
 
-        <ResponsiveMetalCard
-          values={currentData.streams.map((stream) => (
-            { name: stream.name, value: Math.round(stream.costTonne).toLocaleString() }))}
-          title={`Processing Cost per Tonne`}
-          unitPrefix="$"
-        />
+        {
+          seeMoreInput &&
+          <>
+            {currentData.metals.map((metal, index) => {
+              return <ResponsiveMetalCard
+                key={`metal-recovery-${index}`}
+                values={metal.streams.map((stream) => (
+                  { name: stream.name, value: Math.round(stream.recovery).toLocaleString() }))}
+                title={`${metal.name} Recovery`}
+                unitSuffix="%"
+              />
+            })}
+            <ResponsiveMetalCard
+              values={currentData.streams.map((stream) => (
+                { name: stream.name, value: Math.round(stream.costTonne).toLocaleString() }))}
+              title={`Processing Cost per Tonne`}
+              unitPrefix="$"
+            />
+          </>
+        }
+        {
+          isMobile &&
+          <button onClick={() => {
+            setSeeMoreInput(!seeMoreInput)
+          }}
+            className={styles.seeMore}>
+            See {seeMoreInput ? "less" : "more"}
+          </button>
+
+        }
       </div>
     )
   }
@@ -118,62 +147,79 @@ export const OverviewSection: React.FC<OverviewSectionProps> = (props) => {
           ]}
         />
 
-        <GroupedInfoCard key="costBreakdown"
-          rows={[
-            {
-              leftLabel: "Extraction Cost",
-              leftValue: `${displayValue(localeNumber(metric.extractionCost, 0), "$")}`,
-              rightLabel: "/tonne",
-              rightValue: `${displayValue(localeNumber(metric.extractionCostTonne, 1), "$")}`
-            },
-            {
-              leftLabel: "Imaging Cost",
-              leftValue: `${displayValue(localeNumber(metric.imagingCost, 0), "$")}`,
-              rightLabel: "/tonne",
-              rightValue: `${displayValue(localeNumber(metric.imagingCostTonne, 0), "$")}`
-            },
-            {
-              leftLabel: "Closure Cost",
-              leftValue: `${displayValue(localeNumber(metric.closureCost, 0), "$")}`,
-              rightLabel: "/tonne",
-              rightValue: `${displayValue(localeNumber(metric.closureCostTonne, 0), "$")}`
-            },
-          ]}
-        />
+        {
+          seeMoreFinancial &&
+          <>
+            <GroupedInfoCard key="costBreakdown"
 
-        <GroupedInfoCard key="totalProcessingCost"
-          rows={[
-            {
-              leftLabel: "Total Processing Cost",
-              leftValue: `${displayValue(localeNumber(metric.totalProcessingCost, 0), "$")}`,
-              rightLabel: "/tonne",
-              rightValue: `${displayValue(localeNumber(metric.totalProcessingCostTonne, 0), "$")}`
-            },
-          ]}
-        />
+              rows={[
+                {
+                  leftLabel: "Extraction Cost",
+                  leftValue: `${displayValue(localeNumber(metric.extractionCost, 0), "$")}`,
+                  rightLabel: "/tonne",
+                  rightValue: `${displayValue(localeNumber(metric.extractionCostTonne, 1), "$")}`
+                },
+                {
+                  leftLabel: "Imaging Cost",
+                  leftValue: `${displayValue(localeNumber(metric.imagingCost, 0), "$")}`,
+                  rightLabel: "/tonne",
+                  rightValue: `${displayValue(localeNumber(metric.imagingCostTonne, 0), "$")}`
+                },
+                {
+                  leftLabel: "Closure Cost",
+                  leftValue: `${displayValue(localeNumber(metric.closureCost, 0), "$")}`,
+                  rightLabel: "/tonne",
+                  rightValue: `${displayValue(localeNumber(metric.closureCostTonne, 0), "$")}`
+                },
+              ]}
+            />
 
-        <GroupedInfoCard key="totalProjectCost"
-          rows={[
-            {
-              leftLabel: "Total Project Cost",
-              leftValue: `${displayValue(localeNumber(metric.allInCost, 0), "$")}`,
-              dark: true,
-            },
-          ]}
-        />
+            <GroupedInfoCard key="totalProcessingCost"
+              rows={[
+                {
+                  leftLabel: "Total Processing Cost",
+                  leftValue: `${displayValue(localeNumber(metric.totalProcessingCost, 0), "$")}`,
+                  rightLabel: "/tonne",
+                  rightValue: `${displayValue(localeNumber(metric.totalProcessingCostTonne, 0), "$")}`
+                },
+              ]}
+            />
 
-        <span />
+            <GroupedInfoCard key="totalProjectCost"
+              rows={[
+                {
+                  leftLabel: "Total Project Cost",
+                  leftValue: `${displayValue(localeNumber(metric.allInCost, 0), "$")}`,
+                  dark: true,
+                },
+              ]}
+            />
 
-        <GroupedInfoCard key="netCashFlow"
-          rows={[
-            {
-              leftLabel: "Project Net Cash Flow",
-              leftValue: `${displayValue(localeNumber(metric.netCashFlow, 0), "$")}`,
-              rightLabel: "/tonne",
-              rightValue: `${displayValue(localeNumber(metric.netCashFlowTonne, 0), "$")}`,
-            },
-          ]}
-        />
+            <span />
+
+            <GroupedInfoCard key="netCashFlow"
+              rows={[
+                {
+                  leftLabel: "Project Net Cash Flow",
+                  leftValue: `${displayValue(localeNumber(metric.netCashFlow, 0), "$")}`,
+                  rightLabel: "/tonne",
+                  rightValue: `${displayValue(localeNumber(metric.netCashFlowTonne, 0), "$")}`,
+                },
+              ]}
+            />
+
+          </>
+        }
+
+        {isMobile && (
+          <button onClick={() => {
+            setSeeMoreFinancial(!seeMoreFinancial)
+          }}
+            className={styles.seeMore}>
+            See {seeMoreFinancial ? "less" : "more"}
+          </button>
+        )}
+
       </div>
     )
   }
@@ -202,65 +248,77 @@ export const OverviewSection: React.FC<OverviewSectionProps> = (props) => {
           unitSuffix={`${currentData.metals[0]?.per || ""}`}
           title={"Total Commodity Volume"}
         />
-
-        {
-          currentData.metals.map((metal, index) => (
+        {seeMoreOperational &&
+          <>
+            {
+              currentData.metals.map((metal, index) => (
+                <ResponsiveMetalCard
+                  key={`metal-grade-${index}`}
+                  values={currentData.grade.processed.map((processed, i) => {
+                    const metalEntry = processed.metals.find(m => m.name === metal.name);
+                    return {
+                      name: processed.name,
+                      value: metalEntry ? metalEntry.grade.toString() : "-"
+                    };
+                  })}
+                  title={`${metal.name} Grade`}
+                  unitSuffix={metal.unit || ""}
+                />
+              ))
+            }
             <ResponsiveMetalCard
-              key={`metal-grade-${index}`}
-              values={currentData.grade.processed.map((processed, i) => {
-                const metalEntry = processed.metals.find(m => m.name === metal.name);
-                return {
-                  name: processed.name,
-                  value: metalEntry ? metalEntry.grade.toString() : "-"
-                };
-              })}
-              title={`${metal.name} Grade`}
-              unitSuffix={metal.unit || ""}
+              key={"MassOfMaterialsProcessed"}
+              values={currentData.streams.map(stream => ({ name: stream.name, value: localeNumber(stream.tonnesProcessed) ?? "" }))}
+              title={`Mass of Materials Processed`}
+              unitSuffix={"t"}
             />
-          ))
+
+            <span /><span />
+            <view className={styles.row}>
+              <ResponsiveMetalCard
+                values={[{ name: "", value: metric.extractionHoles.toString() }]}
+                title={"Extraction Holes"}
+              />
+
+              <ResponsiveMetalCard
+                values={[{ name: "", value: metric.totalLength.toLocaleString() }]}
+                unitSuffix="m"
+                title={"Total Length"}
+              />
+            </view>
+
+            <MetricCardThreeRows topLabels={["Hole Length"]}
+              values={[
+                { key: "holeLengthMin", value: `${displayValue(localeNumber(metric.holeLengthMin), "", "")}`, label: "MIN", unitSuffix: "m" },
+                { key: "holeLengthMax", value: `${displayValue(localeNumber(metric.holeLengthMax), "", "")}`, label: "MAX", unitSuffix: "m" },
+                { key: "holeLengthAvg", value: `${displayValue(localeNumber(Math.round(metric.holeLengthAvg)), "", "")}`, label: "AVG", unitSuffix: "m" },
+              ]}
+            />
+
+            <MetricCardThreeRows topLabels={["Hole Inclination"]}
+              values={[
+                { key: "holeInclinationMin", value: `${displayValue(metric.holeInclinationMin)}`, label: "MIN", unitSuffix: "°" },
+                { key: "holeInclinationMax", value: `${displayValue(metric.holeInclinationMax)}`, label: "MAX", unitSuffix: "°" },
+                { key: "holeInclinationAvg", value: `${displayValue(metric.holeInclinationAvg.toFixed(1))}`, label: "AVG", unitSuffix: "°" },
+              ]}
+            />
+
+            <MetricCardThreeRows topLabels={["Quantity of Holes per Inclination"]}
+              values={numHolesLabels.map((label, index) => {
+                return { key: `numHoles${label}`, value: `${displayValue(localeNumber(metric.quantityOfHolesPerInclination[index]), "", "")}`, label: `${label}°` }
+
+              })}
+            />
+          </>
         }
-        <ResponsiveMetalCard
-          key={"MassOfMaterialsProcessed"}
-          values={currentData.streams.map(stream => ({ name: stream.name, value: localeNumber(stream.tonnesProcessed) ?? "" }))}
-          title={`Mass of Materials Processed`}
-          unitSuffix={"t"}
-        />
+        {isMobile &&
+          <button onClick={() => {
+            setSeeMoreOperational(!seeMoreOperational)
+          }}
+            className={styles.seeMore}>
+            See {seeMoreOperational ? "less" : "more"}
+          </button>}
 
-        <span /><span />
-        <view className={styles.row}>
-          <ResponsiveMetalCard
-            values={[{ name: "", value: metric.extractionHoles.toString() }]}
-            title={"Extraction Holes"}
-          />
-
-          <ResponsiveMetalCard
-            values={[{ name: "", value: metric.totalLength.toLocaleString() }]}
-            unitSuffix="m"
-            title={"Total Length"}
-          />
-        </view>
-
-        <MetricCardThreeRows topLabels={["Hole Length"]}
-          values={[
-            { key: "holeLengthMin", value: `${displayValue(localeNumber(metric.holeLengthMin), "", "")}`, label: "MIN", unitSuffix: "m" },
-            { key: "holeLengthMax", value: `${displayValue(localeNumber(metric.holeLengthMax), "", "")}`, label: "MAX", unitSuffix: "m" },
-            { key: "holeLengthAvg", value: `${displayValue(localeNumber(Math.round(metric.holeLengthAvg)), "", "")}`, label: "AVG", unitSuffix: "m" },
-          ]}
-        />
-
-        <MetricCardThreeRows topLabels={["Hole Inclination"]}
-          values={[
-            { key: "holeInclinationMin", value: `${displayValue(metric.holeInclinationMin)}`, label: "MIN", unitSuffix: "°" },
-            { key: "holeInclinationMax", value: `${displayValue(metric.holeInclinationMax)}`, label: "MAX", unitSuffix: "°" },
-            { key: "holeInclinationAvg", value: `${displayValue(metric.holeInclinationAvg.toFixed(1))}`, label: "AVG", unitSuffix: "°" },
-          ]}
-        />
-
-        <MetricCardThreeRows topLabels={["Quantity of Holes per Inclination"]}
-          values={numHolesLabels.map((label, index) => {
-            return { key: `numHoles${label}`, value: `${displayValue(localeNumber(metric.quantityOfHolesPerInclination[index]), "", "")}`, label: `${label}°` }
-          })}
-        />
       </div>
     )
   }
