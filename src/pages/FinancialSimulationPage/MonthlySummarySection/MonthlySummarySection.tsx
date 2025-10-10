@@ -123,7 +123,7 @@ const MonthlySummarySection: React.FC<MonthlySummarySectionProps> = ({ scenarioT
   const fileName = "SummaryTable";
 
   return (
-    <div style={{ minHeight: "auto" }}>
+    <div >
       <div style={{ padding: "0 2rem" }}>
         <div className={styles.headerContainer}>
           <div className={finSimStyles.heading}>
@@ -141,21 +141,13 @@ const MonthlySummarySection: React.FC<MonthlySummarySectionProps> = ({ scenarioT
         </div>
       </div>
 
-      <div style={{ }}>
-
-        <div style={{
-          position: 'relative',
-          marginLeft: "calc(Max((100vw - 1020px) / 2, 2rem))",
-          marginTop: '24px'
-          
-        }}>
-          <SummaryTable
-            marginRight='calc(Max((100vw - 1020px) / 2, 2rem))'
-            columns={scenarioTableData[scenarioIdx].columns}
-            sections={scenarioTableData[scenarioIdx].sections} />
-        </div>
-
+      <div className={styles.tableContainer}>
+        <SummaryTable
+          marginRight='calc(Max((100vw - 1020px) / 2, 2rem))'
+          columns={scenarioTableData[scenarioIdx].columns}
+          sections={scenarioTableData[scenarioIdx].sections} />
       </div>
+
     </div>
   )
 
