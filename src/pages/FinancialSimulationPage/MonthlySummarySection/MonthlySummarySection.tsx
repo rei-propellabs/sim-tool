@@ -1,5 +1,6 @@
 import { Download } from "images/Dynamic/Download";
 import finSimStyles from '../FinancialSimulationPage.module.css';
+import styles from './MonthlySummarySection.module.css';
 import SummaryTable from "./SummaryTable/SummaryTable";
 import { exportToExcel } from "./ExportToExcel";
 import { SummaryTableType } from "types/SummaryTableType"
@@ -123,7 +124,7 @@ const MonthlySummarySection: React.FC<MonthlySummarySectionProps> = ({ scenarioT
 
   return (
     <div className={finSimStyles.sectionContainer} style={{ minHeight: "auto" }}>
-      <div className={finSimStyles.headerContainer}>
+      <div className={styles.headerContainer}>
         <div className={finSimStyles.heading}>
           <div className={finSimStyles.left}>
             <div className={finSimStyles.scenarioLabel}>{scenarioTitle}</div>
@@ -140,11 +141,11 @@ const MonthlySummarySection: React.FC<MonthlySummarySectionProps> = ({ scenarioT
         <div style={{ 
           position: 'relative',
           width: '100vw',
-          paddingLeft: '10vw',
+          paddingLeft: 'calc((100% - 1020px) / 2)',
           marginTop: '24px'
         }}>
           <SummaryTable 
-            marginRight='10vw'
+            marginRight='calc((100vw - 1020px) / 2)'
             columns={scenarioTableData[scenarioIdx].columns} 
             sections={scenarioTableData[scenarioIdx].sections} />
         </div>

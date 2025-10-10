@@ -15,11 +15,10 @@
   width: 100%;
   justify-items: center;
   box-sizing: border-box;
-  padding: 6vh 0;
+  padding: 3rem 2rem;
   display: flex;
   flex-direction: column;
   overflow: visible;
-  margin-bottom: 2rem; /* ensures next component does not overlap */
 }
 
 .scenarioLabel {
