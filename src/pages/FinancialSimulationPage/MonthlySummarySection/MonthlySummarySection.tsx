@@ -123,33 +123,39 @@ const MonthlySummarySection: React.FC<MonthlySummarySectionProps> = ({ scenarioT
   const fileName = "SummaryTable";
 
   return (
-    <div className={finSimStyles.sectionContainer} style={{ minHeight: "auto" }}>
-      <div className={styles.headerContainer}>
-        <div className={finSimStyles.heading}>
-          <div className={finSimStyles.left}>
-            <div className={finSimStyles.scenarioLabel}>{scenarioTitle}</div>
-            <div className={finSimStyles.title}>Project Summary by Month</div>
-          </div>
-          <div className={finSimStyles.right}>
-            <button onClick={() => exportToExcel(scenarioTableData, fileName)} className={"primary-button"}>
-              <Download size={18} color={"var(--primary-button-text)"} />
-              Download</button>
+    <div style={{ minHeight: "auto" }}>
+      <div style={{ padding: "0 2rem" }}>
+        <div className={styles.headerContainer}>
+          <div className={finSimStyles.heading}>
+            <div className={finSimStyles.left}>
+              <div className={finSimStyles.scenarioLabel}>{scenarioTitle}</div>
+              <div className={finSimStyles.title}>Project Summary by Month</div>
+            </div>
+            <div className={finSimStyles.right}>
+              <button onClick={() => exportToExcel(scenarioTableData, fileName)} className={"primary-button"}>
+                <Download size={18} color={"var(--primary-button-text)"} />
+                Download</button>
 
+            </div>
           </div>
         </div>
-        </div>
-        <div style={{ 
+      </div>
+
+      <div style={{ }}>
+
+        <div style={{
           position: 'relative',
-          width: '100vw',
-          paddingLeft: 'calc((100% - 1020px) / 2)',
+          marginLeft: "calc(Max((100vw - 1020px) / 2, 2rem))",
           marginTop: '24px'
+          
         }}>
-          <SummaryTable 
-            marginRight='calc((100vw - 1020px) / 2)'
-            columns={scenarioTableData[scenarioIdx].columns} 
+          <SummaryTable
+            marginRight='calc(Max((100vw - 1020px) / 2, 2rem))'
+            columns={scenarioTableData[scenarioIdx].columns}
             sections={scenarioTableData[scenarioIdx].sections} />
         </div>
-      
+
+      </div>
     </div>
   )
 
