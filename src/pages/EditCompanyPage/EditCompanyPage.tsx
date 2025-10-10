@@ -161,7 +161,7 @@ export const EditCompanyPage = () => {
       } else {
         const body = {
           "name": orgName,
-          "isAdmin": true,
+          "isActive": true,
           "settings": {
             mainContact: mainContact,
             adminEmail: adminEmail,
